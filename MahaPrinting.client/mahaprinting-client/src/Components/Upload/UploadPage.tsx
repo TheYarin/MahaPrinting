@@ -1,15 +1,21 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { TextField } from "@material-ui/core";
+import MyPrintsStore from "./MyPrintsStore";
+import UploadPrintForm from "./UploadPrintForm";
+import MyPrints from "./MyPrints";
 
-export default class UploadPage extends React.Component<{}, {}> {
+export default class UploadPage extends React.Component {
+  myPrintsStore: MyPrintsStore = new MyPrintsStore();
+  // constructor(props: Object){
+  //   super(props);
+  // }
+
   render() {
     return (
       <div>
         <Typography variant="h2">Upload</Typography>
-        <form autoComplete="off">
-          <TextField name="name" label="Print name" variant="outlined" />
-        </form>
+        <UploadPrintForm myPrintsStore={this.myPrintsStore} />
+        <MyPrints myPrintsStore={this.myPrintsStore} />
       </div>
     );
   }
