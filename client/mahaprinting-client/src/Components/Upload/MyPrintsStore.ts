@@ -1,13 +1,16 @@
 import { observable } from "mobx";
-import Print from "./Print";
+import { ServerConnector, UserPrint } from "../../ServerAPI";
 
 export default class MyPrintsStore {
-  prints = observable(new Array<Print>());
+  @observable public prints = new Array<UserPrint>();
+  private serverConnector: ServerConnector;
 
-  add(file: File, name: string): Print {
-    const print = new Print({ name, linkToStl: "LINK_TO_STL" });
-    this.prints.push(print);
+  public constructor(serverConnector: ServerConnector) {
+    this.serverConnector = serverConnector;
+  }
 
-    return print;
+  public async add(name: string, contactDetails: string, file: File): Promise<void> {
+    const userPrint = await this.serverConnector.uploadUserPrint(name, contactDetails, file);
+    this.prints.push(userPrint);
   }
 }

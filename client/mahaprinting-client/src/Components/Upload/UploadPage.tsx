@@ -3,9 +3,10 @@ import Typography from "@material-ui/core/Typography";
 import MyPrintsStore from "./MyPrintsStore";
 import UploadPrintForm from "./UploadPrintForm";
 import MyPrints from "./MyPrints";
+import { ServerConnector } from "../../ServerAPI";
 
 export default class UploadPage extends React.Component {
-  myPrintsStore: MyPrintsStore = new MyPrintsStore();
+  myPrintsStore: MyPrintsStore = new MyPrintsStore(new ServerConnector("http://localhost:5000"));
   // constructor(props: Object){
   //   super(props);
   // }
