@@ -16,5 +16,7 @@
     "statusBar.foreground": "#15202b"
   },
   "peacock.color": "#f9e64f",
-  "python.pythonPath": "C:\\Users\\Yarin\\.virtualenvs\\mahaprinting_server-cAw6a2Pl\\Scripts\\python.exe"
+  "python.pythonPath": "C:\\Users\\Yarin\\.virtualenvs\\mahaprinting_server-cAw6a2Pl\\Scripts\\python.exe",
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true
 }

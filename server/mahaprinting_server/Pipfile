@@ -5,10 +5,12 @@ verify_ssl = true
 
 [dev-packages]
 autopep8 = "*"
+flake8 = "*"
 
 [packages]
 flask = "*"
 python-dotenv = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
