@@ -2,13 +2,15 @@ import React from "react";
 import MyPrintsStore from "../MyPrintsStore";
 import { observer } from "mobx-react";
 import UserPrintListItem from "./UserPrintListItem";
-import { withStyles, createStyles, WithStyles, colors } from "@material-ui/core";
+import { withStyles, createStyles, WithStyles, colors, Typography } from "@material-ui/core";
 
 const styles = createStyles({
-  root: {
-    marginTop: 10,
-    padding: "5px 0",
+  title: {
+    marginBottom: 10,
+  },
+  list: {
     backgroundColor: colors.grey[100],
+    padding: "5px 0",
     boxShadow: "0 0 5px " + colors.grey[100],
   },
 });
@@ -24,7 +26,16 @@ class MyPrints extends React.Component<Props> {
       <UserPrintListItem key={print.id} userPrint={print} />
     ));
 
-    return <div className={this.props.classes.root}>{expansionPanels}</div>;
+    const { classes } = this.props;
+
+    return (
+      <div>
+        <Typography className={classes.title} variant="h5">
+          Your prints
+        </Typography>
+        <div className={classes.list}>{expansionPanels}</div>
+      </div>
+    );
   }
 }
 
