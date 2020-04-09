@@ -1,14 +1,62 @@
-from flask import Flask, request
-import requests
+import random
+import string
+import json
 
+from flask import Flask, request, make_response
+
+from mahaprinting_service import MahaPrintingService
+from settings import ALLOW_CORS
+
+# Flask stuff
 app = Flask(__name__)
+
+if ALLOW_CORS == 'TRUE':
+    from flask_cors import CORS
+    CORS(app, supports_credentials=True)
+
+mahaprinting_service = MahaPrintingService()
+
+
+def generate_user_id() -> str:
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(40))
+
+
+USER_ID_COOKIE = 'user_id'
+
+
+@app.route('/initialize')
+def initialize():
+    current_user_id = request.cookies.get(USER_ID_COOKIE)
+
+    if current_user_id is None:
+        current_user_id = generate_user_id()
+
+    response = make_response()
+    month_in_seconds = 60*60*24*31
+    response.set_cookie(USER_ID_COOKIE, current_user_id, max_age=month_in_seconds)
+
+    return response
 
 
 @app.route('/uploadUserPrint', methods=['POST'])
 def upload_user_print():
-    print(request)
-    requests.post("http://localhost:5000/test", files=dict(boom=request.files['file']))
-    return 'Hello, World!'
+    user_id = request.cookies.get(USER_ID_COOKIE)
+    user_print = mahaprinting_service.upload_user_print(
+        request.form['name'],
+        request.form['contactDetails'],
+        user_id,
+        request.files['file'])
+
+    return user_print.__dict__
+
+
+@app.route('/getUserPrints', methods=['GET'])
+def get_user_prints():
+    user_id = request.cookies.get(USER_ID_COOKIE)
+    user_prints = mahaprinting_service.get_user_prints(user_id)
+
+    return json.dumps([p.__dict__ for p in user_prints])
 
 
 @app.route('/test', methods=['POST'])

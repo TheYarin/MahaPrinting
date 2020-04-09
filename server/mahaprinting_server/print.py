@@ -1,14 +1,14 @@
 from enum import Enum
 
 
-class PrintStatus(Enum):
+class PrintStatus(str, Enum):
     IN_QUEUE = "IN_QUEUE"
     PRINTING = "PRINTING"
     DONE = "DONE"
 
 
 class Print:
-    id: str
+    id: int
     name: str
     status: PrintStatus
     user_id: str
