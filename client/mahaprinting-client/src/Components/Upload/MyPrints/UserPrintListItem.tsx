@@ -1,17 +1,18 @@
 import React, { Component } from "react";
-import { Paper, createStyles, WithStyles, withStyles, IconButton, Typography } from "@material-ui/core";
+import { Paper, createStyles, WithStyles, withStyles, Typography, ListItem } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import { UserPrint } from "../../../ServerAPI";
 
 const styles = createStyles({
   root: {
-    paddingLeft: 10,
     margin: 5,
+  },
+  paper: {
+    paddingLeft: 10,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    cursor: "pointer",
   },
   grouping: {
     display: "flex",
@@ -20,6 +21,9 @@ const styles = createStyles({
   },
   fullSizeFont: {
     fontSize: "1.5em",
+  },
+  menuIcon: {
+    padding: 12,
   },
 });
 
@@ -33,18 +37,18 @@ class UserPrintListItem extends Component<Props> {
     const { name, status } = userPrint;
 
     return (
-      <Paper className={this.props.classes.root} onClick={() => console.log("asd")}>
-        <Typography className={classes.fullSizeFont} variant="body1">
-          {name}
-        </Typography>
-        <div className={classes.grouping}>
-          <Typography variant="caption" color="textSecondary">
-            {status}
+      <Paper className={classes.root} onClick={() => console.log("asd")}>
+        <ListItem button disableGutters className={classes.paper}>
+          <Typography className={classes.fullSizeFont} variant="body1">
+            {name}
           </Typography>
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
-        </div>
+          <div className={classes.grouping}>
+            <Typography variant="caption" color="textSecondary">
+              {status}
+            </Typography>
+            <MoreVertIcon className={classes.menuIcon} />
+          </div>
+        </ListItem>
       </Paper>
     );
   }
