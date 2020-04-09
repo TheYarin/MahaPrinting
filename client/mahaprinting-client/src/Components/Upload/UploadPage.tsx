@@ -6,11 +6,12 @@ import MyPrintsStore from "./MyPrintsStore";
 import UploadPrintForm from "./UploadPrintForm";
 import MyPrints from "./MyPrints/MyPrints";
 import { ServerConnector } from "../../ServerAPI";
+import { observer } from "mobx-react";
 
 const styles = createStyles({
   root: {
     "& > *:not(:last-child)": {
-      marginBottom: 10,
+      marginBottom: 20,
     },
     display: "flex",
     flexDirection: "column",
@@ -22,6 +23,7 @@ interface Props extends WithStyles<typeof styles> {
   serverConnector: ServerConnector;
 }
 
+@observer
 class UploadPage extends React.Component<Props> {
   myPrintsStore: MyPrintsStore = new MyPrintsStore(this.props.serverConnector);
 
@@ -36,7 +38,7 @@ class UploadPage extends React.Component<Props> {
       <div className={classes.root}>
         <Typography variant="h2">Upload</Typography>
         <UploadPrintForm myPrintsStore={this.myPrintsStore} />
-        <MyPrints myPrintsStore={this.myPrintsStore} />
+        {this.myPrintsStore.prints.length > 0 && <MyPrints myPrintsStore={this.myPrintsStore} />}
       </div>
     );
   }
