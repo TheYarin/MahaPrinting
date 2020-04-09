@@ -5,16 +5,29 @@ export class ServerConnector {
     this.urlBase = urlBase;
   }
 
+  public async initialize(): Promise<void> {
+    await fetchWithCookies(this.urlBase + "/initialize");
+  }
+
   public async uploadUserPrint(name: string, contactDetails: string, file: File): Promise<UserPrint> {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("contactDetails", contactDetails);
     formData.append("file", file);
 
-    const response = await postFormData(this.urlBase + "/uploadUserPrint", formData);
+    const response = await postFormDataWithCookies(this.urlBase + "/uploadUserPrint", formData);
     const responseJson = await response.json();
 
     return new UserPrint(responseJson);
+  }
+
+  public async getUserPrints(): Promise<UserPrint[]> {
+    const response = await fetchWithCookies(this.urlBase + "/getUserPrints");
+    const responseJson = await response.json();
+
+    const userPrints = responseJson.map((p: any) => new UserPrint(p));
+
+    return userPrints;
   }
 }
 
@@ -25,7 +38,7 @@ export enum PrintStatus {
 }
 
 export class UserPrint {
-  public id: string;
+  public id: number;
   public name: string;
   public status: PrintStatus;
   public timestamp: string;
@@ -38,7 +51,7 @@ export class UserPrint {
     timestamp,
     contactDetails
   }: {
-    id: string;
+    id: number;
     name: string;
     status: PrintStatus;
     timestamp: string;
@@ -52,9 +65,19 @@ export class UserPrint {
   }
 }
 
-async function postFormData(url: string, formData: FormData): Promise<Response> {
-  return await fetch(url, {
+async function postFormDataWithCookies(url: string, formData: FormData): Promise<Response> {
+  return await fetchWithCookies(url, {
     method: "POST",
     body: formData
   });
+}
+
+function fetchWithCookies(input: RequestInfo, init?: RequestInit): Promise<Response> {
+  let initWithCookies = init;
+
+  if (initWithCookies === undefined) initWithCookies = {};
+
+  initWithCookies.credentials = "include";
+
+  return fetch(input, initWithCookies);
 }

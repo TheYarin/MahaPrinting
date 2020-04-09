@@ -5,11 +5,16 @@ import UploadPrintForm from "./UploadPrintForm";
 import MyPrints from "./MyPrints";
 import { ServerConnector } from "../../ServerAPI";
 
-export default class UploadPage extends React.Component {
-  myPrintsStore: MyPrintsStore = new MyPrintsStore(new ServerConnector("http://localhost:5000"));
-  // constructor(props: Object){
-  //   super(props);
-  // }
+export interface UploadPageProps {
+  serverConnector: ServerConnector;
+}
+
+export default class UploadPage extends React.Component<UploadPageProps> {
+  myPrintsStore: MyPrintsStore = new MyPrintsStore(this.props.serverConnector);
+
+  async componentDidMount() {
+    await this.myPrintsStore.initialize();
+  }
 
   render() {
     return (

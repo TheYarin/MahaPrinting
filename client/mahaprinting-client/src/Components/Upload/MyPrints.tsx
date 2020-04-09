@@ -9,7 +9,7 @@ export interface MyPrintsProps {
 @observer
 export default class MyPrints extends React.Component<MyPrintsProps> {
   render() {
-    const expansionPanels = this.props.myPrintsStore.prints.map((print) => <div>{print.name}</div>);
+    const expansionPanels = this.props.myPrintsStore.prints.map((print) => <div key={print.id}>{print.name}</div>);
 
     return <div>{expansionPanels}</div>;
   }

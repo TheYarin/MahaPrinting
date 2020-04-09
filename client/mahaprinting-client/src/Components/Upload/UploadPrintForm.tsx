@@ -17,11 +17,11 @@ export default class UploadPrintForm extends React.Component<UploadPrintFormProp
   submitPrint = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log("UploadPrintForm -> submitPrint -> submitPrint", this);
+    if (!this.name) return;
 
     console.log(this.fileInput);
 
-    this.props.myPrintsStore.add("NAME", "CONTACT_DETAILS", this.fileInput.current!.files![0] as File);
+    this.props.myPrintsStore.add(this.name as string, "CONTACT_DETAILS", this.fileInput.current!.files![0] as File);
   };
 
   // constructor(props: Object){
