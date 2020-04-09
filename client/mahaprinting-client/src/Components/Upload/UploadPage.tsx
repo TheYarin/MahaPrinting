@@ -15,7 +15,7 @@ const styles = createStyles({
     },
     display: "flex",
     flexDirection: "column",
-    maxWidth: 600,
+    maxWidth: "min(600px, 100%)",
   },
 });
 
