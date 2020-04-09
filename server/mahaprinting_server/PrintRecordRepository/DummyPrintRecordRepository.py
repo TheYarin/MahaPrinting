@@ -17,9 +17,9 @@ class DummyPrintRecordRepository(IPrintRecordRepository):
                   file_path: str) -> Print:
         self._counter += 1
         print = Print()
-        print.id = str(self._counter)
+        print.id = self._counter
         print.name = name
-        print.contact_details = contact_details
+        print.contactDetails = contact_details
         print.status = PrintStatus.IN_QUEUE
         print.timestamp = datetime.now().isoformat()
 

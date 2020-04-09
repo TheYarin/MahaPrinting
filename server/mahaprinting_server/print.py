@@ -11,11 +11,11 @@ class Print:
     id: int
     name: str
     status: PrintStatus
-    user_id: str
-    contact_details: str
+    userId: str
+    contactDetails: str
     timestamp: str
-    file_download_link: str
-    file_path: str  # On OctoPrint
+    fileDownloadLink: str
+    filePath: str  # On OctoPrint
     # file_location: str # On OctoPrint, "local" or "sdcard"
 
 
@@ -25,4 +25,4 @@ class UserPrint:
         self.name = print.name
         self.status = print.status
         self.timestamp = print.timestamp
-        self.contact_details = print.contact_details
+        self.contactDetails = print.contactDetails

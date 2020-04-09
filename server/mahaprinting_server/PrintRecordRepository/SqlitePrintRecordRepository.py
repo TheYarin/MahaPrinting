@@ -32,22 +32,22 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
                   file_download_link: str,
                   file_path: str) -> Print:
         p = Print()
-        p.user_id = user_id
+        p.userId = user_id
         p.name = name
-        p.contact_details = contact_details
-        p.file_download_link = file_download_link
-        p.file_path = file_path
+        p.contactDetails = contact_details
+        p.fileDownloadLink = file_download_link
+        p.filePath = file_path
         p.status = PrintStatus.IN_QUEUE
         p.timestamp = datetime.now().isoformat()
 
         cursor = self.connection.execute(INSERT_QUERY,
                                          (p.timestamp,
-                                          p.user_id,
+                                          p.userId,
                                           p.name,
                                           p.status,
-                                          p.contact_details,
-                                          p.file_download_link,
-                                          p.file_path))
+                                          p.contactDetails,
+                                          p.fileDownloadLink,
+                                          p.filePath))
         self.connection.commit()
 
         p.id = cursor.lastrowid
@@ -67,7 +67,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
         for row in rows:
             p = Print()
-            (p.id, p.timestamp, p.user_id, p.name, p.status, p.contact_details, p.file_download_link, p.file_path) = row
+            (p.id, p.timestamp, p.userId, p.name, p.status, p.contactDetails, p.fileDownloadLink, p.filePath) = row
 
             prints.append(p)
 
