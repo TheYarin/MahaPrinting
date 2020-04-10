@@ -34,7 +34,8 @@ export class ServerConnector {
 export enum PrintStatus {
   IN_QUEUE = "IN_QUEUE",
   PRINTING = "PRINTING",
-  DONE = "DONE"
+  DONE = "DONE",
+  CANCELED = "CANCELED",
 }
 
 export class UserPrint {
@@ -49,7 +50,7 @@ export class UserPrint {
     name,
     status,
     timestamp,
-    contactDetails
+    contactDetails,
   }: {
     id: number;
     name: string;
@@ -68,7 +69,7 @@ export class UserPrint {
 async function postFormDataWithCookies(url: string, formData: FormData): Promise<Response> {
   return await fetchWithCookies(url, {
     method: "POST",
-    body: formData
+    body: formData,
   });
 }
 

@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  DialogActions as MuiDialogActions,
 } from "@material-ui/core";
 
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -20,6 +21,15 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import { UserPrint } from "../../../ServerAPI";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
+import ButtonWithIconOnTop from "../../Common/ButtonWithIconOnTop";
+
+const DialogActions = withStyles((theme) => ({
+  root: {
+    justifyContent: "center",
+    margin: 0,
+    padding: theme.spacing(1),
+  },
+}))(MuiDialogActions);
 
 const styles = createStyles({
   root: {
@@ -83,17 +93,15 @@ class UserPrintListItem extends Component<Props> {
             <DialogTitle className={classes.dialogTitle}>{name}</DialogTitle>
           </div>
           <DialogContent>
-            <div>
-              <IconButton>
-                <DeleteForeverIcon />
-              </IconButton>
-            </div>
-            <div>
-              <div>Uploaded at: {timestamp}</div>
-              <div>Status: {status}</div>
-              <div>Contact details: {contactDetails}</div>
-            </div>
+            <div>Uploaded at: {timestamp}</div>
+            <div>Status: {status}</div>
+            <div>Contact details: {contactDetails}</div>
           </DialogContent>
+          <DialogActions>
+            <ButtonWithIconOnTop topIcon={<DeleteForeverIcon />} color={"secondary"}>
+              Cancel Print
+            </ButtonWithIconOnTop>
+          </DialogActions>
         </Dialog>
         <ListItem button disableGutters className={classes.itemContent} onClick={() => (this.dialogOpen = true)}>
           <Typography className={classes.fullSizeFont} variant="body1">
