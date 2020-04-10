@@ -1,7 +1,7 @@
 import React from "react";
 import MyPrintsStore from "../MyPrintsStore";
 import { observer } from "mobx-react";
-import UserPrintListItem from "./UserPrintListItem";
+import UserPrintListItem from "./UserPrintListItem/UserPrintListItem";
 import { withStyles, createStyles, WithStyles, colors, Typography, List } from "@material-ui/core";
 
 const styles = createStyles({
