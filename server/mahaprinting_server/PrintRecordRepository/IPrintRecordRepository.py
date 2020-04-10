@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from print import Print
 
@@ -11,13 +11,13 @@ class IPrintRecordRepository:
                   contact_details: str,
                   file_download_link: str,
                   file_path: str) -> Print:
-        pass
+        raise Exception("NOT IMPLEMENTED")
 
-    def get_prints(self, user_id: str = None) -> List[Print]:
-        pass
+    def get_prints(self, user_id: Optional[str] = None) -> List[Print]:
+        raise Exception("NOT IMPLEMENTED")
 
     def get_print(self, print_id: str) -> Print:
-        pass
+        raise Exception("NOT IMPLEMENTED")
 
     def cancel_print(self, print_id: str):
-        pass
+        raise Exception("NOT IMPLEMENTED")

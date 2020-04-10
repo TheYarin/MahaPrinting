@@ -1,5 +1,5 @@
 
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 
 from PrintRecordRepository.IPrintRecordRepository import IPrintRecordRepository
@@ -25,7 +25,7 @@ class DummyPrintRecordRepository(IPrintRecordRepository):
 
         return print
 
-    def get_prints(self, user_id: str = None) -> List[Print]:
+    def get_prints(self, user_id: Optional[str] = None) -> List[Print]:
         raise Exception("NOT IMPLEMENTED")
 
     def get_print(self, print_id: str) -> Print:

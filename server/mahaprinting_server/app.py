@@ -1,11 +1,12 @@
 import random
 import string
 import json
+from typing import Any, Callable
 
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, abort
 
 from mahaprinting_service import MahaPrintingService
-from settings import ALLOW_CORS
+from settings import ALLOW_CORS, ADMIN_USER_ID
 
 # Flask stuff
 app = Flask(__name__)
@@ -15,6 +16,18 @@ if ALLOW_CORS == 'TRUE':
     CORS(app, supports_credentials=True)
 
 mahaprinting_service = MahaPrintingService()
+
+
+def admin_only(routeHandlingFunc: Callable[[], Any]):
+    def wrapper():
+        user_id = request.cookies.get(USER_ID_COOKIE)
+
+        if user_id != ADMIN_USER_ID:
+            abort(401)  # Unauthorized
+
+        return routeHandlingFunc()
+
+    return wrapper
 
 
 def generate_user_id() -> str:
@@ -59,8 +72,16 @@ def get_user_prints():
     return json.dumps([p.__dict__ for p in user_prints])
 
 
-@app.route('/test', methods=['POST'])
-def test():
-    print(request)
-    request.files['boom'].save(r"I:\test_output.stl")
-    return 'Hello, World!'
+@app.route('/getAllPrints', methods=['GET'])
+@admin_only
+def get_all_prints():
+    prints = mahaprinting_service.get_all_prints()
+
+    return json.dumps([p.__dict__ for p in prints])
+
+
+# @app.route('/test', methods=['POST'])
+# def test():
+#     print(request)
+#     request.files['boom'].save(r"I:\test_output.stl")
+#     return 'Hello, World!'

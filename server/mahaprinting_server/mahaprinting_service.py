@@ -3,7 +3,7 @@ import io
 
 # import requests
 
-from print import UserPrint
+from print import Print, UserPrint
 from PrintRecordRepository.IPrintRecordRepository import IPrintRecordRepository
 from PrintRecordRepository.SqlitePrintRecordRepository import SqlitePrintRecordRepository
 
@@ -27,3 +27,6 @@ class MahaPrintingService:
         user_prints = self.print_record_repository.get_prints(user_id)
 
         return [UserPrint(p) for p in user_prints]
+
+    def get_all_prints(self) -> List[Print]:
+        return self.print_record_repository.get_prints()

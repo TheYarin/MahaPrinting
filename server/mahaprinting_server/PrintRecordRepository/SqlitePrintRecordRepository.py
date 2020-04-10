@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 
-from typing import List
+from typing import List, Optional
 from sqlite3.dbapi2 import Connection
 
 
@@ -54,7 +54,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
         return p
 
-    def get_prints(self, user_id: str = None) -> List[Print]:
+    def get_prints(self, user_id: Optional[str] = None) -> List[Print]:
         if user_id is None:
             cursor = self.connection.execute(GET_ALL_PRINTS_QUERY)
         else:
