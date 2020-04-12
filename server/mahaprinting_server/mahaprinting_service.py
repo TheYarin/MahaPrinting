@@ -30,3 +30,9 @@ class MahaPrintingService:
 
     def get_all_prints(self) -> List[Print]:
         return self.print_record_repository.get_prints()
+
+    def get_print(self, print_d):
+        raise Exception("NOT IMPLEMENTED")
+
+    def cancel_print(self, printId):
+        raise Exception("NOT IMPLEMENTED")

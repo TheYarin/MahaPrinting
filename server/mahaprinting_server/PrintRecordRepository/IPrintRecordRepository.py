@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from print import Print
+from print import Print, PrintStatus
 
 
 class IPrintRecordRepository:
@@ -19,5 +19,5 @@ class IPrintRecordRepository:
     def get_print(self, print_id: str) -> Print:
         raise Exception("NOT IMPLEMENTED")
 
-    def cancel_print(self, print_id: str):
+    def change_print_status(self, print_id: str, new_status: PrintStatus) -> None:
         raise Exception("NOT IMPLEMENTED")

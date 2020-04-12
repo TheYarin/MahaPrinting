@@ -31,5 +31,5 @@ class DummyPrintRecordRepository(IPrintRecordRepository):
     def get_print(self, print_id: str) -> Print:
         raise Exception("NOT IMPLEMENTED")
 
-    def cancel_print(self, print_id: str) -> None:
+    def change_print_status(self, print_id: str, new_status: PrintStatus):
         raise Exception("NOT IMPLEMENTED")

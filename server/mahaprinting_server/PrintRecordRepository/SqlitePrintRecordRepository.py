@@ -3,7 +3,7 @@ from datetime import datetime
 from threading import Lock
 
 from typing import List, Optional
-from sqlite3.dbapi2 import Connection
+from sqlite3.dbapi2 import Connection, Row
 
 
 from settings import DB_PATH
@@ -73,26 +73,49 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
         if user_id is None:
             cursor = self.connection.execute(GET_ALL_PRINTS_QUERY)
         else:
-            # Don't remove the trailing comma in (user_id,) - It turns this expression into a tuple
+            # Don't remove the trailing comma in (user_id,) - The comma turns this expression into a tuple
             cursor = self.connection.execute(GET_USER_PRINTS_QUERY, (user_id,))
 
         rows = cursor.fetchall()
-
-        prints = []
-
-        for row in rows:
-            p = Print()
-            (p.id, p.timestamp, p.userId, p.name, p.status, p.contactDetails, p.fileDownloadLink, p.filePath) = row
-
-            prints.append(p)
+        prints = _convert_rows_to_prints(rows)
 
         return prints
 
-    def get_print(self, print_id: str) -> Print:
+    def get_print(self, print_id: str) -> Optional[Print]:
+        # Don't remove the trailing comma in (print_id,) - The comma turns this expression into a tuple
+        cursor = self.connection.execute(GET_PRINT, (print_id,))
+
+        row = cursor.fetchone()
+
+        if row is None:
+            return None
+
+        return _convert_row_to_print(row)
+
+    @_synchronized
+    def change_print_status(self, print_id: str, new_status: PrintStatus) -> None:
+        cursor = self.connection.execute(UPDATE_PRINT_STATUS, (new_status, print_id))
+        self.connection.commit()
+
         raise Exception("NOT IMPLEMENTED")
 
-    def cancel_print(self, print_id: str):
-        raise Exception("NOT IMPLEMENTED")
+
+def _convert_rows_to_prints(rows: List[Row]) -> List[Print]:
+    prints = []
+
+    for row in rows:
+        p = _convert_row_to_print(row)
+
+        prints.append(p)
+
+    return prints
+
+
+def _convert_row_to_print(row: Row) -> Print:
+    p = Print()
+    (p.id, p.timestamp, p.userId, p.name, p.status, p.contactDetails, p.fileDownloadLink, p.filePath) = row
+
+    return p
 
 
 CREATE_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS prints (
@@ -106,9 +129,10 @@ CREATE_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS prints (
     filePath text
 );'''
 
-
 INSERT_QUERY = ''' INSERT INTO prints(timestamp,userId,name,status,contactDetails,fileDownloadLink,filePath)
                    VALUES(?,?,?,?,?,?,?) '''
 
-GET_USER_PRINTS_QUERY = 'SELECT id,timestamp,userId,name,status,contactDetails,fileDownloadLink,filePath FROM prints WHERE userId=?'
 GET_ALL_PRINTS_QUERY = 'SELECT id,timestamp,userId,name,status,contactDetails,fileDownloadLink,filePath FROM prints'
+GET_USER_PRINTS_QUERY = GET_ALL_PRINTS_QUERY + ' WHERE userId=?'
+GET_PRINT = GET_ALL_PRINTS_QUERY + ' WHERE id=? LIMIT 1'
+UPDATE_PRINT_STATUS = 'UPDATE prints SET status = ? WHERE id = ?'
