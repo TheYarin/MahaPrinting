@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+from threading import Lock
 
 from typing import List, Optional
 from sqlite3.dbapi2 import Connection
@@ -10,8 +11,21 @@ from PrintRecordRepository.IPrintRecordRepository import IPrintRecordRepository
 from print import Print, PrintStatus
 
 
+def _synchronized(f):
+    def newFunction(*args, **kw):
+        self = args[0]
+        self._lock.acquire()
+        try:
+            return f(*args, **kw)
+        finally:
+            self._lock.release()
+
+    return newFunction
+
+
 class SqlitePrintRecordRepository(IPrintRecordRepository):
     connection: Connection
+    _lock = Lock()
 
     def __init__(self):
         self._connect_to_database()
@@ -25,6 +39,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
     # Public Methods
 
+    @_synchronized
     def add_print(self,
                   user_id: str,
                   name: str,
