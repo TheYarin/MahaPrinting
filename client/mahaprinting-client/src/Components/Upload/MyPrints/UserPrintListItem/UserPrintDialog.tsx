@@ -44,6 +44,17 @@ interface Props extends WithStyles<typeof styles> {
 @inject("myPrintStore")
 @observer
 class UserPrintDialog extends Component<Props> {
+  constructor(props: Props) {
+    super(props);
+
+    if (!props.myPrintStore)
+      throw new Error(
+        "Missing prop: myPrintStore." +
+          " Yeah yeah, I know it's marked as optional, but that's just to trick typescript to work with Mobx's inject." +
+          " It's actually mandatory. sorry."
+      );
+  }
+
   cancelPrint = () => {
     const userAgreedToCancel = window.confirm("Are you sure you want to cancel this print?");
     if (userAgreedToCancel) this.props.myPrintStore!.cancelPrint(this.props.userPrint.id);
