@@ -8,6 +8,8 @@ from flask import Flask, request, make_response, abort
 from mahaprinting_service import MahaPrintingService
 from settings import ALLOW_CORS, ADMIN_USER_ID
 
+USER_ID_COOKIE = 'user_id'
+
 # Flask stuff
 app = Flask(__name__)
 
@@ -18,9 +20,13 @@ if ALLOW_CORS == 'TRUE':
 mahaprinting_service = MahaPrintingService()
 
 
+def get_user_id():
+    return request.cookies.get(USER_ID_COOKIE)
+
+
 def admin_only(routeHandlingFunc: Callable[[], Any]):
     def wrapper():
-        user_id = request.cookies.get(USER_ID_COOKIE)
+        user_id = get_user_id()
 
         if user_id != ADMIN_USER_ID:
             abort(401)  # Unauthorized
@@ -35,12 +41,9 @@ def generate_user_id() -> str:
     return ''.join(random.choice(letters) for i in range(40))
 
 
-USER_ID_COOKIE = 'user_id'
-
-
 @app.route('/initialize')
 def initialize():
-    current_user_id = request.cookies.get(USER_ID_COOKIE)
+    current_user_id = get_user_id()
 
     if current_user_id is None:
         current_user_id = generate_user_id()
@@ -54,7 +57,7 @@ def initialize():
 
 @app.route('/uploadUserPrint', methods=['POST'])
 def upload_user_print():
-    user_id = request.cookies.get(USER_ID_COOKIE)
+    user_id = get_user_id()
     user_print = mahaprinting_service.upload_user_print(
         request.form['name'],
         request.form['contactDetails'],
@@ -66,7 +69,7 @@ def upload_user_print():
 
 @app.route('/getUserPrints', methods=['GET'])
 def get_user_prints():
-    user_id = request.cookies.get(USER_ID_COOKIE)
+    user_id = get_user_id()
     user_prints = mahaprinting_service.get_user_prints(user_id)
 
     return json.dumps([p.__dict__ for p in user_prints])

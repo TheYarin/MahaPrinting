@@ -81,7 +81,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
         return prints
 
-    def get_print(self, print_id: str) -> Optional[Print]:
+    def get_print(self, print_id: int) -> Optional[Print]:
         # Don't remove the trailing comma in (print_id,) - The comma turns this expression into a tuple
         cursor = self.connection.execute(GET_PRINT, (print_id,))
 
@@ -93,7 +93,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
         return _convert_row_to_print(row)
 
     @_synchronized
-    def change_print_status(self, print_id: str, new_status: PrintStatus) -> None:
+    def change_print_status(self, print_id: int, new_status: PrintStatus) -> None:
         cursor = self.connection.execute(UPDATE_PRINT_STATUS, (new_status, print_id))
         self.connection.commit()
 
