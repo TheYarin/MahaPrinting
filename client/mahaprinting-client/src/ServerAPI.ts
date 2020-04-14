@@ -1,3 +1,5 @@
+import { observable } from "mobx";
+
 export class ServerConnector {
   private urlBase: string;
 
@@ -29,6 +31,12 @@ export class ServerConnector {
 
     return userPrints;
   }
+
+  public async cancelPrint(printId: number): Promise<void> {
+    const response = await postJsonWithCookies(this.urlBase + "/cancelPrint", { printId });
+
+    if (response.status !== 200) throw new Error("Failed to cancel print, server returned status code " + response.status);
+  }
 }
 
 export enum PrintStatus {
@@ -39,11 +47,11 @@ export enum PrintStatus {
 }
 
 export class UserPrint {
-  public id: number;
-  public name: string;
-  public status: PrintStatus;
-  public timestamp: string;
-  public contactDetails: string;
+  @observable public id: number;
+  @observable public name: string;
+  @observable public status: PrintStatus;
+  @observable public timestamp: string;
+  @observable public contactDetails: string;
 
   public constructor({
     id,
@@ -66,13 +74,6 @@ export class UserPrint {
   }
 }
 
-async function postFormDataWithCookies(url: string, formData: FormData): Promise<Response> {
-  return await fetchWithCookies(url, {
-    method: "POST",
-    body: formData,
-  });
-}
-
 function fetchWithCookies(input: RequestInfo, init?: RequestInit): Promise<Response> {
   let initWithCookies = init;
 
@@ -81,4 +82,21 @@ function fetchWithCookies(input: RequestInfo, init?: RequestInit): Promise<Respo
   initWithCookies.credentials = "include";
 
   return fetch(input, initWithCookies);
+}
+
+async function postFormDataWithCookies(url: string, formData: FormData): Promise<Response> {
+  return await fetchWithCookies(url, {
+    method: "POST",
+    body: formData,
+  });
+}
+
+async function postJsonWithCookies(url: string, data: any): Promise<Response> {
+  return await fetchWithCookies(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 }

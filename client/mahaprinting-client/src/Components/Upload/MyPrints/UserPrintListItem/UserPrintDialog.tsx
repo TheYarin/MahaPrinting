@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { observer, inject } from "mobx-react";
 import {
   createStyles,
   WithStyles,
@@ -13,7 +14,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import ButtonWithIconOnTop from "../../../Common/ButtonWithIconOnTop";
-import { UserPrint } from "../../../../ServerAPI";
+import { UserPrint, PrintStatus } from "../../../../ServerAPI";
+import MyPrintsStore from "../../MyPrintsStore";
 
 const styles = createStyles({
   root: {},
@@ -36,9 +38,17 @@ interface Props extends WithStyles<typeof styles> {
   open: boolean;
   onClose: Function; // This is intentionally not the same type as Dialog's onClose prop because that one really sucks
   userPrint: UserPrint;
+  myPrintStore?: MyPrintsStore;
 }
 
+@inject("myPrintStore")
+@observer
 class UserPrintDialog extends Component<Props> {
+  cancelPrint = () => {
+    const userAgreedToCancel = window.confirm("Are you sure you want to cancel this print?");
+    if (userAgreedToCancel) this.props.myPrintStore!.cancelPrint(this.props.userPrint.id);
+  };
+
   render() {
     const { classes, userPrint, open, onClose } = this.props;
     const { name, status, contactDetails, timestamp } = userPrint;
@@ -56,9 +66,11 @@ class UserPrintDialog extends Component<Props> {
           <div>Contact details: {contactDetails}</div>
         </DialogContent>
         <DialogActions>
-          <ButtonWithIconOnTop topIcon={<DeleteForeverIcon />} color={"secondary"}>
-            Cancel Print
-          </ButtonWithIconOnTop>
+          {status !== PrintStatus.CANCELED && (
+            <ButtonWithIconOnTop onClick={this.cancelPrint} topIcon={<DeleteForeverIcon />} color={"secondary"}>
+              Cancel Print
+            </ButtonWithIconOnTop>
+          )}
         </DialogActions>
       </Dialog>
     );

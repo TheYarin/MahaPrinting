@@ -83,6 +83,23 @@ def get_all_prints():
     return json.dumps([p.__dict__ for p in prints])
 
 
+@app.route('/cancelPrint', methods=['POST'])
+def cancel_print():
+    user_id = get_user_id()
+    data = request.json
+    print_id = data['printId']
+
+    if not (user_id == ADMIN_USER_ID or mahaprinting_service.does_print_belongs_to_user(print_id, user_id)):
+        abort(401)
+
+    mahaprinting_service.cancel_print(print_id)
+
+    response = make_response()
+    response.status_code = 200
+
+    return response
+
+
 # @app.route('/test', methods=['POST'])
 # def test():
 #     print(request)

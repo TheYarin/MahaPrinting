@@ -3,7 +3,7 @@ import io
 
 # import requests
 
-from print import Print, UserPrint
+from print import Print, PrintStatus, UserPrint
 from PrintRecordRepository.IPrintRecordRepository import IPrintRecordRepository
 from PrintRecordRepository.SqlitePrintRecordRepository import SqlitePrintRecordRepository
 
@@ -31,8 +31,10 @@ class MahaPrintingService:
     def get_all_prints(self) -> List[Print]:
         return self.print_record_repository.get_prints()
 
-    def get_print(self, print_d):
-        raise Exception("NOT IMPLEMENTED")
+    def does_print_belongs_to_user(self, print_id: int, user_id: str) -> bool:
+        p = self.print_record_repository.get_print(print_id)
 
-    def cancel_print(self, printId):
-        raise Exception("NOT IMPLEMENTED")
+        return p.userId == user_id
+
+    def cancel_print(self, print_id: int) -> None:
+        self.print_record_repository.change_print_status(print_id, PrintStatus.CANCELED)

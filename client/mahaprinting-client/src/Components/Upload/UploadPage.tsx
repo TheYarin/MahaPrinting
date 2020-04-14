@@ -6,7 +6,7 @@ import MyPrintsStore from "./MyPrintsStore";
 import UploadPrintForm from "./UploadPrintForm";
 import MyPrints from "./MyPrints/MyPrints";
 import { ServerConnector } from "../../ServerAPI";
-import { observer } from "mobx-react";
+import { observer, Provider } from "mobx-react";
 
 const styles = createStyles({
   root: {
@@ -35,11 +35,13 @@ class UploadPage extends React.Component<Props> {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        <Typography variant="h2">Upload</Typography>
-        <UploadPrintForm myPrintsStore={this.myPrintsStore} />
-        {this.myPrintsStore.prints.length > 0 && <MyPrints myPrintsStore={this.myPrintsStore} />}
-      </div>
+      <Provider myPrintStore={this.myPrintsStore}>
+        <div className={classes.root}>
+          <Typography variant="h2">Upload</Typography>
+          <UploadPrintForm myPrintsStore={this.myPrintsStore} />
+          {this.myPrintsStore.prints.length > 0 && <MyPrints myPrintsStore={this.myPrintsStore} />}
+        </div>
+      </Provider>
     );
   }
 }

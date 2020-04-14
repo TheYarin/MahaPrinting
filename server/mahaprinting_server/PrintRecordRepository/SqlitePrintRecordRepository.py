@@ -97,7 +97,10 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
         cursor = self.connection.execute(UPDATE_PRINT_STATUS, (new_status, print_id))
         self.connection.commit()
 
-        raise Exception("NOT IMPLEMENTED")
+        if (cursor.rowcount != 1):
+            raise Exception(
+                "cursor.rowcount is not 1, which probably means the number of records changed is not 1, \
+                    even though it should be. investigate why")
 
 
 def _convert_rows_to_prints(rows: List[Row]) -> List[Print]:
