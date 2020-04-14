@@ -2,25 +2,45 @@ import React, { FormEvent } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
-import { TextField } from "@material-ui/core";
+import { TextField, WithStyles, createStyles, withStyles, Button } from "@material-ui/core";
 import MyPrintsStore from "./MyPrintsStore";
 
-export interface UploadPrintFormProps {
+const styles = createStyles({
+  root: {
+    "& > *:not(:last-child)": {
+      marginBottom: 20,
+    },
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+});
+
+interface Props extends WithStyles<typeof styles> {
   myPrintsStore: MyPrintsStore;
 }
 
 @observer
-export default class UploadPrintForm extends React.Component<UploadPrintFormProps> {
+class UploadPrintForm extends React.Component<Props> {
   @observable name?: string;
+  @observable contactDetails?: string = window.localStorage["contactDetails"];
   fileInput: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
 
   submitPrint = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!this.name) return;
+    if (!this.contactDetails) return;
 
     const printFile = this.fileInput.current!.files![0] as File;
-    this.props.myPrintsStore.add(this.name as string, "CONTACT_DETAILS", printFile);
+
+    if (!printFile) return;
+
+    this.props.myPrintsStore.add(this.name as string, this.contactDetails, printFile);
+
+    window.localStorage["contactDetails"] = this.contactDetails;
 
     this.name = undefined;
   };
@@ -30,19 +50,31 @@ export default class UploadPrintForm extends React.Component<UploadPrintFormProp
   // }
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <div>
-        <form autoComplete="off" onSubmit={this.submitPrint}>
-          <TextField
-            name="name"
-            label="Print name"
-            variant="outlined"
-            value={this.name || ""}
-            onChange={(event) => (this.name = event.target.value)}
-          />
-          <input type="file" ref={this.fileInput} accept=".stl" />
-        </form>
-      </div>
+      <form className={classes.root} autoComplete="off" onSubmit={this.submitPrint}>
+        <TextField
+          name="name"
+          label="Print name"
+          variant="outlined"
+          value={this.name || ""}
+          onChange={(event) => (this.name = event.target.value)}
+        />
+        <TextField
+          name="contactDetails"
+          label="Contact Details"
+          variant="outlined"
+          value={this.contactDetails || ""}
+          onChange={(event) => (this.contactDetails = event.target.value)}
+        />
+        <input type="file" ref={this.fileInput} accept=".stl" />
+        <Button type="submit" variant="contained" color="primary">
+          Upload print
+        </Button>
+      </form>
     );
   }
 }
+
+export default withStyles(styles)(UploadPrintForm);
