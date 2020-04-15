@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+
 import { createStyles, WithStyles, withStyles } from "@material-ui/core";
+import PrintIcon from "@material-ui/icons/Print";
+
 import MaterialTable, { Icons } from "material-table";
-
 import { forwardRef } from "react";
-
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
 import Check from "@material-ui/icons/Check";
@@ -19,6 +20,7 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
+
 import { PrintsStore } from "../../PrintStores/PrintsStore";
 import { observer } from "mobx-react";
 
@@ -66,6 +68,14 @@ class AllPrintsTable extends Component<Props> {
           ]}
           data={printsStore.prints.map((p) => p)}
           icons={tableIcons as Icons}
+          options={{ pageSize: 100, pageSizeOptions: [20, 50, 100, 200], emptyRowsWhenPaging: false }}
+          actions={[
+            {
+              icon: () => <PrintIcon />,
+              tooltip: "Send to 3D printer",
+              onClick: () => false,
+            },
+          ]}
         />
       </div>
     );
