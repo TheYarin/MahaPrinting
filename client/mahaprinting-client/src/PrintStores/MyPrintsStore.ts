@@ -5,16 +5,16 @@ export default abstract class PrintsStoreBase<TPrint extends UserPrint> {
   @observable public prints = new Array<TPrint>();
   protected serverConnector: ServerConnector;
 
-  protected abstract async _getPrints(): Promise<TPrint[]>;
-
   public constructor(serverConnector: ServerConnector) {
     this.serverConnector = serverConnector;
   }
 
-  public async initialize(): Promise<void> {
-    const userPrintsFromTheServer = await this._getPrints();
+  protected abstract async _getPrints(): Promise<TPrint[]>;
 
-    this.prints.push(...userPrintsFromTheServer);
+  public async initialize(): Promise<void> {
+    const printsFromTheServer = await this._getPrints();
+
+    this.prints.push(...printsFromTheServer);
   }
 
   public async cancelPrint(printId: number): Promise<void> {

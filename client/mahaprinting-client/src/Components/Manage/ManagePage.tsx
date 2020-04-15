@@ -15,13 +15,17 @@ interface Props extends WithStyles<typeof styles> {
   serverConnector: ServerConnector;
 }
 class ManagePage extends React.Component<Props> {
-  AllPrintsStore: PrintsStore = new PrintsStore(this.props.serverConnector);
+  allPrintsStore: PrintsStore = new PrintsStore(this.props.serverConnector);
+
+  async componentDidMount() {
+    await this.allPrintsStore.initialize();
+  }
 
   render() {
     return (
       <div>
         <Typography variant="h2">Manage</Typography>
-        <AllPrintsTable />
+        <AllPrintsTable printsStore={this.allPrintsStore} />
       </div>
     );
   }

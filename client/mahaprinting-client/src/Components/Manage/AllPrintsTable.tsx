@@ -19,6 +19,8 @@ import Remove from "@material-ui/icons/Remove";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
+import { PrintsStore } from "../../PrintStores/PrintsStore";
+import { observer } from "mobx-react";
 
 const tableIcons = {
   Add: forwardRef((props, ref: any) => <AddBox {...props} ref={ref} />),
@@ -44,20 +46,26 @@ const styles = createStyles({
   root: {},
 });
 
-interface Props extends WithStyles<typeof styles> {}
+interface Props extends WithStyles<typeof styles> {
+  printsStore: PrintsStore;
+}
 
+@observer
 class AllPrintsTable extends Component<Props> {
   render() {
-    const { classes } = this.props;
+    const { classes, printsStore } = this.props;
+    console.log("AllPrintsTable -> render -> printsStore", printsStore.prints);
 
     return (
       <div className={classes.root}>
         <MaterialTable
           columns={[
+            { title: "ID", field: "id" },
             { title: "Print Name", field: "name" },
             { title: "Contact Details", field: "contactDetails" },
+            { title: "Uploaded at", field: "timestamp" },
           ]}
-          data={[{ name: "wow" }]}
+          data={printsStore.prints.map((p) => p)}
           icons={tableIcons as Icons}
         />
       </div>
