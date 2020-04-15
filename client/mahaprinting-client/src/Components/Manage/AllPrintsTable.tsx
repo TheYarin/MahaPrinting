@@ -54,7 +54,6 @@ interface Props extends WithStyles<typeof styles> {
 class AllPrintsTable extends Component<Props> {
   render() {
     const { classes, printsStore } = this.props;
-    console.log("AllPrintsTable -> render -> printsStore", printsStore.prints);
 
     return (
       <div className={classes.root}>
