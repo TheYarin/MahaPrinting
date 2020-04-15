@@ -1,8 +1,8 @@
 import React from "react";
-import MyPrintsStore from "../MyPrintsStore";
 import { observer } from "mobx-react";
 import UserPrintListItem from "./UserPrintListItem/UserPrintListItem";
 import { withStyles, createStyles, WithStyles, colors, Typography, List } from "@material-ui/core";
+import { UserPrintsStore } from "../../../PrintStores/UserPrintsStore";
 
 const styles = createStyles({
   title: {
@@ -16,13 +16,13 @@ const styles = createStyles({
 });
 
 export interface Props extends WithStyles<typeof styles> {
-  myPrintsStore: MyPrintsStore;
+  userPrintsStore: UserPrintsStore;
 }
 
 @observer
 class MyPrints extends React.Component<Props> {
   render() {
-    const expansionPanels = this.props.myPrintsStore.prints.map((print) => (
+    const expansionPanels = this.props.userPrintsStore.prints.map((print) => (
       <UserPrintListItem key={print.id} userPrint={print} />
     ));
 

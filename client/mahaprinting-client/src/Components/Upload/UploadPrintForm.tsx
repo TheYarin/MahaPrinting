@@ -3,7 +3,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 
 import { TextField, WithStyles, createStyles, withStyles, Button } from "@material-ui/core";
-import MyPrintsStore from "./MyPrintsStore";
+import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
 
 const styles = createStyles({
   root: {
@@ -19,7 +19,7 @@ const styles = createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
-  myPrintsStore: MyPrintsStore;
+  userPrintsStore: UserPrintsStore;
 }
 
 @observer
@@ -38,7 +38,7 @@ class UploadPrintForm extends React.Component<Props> {
 
     if (!printFile) return;
 
-    this.props.myPrintsStore.add(this.name as string, this.contactDetails, printFile);
+    this.props.userPrintsStore.add(this.name as string, this.contactDetails, printFile);
 
     window.localStorage["contactDetails"] = this.contactDetails;
 

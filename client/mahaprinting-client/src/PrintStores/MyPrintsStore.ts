@@ -1,22 +1,20 @@
 import { observable } from "mobx";
-import { ServerConnector, UserPrint, PrintStatus } from "../../ServerAPI";
+import { ServerConnector, PrintStatus, UserPrint } from "../ServerAPI";
 
-export default class MyPrintsStore {
-  @observable public prints = new Array<UserPrint>();
-  private serverConnector: ServerConnector;
+export default abstract class PrintsStoreBase<TPrint extends UserPrint> {
+  @observable public prints = new Array<TPrint>();
+  protected serverConnector: ServerConnector;
+
+  protected abstract async _getPrints(): Promise<TPrint[]>;
 
   public constructor(serverConnector: ServerConnector) {
     this.serverConnector = serverConnector;
   }
 
   public async initialize(): Promise<void> {
-    const userPrintsFromTheServer = await this.serverConnector.getUserPrints();
-    this.prints.push(...userPrintsFromTheServer);
-  }
+    const userPrintsFromTheServer = await this._getPrints();
 
-  public async add(name: string, contactDetails: string, file: File): Promise<void> {
-    const userPrint = await this.serverConnector.uploadUserPrint(name, contactDetails, file);
-    this.prints.push(userPrint);
+    this.prints.push(...userPrintsFromTheServer);
   }
 
   public async cancelPrint(printId: number): Promise<void> {

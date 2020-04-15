@@ -37,6 +37,10 @@ export class ServerConnector {
 
     if (response.status !== 200) throw new Error("Failed to cancel print, server returned status code " + response.status);
   }
+
+  public async getAllPrints(): Promise<Print[]> {
+    throw new Error("Method not implemented.");
+  }
 }
 
 export enum PrintStatus {
@@ -71,6 +75,37 @@ export class UserPrint {
     this.status = status;
     this.timestamp = timestamp;
     this.contactDetails = contactDetails;
+  }
+}
+
+export class Print extends UserPrint {
+  @observable userId: string;
+  @observable fileDownloadLink: string;
+  @observable filePath: string;
+
+  constructor({
+    id,
+    name,
+    status,
+    timestamp,
+    contactDetails,
+    userId,
+    fileDownloadLink,
+    filePath,
+  }: {
+    id: number;
+    name: string;
+    status: PrintStatus;
+    timestamp: string;
+    contactDetails: string;
+    userId: string;
+    fileDownloadLink: string;
+    filePath: string;
+  }) {
+    super({ id, name, status, timestamp, contactDetails });
+    this.userId = userId;
+    this.fileDownloadLink = fileDownloadLink;
+    this.filePath = filePath;
   }
 }
 

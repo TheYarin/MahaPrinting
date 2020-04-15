@@ -15,7 +15,7 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import ButtonWithIconOnTop from "../../../Common/ButtonWithIconOnTop";
 import { UserPrint, PrintStatus } from "../../../../ServerAPI";
-import MyPrintsStore from "../../MyPrintsStore";
+import { UserPrintsStore } from "../../../../PrintStores/UserPrintsStore";
 
 const styles = createStyles({
   root: {},
@@ -38,16 +38,16 @@ interface Props extends WithStyles<typeof styles> {
   open: boolean;
   onClose: Function; // This is intentionally not the same type as Dialog's onClose prop because that one really sucks
   userPrint: UserPrint;
-  myPrintStore?: MyPrintsStore;
+  userPrintStore?: UserPrintsStore;
 }
 
-@inject("myPrintStore")
+@inject("userPrintStore")
 @observer
 class UserPrintDialog extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
-    if (!props.myPrintStore)
+    if (!props.userPrintStore)
       throw new Error(
         "Missing prop: myPrintStore." +
           " Yeah yeah, I know it's marked as optional, but that's just to trick typescript to work with Mobx's inject." +
@@ -57,7 +57,7 @@ class UserPrintDialog extends Component<Props> {
 
   cancelPrint = () => {
     const userAgreedToCancel = window.confirm("Are you sure you want to cancel this print?");
-    if (userAgreedToCancel) this.props.myPrintStore!.cancelPrint(this.props.userPrint.id);
+    if (userAgreedToCancel) this.props.userPrintStore!.cancelPrint(this.props.userPrint.id);
   };
 
   render() {

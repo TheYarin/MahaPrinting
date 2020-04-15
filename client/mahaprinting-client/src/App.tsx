@@ -29,7 +29,7 @@ export default class App extends Component {
       <Router>
         <Switch>
           <Route path="/manage">
-            <ManagePage />
+            <ManagePage serverConnector={castServerConnector} />
           </Route>
           <Route path="/">
             <UploadPage serverConnector={castServerConnector} />

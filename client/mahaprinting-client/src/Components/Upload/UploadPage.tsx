@@ -2,11 +2,11 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { createStyles, WithStyles, withStyles } from "@material-ui/core";
 
-import MyPrintsStore from "./MyPrintsStore";
 import UploadPrintForm from "./UploadPrintForm";
 import MyPrints from "./MyPrints/MyPrints";
 import { ServerConnector } from "../../ServerAPI";
 import { observer, Provider } from "mobx-react";
+import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
 
 const styles = createStyles({
   root: {
@@ -25,21 +25,21 @@ interface Props extends WithStyles<typeof styles> {
 
 @observer
 class UploadPage extends React.Component<Props> {
-  myPrintsStore: MyPrintsStore = new MyPrintsStore(this.props.serverConnector);
+  userPrintsStore: UserPrintsStore = new UserPrintsStore(this.props.serverConnector);
 
   async componentDidMount() {
-    await this.myPrintsStore.initialize();
+    await this.userPrintsStore.initialize();
   }
 
   render() {
     const { classes } = this.props;
 
     return (
-      <Provider myPrintStore={this.myPrintsStore}>
+      <Provider userPrintStore={this.userPrintsStore}>
         <div className={classes.root}>
           <Typography variant="h2">Upload</Typography>
-          <UploadPrintForm myPrintsStore={this.myPrintsStore} />
-          {this.myPrintsStore.prints.length > 0 && <MyPrints myPrintsStore={this.myPrintsStore} />}
+          <UploadPrintForm userPrintsStore={this.userPrintsStore} />
+          {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
         </div>
       </Provider>
     );
