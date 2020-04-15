@@ -11,6 +11,25 @@ export class ServerConnector {
     await fetchWithCookies(this.urlBase + "/initialize");
   }
 
+  public async getUserPrints(): Promise<UserPrint[]> {
+    const response = await fetchWithCookies(this.urlBase + "/getUserPrints");
+    const responseJson = await response.json();
+    const userPrints = responseJson.map((p: any) => new UserPrint(p));
+
+    return userPrints;
+  }
+
+  public async getAllPrints(): Promise<Print[]> {
+    const response = await fetchWithCookies(this.urlBase + "/getAllPrints");
+
+    if (!response.ok) throw new Error("Failed to get all prints, response status was " + response.statusText);
+
+    const responseJson = await response.json();
+    const prints = responseJson.map((p: any) => new Print(p));
+
+    return prints;
+  }
+
   public async uploadUserPrint(name: string, contactDetails: string, file: File): Promise<UserPrint> {
     const formData = new FormData();
     formData.append("name", name);
@@ -23,23 +42,10 @@ export class ServerConnector {
     return new UserPrint(responseJson);
   }
 
-  public async getUserPrints(): Promise<UserPrint[]> {
-    const response = await fetchWithCookies(this.urlBase + "/getUserPrints");
-    const responseJson = await response.json();
-
-    const userPrints = responseJson.map((p: any) => new UserPrint(p));
-
-    return userPrints;
-  }
-
   public async cancelPrint(printId: number): Promise<void> {
     const response = await postJsonWithCookies(this.urlBase + "/cancelPrint", { printId });
 
-    if (response.status !== 200) throw new Error("Failed to cancel print, server returned status code " + response.status);
-  }
-
-  public async getAllPrints(): Promise<Print[]> {
-    throw new Error("Method not implemented.");
+    if (!response.ok) throw new Error("Failed to cancel print, server returned status code " + response.status);
   }
 }
 
