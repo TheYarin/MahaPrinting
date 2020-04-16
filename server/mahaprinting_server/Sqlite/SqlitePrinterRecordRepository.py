@@ -22,10 +22,7 @@ class SqlitePrinterRecordRepository(IPrinterRecordRepository):
     # Public Methods
 
     @synchronized
-    def add_printer(self,
-                    address: str,
-                    printer_name: str,
-                    apiKey: str) -> Printer:
+    def add_printer(self, printer_name: str, address: str, apiKey: str) -> Printer:
         cursor = self._connection.execute(INSERT_QUERY, (printer_name, address, apiKey))
         self._connection.commit()
 

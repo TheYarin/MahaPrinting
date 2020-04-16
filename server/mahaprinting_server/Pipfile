@@ -13,6 +13,7 @@ flask = "*"
 python-dotenv = "*"
 requests = "*"
 flask-cors = "*"
+octorest = "*"
 
 [requires]
 python_version = "3.8"

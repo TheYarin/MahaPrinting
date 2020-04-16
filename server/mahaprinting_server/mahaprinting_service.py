@@ -1,18 +1,23 @@
-from typing import List
+from typing import Dict, List
 import io
-
 # import requests
+
+from octorest import OctoRest
 
 from DomainObjects.print import Print, PrintStatus, UserPrint
 from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordRepository
+
 from DomainObjects.Repositories.IPrinterRecordRepository import IPrinterRecordRepository
+from DomainObjects.printer import Printer
 
 
 class MahaPrintingService:
     print_record_repository: IPrintRecordRepository
     printer_record_repository: IPrinterRecordRepository
 
-    def __init__(self, print_record_repository: IPrintRecordRepository, printer_record_repository: IPrinterRecordRepository):
+    def __init__(self,
+                 print_record_repository: IPrintRecordRepository,
+                 printer_record_repository: IPrinterRecordRepository):
         self.print_record_repository = print_record_repository
         self.printer_record_repository = printer_record_repository
 
@@ -45,6 +50,27 @@ class MahaPrintingService:
 
     # PRINTERS STUFF
 
-    def add_printer(self, address: str, printer_name: str, apiKey: str):
+    def add_printer(self, printer_name: str, address: str, apiKey: str) -> Dict:
+        # TODO validate that the address and the API key are working
+        printer = self.printer_record_repository.add_printer(printer_name, address, apiKey)
 
-        pass
+        return self._get_printer_info(printer)
+
+    def get_printers_info(self) -> List[Dict]:
+        printers_info = []
+        printers = self.printer_record_repository.get_printers()
+
+        for printer in printers:
+            printers_info.append(self._get_printer_info(printer))
+
+        return printers_info
+
+    def _get_printer_info(self, printer: Printer) -> Dict:
+        printer_info = printer.__dict__.copy()
+        client = OctoRest(printer.address, printer.apiKey)
+        printer_info |= client.state()
+
+        if printer_info['flags']['printing'] is True:
+            printer_info |= client.job_info()
+
+        return printer_info

@@ -1,11 +1,11 @@
 class Printer:
     id: int
-    endpoint_address: str
+    address: str
     name: str
     apiKey: str
 
-    def __init__(self, id: int, name: str, endpoint_address: str, apiKey: str) -> None:
+    def __init__(self, id: int, name: str, address: str, apiKey: str) -> None:
         self.id = id
-        self.endpoint_address = endpoint_address
+        self.address = address
         self.name = name
         self.apiKey = apiKey

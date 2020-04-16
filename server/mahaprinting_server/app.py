@@ -39,6 +39,9 @@ def admin_only(routeHandlingFunc: Callable[[], Any]):
 
         return routeHandlingFunc()
 
+    # This hack is necessary because the custom decorator gets mistaken for "same function" by flask's app.route()
+    wrapper.__name__ = routeHandlingFunc.__name__
+
     return wrapper
 
 
@@ -105,6 +108,22 @@ def cancel_print():
 
     return response
 
+
+@app.route('/addPrinter', methods=['POST'])
+@admin_only
+def add_printer():
+    data = request.json
+    printer_info = mahaprinting_service.add_printer(data['printerName'], data['address'], data['apiKey'])
+
+    return json.dumps(printer_info)
+
+
+@app.route('/getPrinters', methods=['GET'])
+@admin_only
+def get_printers():
+    printers_info = mahaprinting_service.get_printers_info()
+
+    return json.dumps(printers_info)
 
 # @app.route('/test', methods=['POST'])
 # def test():
