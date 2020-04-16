@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from print import Print, PrintStatus
+from DomainObjects.print import Print, PrintStatus
 
 
 class IPrintRecordRepository:

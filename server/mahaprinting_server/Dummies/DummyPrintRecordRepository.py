@@ -2,8 +2,8 @@
 from typing import List, Optional
 from datetime import datetime
 
-from PrintRecordRepository.IPrintRecordRepository import IPrintRecordRepository
-from print import Print, PrintStatus
+from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordRepository
+from DomainObjects.print import Print, PrintStatus
 
 
 class DummyPrintRecordRepository(IPrintRecordRepository):

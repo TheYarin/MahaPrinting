@@ -3,16 +3,20 @@ import io
 
 # import requests
 
-from print import Print, PrintStatus, UserPrint
-from PrintRecordRepository.IPrintRecordRepository import IPrintRecordRepository
-from PrintRecordRepository.SqlitePrintRecordRepository import SqlitePrintRecordRepository
+from DomainObjects.print import Print, PrintStatus, UserPrint
+from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordRepository
+from DomainObjects.Repositories.IPrinterRecordRepository import IPrinterRecordRepository
 
 
 class MahaPrintingService:
     print_record_repository: IPrintRecordRepository
+    printer_record_repository: IPrinterRecordRepository
 
-    def __init__(self):
-        self.print_record_repository = SqlitePrintRecordRepository()
+    def __init__(self, print_record_repository: IPrintRecordRepository, printer_record_repository: IPrinterRecordRepository):
+        self.print_record_repository = print_record_repository
+        self.printer_record_repository = printer_record_repository
+
+    # PRINTS STUFF
 
     def upload_user_print(self, name: str, contact_details: str, user_id: str, file: io.IOBase) -> UserPrint:
         # TODO insert real file upload logic here
@@ -38,3 +42,9 @@ class MahaPrintingService:
 
     def cancel_print(self, print_id: int) -> None:
         self.print_record_repository.change_print_status(print_id, PrintStatus.CANCELED)
+
+    # PRINTERS STUFF
+
+    def add_printer(self, address: str, printer_name: str, apiKey: str):
+
+        pass

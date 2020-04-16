@@ -1,45 +1,28 @@
-import sqlite3
 from datetime import datetime
 from threading import Lock
 
 from typing import List, Optional
 from sqlite3.dbapi2 import Connection, Row
 
-
-from settings import DB_PATH
-from PrintRecordRepository.IPrintRecordRepository import IPrintRecordRepository
-from print import Print, PrintStatus
-
-
-def _synchronized(f):
-    def newFunction(*args, **kw):
-        self = args[0]
-        self._lock.acquire()
-        try:
-            return f(*args, **kw)
-        finally:
-            self._lock.release()
-
-    return newFunction
+from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordRepository
+from DomainObjects.print import Print, PrintStatus
+from Sqlite.utils import synchronized
 
 
 class SqlitePrintRecordRepository(IPrintRecordRepository):
-    connection: Connection
+    _connection: Connection
     _lock = Lock()
 
-    def __init__(self):
-        self._connect_to_database()
+    def __init__(self, connection: Connection):
+        self._connection = connection
         self._create_table()
 
-    def _connect_to_database(self) -> None:
-        self.connection = sqlite3.connect(DB_PATH, check_same_thread=False)
-
     def _create_table(self) -> None:
-        self.connection.execute(CREATE_TABLE_QUERY)
+        self._connection.execute(CREATE_TABLE_QUERY)
 
     # Public Methods
 
-    @_synchronized
+    @synchronized
     def add_print(self,
                   user_id: str,
                   name: str,
@@ -55,15 +38,15 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
         p.status = PrintStatus.IN_QUEUE
         p.timestamp = datetime.now().isoformat()
 
-        cursor = self.connection.execute(INSERT_QUERY,
-                                         (p.timestamp,
-                                          p.userId,
-                                          p.name,
-                                          p.status,
-                                          p.contactDetails,
-                                          p.fileDownloadLink,
-                                          p.filePath))
-        self.connection.commit()
+        cursor = self._connection.execute(INSERT_QUERY,
+                                          (p.timestamp,
+                                           p.userId,
+                                           p.name,
+                                           p.status,
+                                           p.contactDetails,
+                                           p.fileDownloadLink,
+                                           p.filePath))
+        self._connection.commit()
 
         p.id = cursor.lastrowid
 
@@ -71,10 +54,10 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
     def get_prints(self, user_id: Optional[str] = None) -> List[Print]:
         if user_id is None:
-            cursor = self.connection.execute(GET_ALL_PRINTS_QUERY)
+            cursor = self._connection.execute(GET_ALL_PRINTS_QUERY)
         else:
             # Don't remove the trailing comma in (user_id,) - The comma turns this expression into a tuple
-            cursor = self.connection.execute(GET_USER_PRINTS_QUERY, (user_id,))
+            cursor = self._connection.execute(GET_USER_PRINTS_QUERY, (user_id,))
 
         rows = cursor.fetchall()
         prints = _convert_rows_to_prints(rows)
@@ -83,7 +66,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
     def get_print(self, print_id: int) -> Optional[Print]:
         # Don't remove the trailing comma in (print_id,) - The comma turns this expression into a tuple
-        cursor = self.connection.execute(GET_PRINT, (print_id,))
+        cursor = self._connection.execute(GET_PRINT, (print_id,))
 
         row = cursor.fetchone()
 
@@ -92,10 +75,10 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
         return _convert_row_to_print(row)
 
-    @_synchronized
+    @synchronized
     def change_print_status(self, print_id: int, new_status: PrintStatus) -> None:
-        cursor = self.connection.execute(UPDATE_PRINT_STATUS, (new_status, print_id))
-        self.connection.commit()
+        cursor = self._connection.execute(UPDATE_PRINT_STATUS, (new_status, print_id))
+        self._connection.commit()
 
         if (cursor.rowcount != 1):
             raise Exception(

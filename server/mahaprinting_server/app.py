@@ -1,3 +1,4 @@
+import sqlite3
 import random
 import string
 import json
@@ -6,7 +7,9 @@ from typing import Any, Callable
 from flask import Flask, request, make_response, abort
 
 from mahaprinting_service import MahaPrintingService
-from settings import ALLOW_CORS, ADMIN_USER_ID
+from settings import ALLOW_CORS, ADMIN_USER_ID, DB_PATH
+from Sqlite.SqlitePrintRecordRepository import SqlitePrintRecordRepository
+from Sqlite.SqlitePrinterRecordRepository import SqlitePrinterRecordRepository
 
 USER_ID_COOKIE = 'user_id'
 
@@ -17,7 +20,10 @@ if ALLOW_CORS == 'TRUE':
     from flask_cors import CORS
     CORS(app, supports_credentials=True)
 
-mahaprinting_service = MahaPrintingService()
+sqlite_db_connection = sqlite3.connect(DB_PATH, check_same_thread=False)
+print_record_repository = SqlitePrintRecordRepository(sqlite_db_connection)
+printer_record_repository = SqlitePrinterRecordRepository(sqlite_db_connection)
+mahaprinting_service = MahaPrintingService(print_record_repository, printer_record_repository)
 
 
 def get_user_id():
