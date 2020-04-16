@@ -1,3 +1,4 @@
+from Dummies.DummyOctoRest import DummyOctoRest
 from typing import Dict, List
 import io
 # import requests
@@ -66,11 +67,12 @@ class MahaPrintingService:
         return printers_info
 
     def _get_printer_info(self, printer: Printer) -> Dict:
+        # client = OctoRest(printer.address, printer.apiKey)
+        client = DummyOctoRest()
         printer_info = printer.__dict__.copy()
-        client = OctoRest(printer.address, printer.apiKey)
-        printer_info |= client.state()
+        printer_info.update(client.state())
 
         # if printer_info['flags']['printing'] is True:
-        printer_info |= client.job_info()
+        printer_info.update(client.job_info())
 
         return printer_info
