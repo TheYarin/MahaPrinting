@@ -4,7 +4,7 @@ import { createStyles, WithStyles, withStyles } from "@material-ui/core";
 
 import UploadPrintForm from "./UploadPrintForm";
 import MyPrints from "./MyPrints/MyPrints";
-import { ServerConnector } from "../../ServerAPI";
+import { ServerConnector } from "../../ServerAPI/ServerConnector";
 import { observer, Provider } from "mobx-react";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
 

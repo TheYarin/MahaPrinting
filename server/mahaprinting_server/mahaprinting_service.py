@@ -70,9 +70,9 @@ class MahaPrintingService:
         # client = OctoRest(printer.address, printer.apiKey)
         client = DummyOctoRest()
         printer_info = printer.__dict__.copy()
-        printer_info.update(client.state())
+        printer_info['state'] = client.state()
 
         # if printer_info['flags']['printing'] is True:
-        printer_info.update(client.job_info())
+        printer_info['jobInfo'] = client.job_info()
 
         return printer_info

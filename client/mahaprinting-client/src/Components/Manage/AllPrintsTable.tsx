@@ -62,7 +62,7 @@ class AllPrintsTable extends Component<Props> {
         <MaterialTable
           columns={[
             { title: "ID", field: "id" },
-            { title: "Print Name", field: "name" },
+            { title: "Print Name", field: "name", cellStyle: { wordBreak: "break-word" } },
             { title: "Contact Details", field: "contactDetails" },
             { title: "Uploaded at", field: "timestamp" },
           ]}

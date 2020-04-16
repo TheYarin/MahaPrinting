@@ -3,7 +3,7 @@ import { Paper, createStyles, WithStyles, withStyles, Typography, ListItem } fro
 
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-import { UserPrint } from "../../../../ServerAPI";
+import { UserPrint } from "../../../../ServerAPI/UserPrint";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import UserPrintDialog from "./UserPrintDialog";

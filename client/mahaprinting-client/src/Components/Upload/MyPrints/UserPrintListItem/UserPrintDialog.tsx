@@ -14,7 +14,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 import ButtonWithIconOnTop from "../../../Common/ButtonWithIconOnTop";
-import { UserPrint, PrintStatus } from "../../../../ServerAPI";
+import { PrintStatus } from "../../../../ServerAPI/PrintStatus";
+import { UserPrint } from "../../../../ServerAPI/UserPrint";
 import { UserPrintsStore } from "../../../../PrintStores/UserPrintsStore";
 
 const styles = createStyles({

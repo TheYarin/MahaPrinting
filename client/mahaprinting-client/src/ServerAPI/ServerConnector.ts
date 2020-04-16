@@ -1,4 +1,6 @@
-import { observable } from "mobx";
+import { UserPrint } from "./UserPrint";
+import { Print } from "./Print";
+import Printer from "./Printer";
 
 export class ServerConnector {
   private urlBase: string;
@@ -47,71 +49,23 @@ export class ServerConnector {
 
     if (!response.ok) throw new Error("Failed to cancel print, server returned status code " + response.status);
   }
-}
 
-export enum PrintStatus {
-  IN_QUEUE = "IN_QUEUE",
-  PRINTING = "PRINTING",
-  DONE = "DONE",
-  CANCELED = "CANCELED",
-}
+  public async getPrinters(): Promise<Printer[]> {
+    const response = await fetchWithCookies(this.urlBase + "/getPrinters");
 
-export class UserPrint {
-  @observable public id: number;
-  @observable public name: string;
-  @observable public status: PrintStatus;
-  @observable public timestamp: string;
-  @observable public contactDetails: string;
+    if (!response.ok) throw new Error("Failed to get printers, response status was " + response.statusText);
 
-  public constructor({
-    id,
-    name,
-    status,
-    timestamp,
-    contactDetails,
-  }: {
-    id: number;
-    name: string;
-    status: PrintStatus;
-    timestamp: string;
-    contactDetails: string;
-  }) {
-    this.id = id;
-    this.name = name;
-    this.status = status;
-    this.timestamp = timestamp;
-    this.contactDetails = contactDetails;
+    const responseJson = await response.json();
+    const printers = responseJson.map((p: any) => new Printer(p));
+
+    return printers;
   }
-}
 
-export class Print extends UserPrint {
-  @observable userId: string;
-  @observable fileDownloadLink: string;
-  @observable filePath: string;
+  public async addPrinter(printerName: string, address: string, apiKey: string): Promise<Printer> {
+    const response = await postJsonWithCookies(this.urlBase + "/addPrinter", { printerName, address, apiKey });
+    const responseJson = await response.json();
 
-  constructor({
-    id,
-    name,
-    status,
-    timestamp,
-    contactDetails,
-    userId,
-    fileDownloadLink,
-    filePath,
-  }: {
-    id: number;
-    name: string;
-    status: PrintStatus;
-    timestamp: string;
-    contactDetails: string;
-    userId: string;
-    fileDownloadLink: string;
-    filePath: string;
-  }) {
-    super({ id, name, status, timestamp, contactDetails });
-    this.userId = userId;
-    this.fileDownloadLink = fileDownloadLink;
-    this.filePath = filePath;
+    return new Printer(responseJson);
   }
 }
 

@@ -1,5 +1,5 @@
-import PrintsStoreBase from "./MyPrintsStore";
-import { UserPrint } from "../ServerAPI";
+import PrintsStoreBase from "./PrintsStoreBase";
+import { UserPrint } from "../ServerAPI/UserPrint";
 
 export class UserPrintsStore extends PrintsStoreBase<UserPrint> {
   protected async _getPrints(): Promise<UserPrint[]> {

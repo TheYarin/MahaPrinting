@@ -4,11 +4,13 @@ import Typography from "@material-ui/core/Typography";
 import { WithStyles, createStyles, withStyles } from "@material-ui/core";
 
 import { PrintsStore } from "../../PrintStores/PrintsStore";
-import { ServerConnector } from "../../ServerAPI";
+import { ServerConnector } from "../../ServerAPI/ServerConnector";
 import AllPrintsTable from "./AllPrintsTable";
+import PrintersPanel from "./PrintersPanel/PrintersPanel";
+import PrintersStore from "../../Stores/PrintersStore";
 
 const styles = createStyles({
-  root: {},
+  pageContainer: { display: "flex" },
 });
 
 interface Props extends WithStyles<typeof styles> {
@@ -16,16 +18,22 @@ interface Props extends WithStyles<typeof styles> {
 }
 class ManagePage extends React.Component<Props> {
   allPrintsStore: PrintsStore = new PrintsStore(this.props.serverConnector);
+  printersStore: PrintersStore = new PrintersStore(this.props.serverConnector);
 
   async componentDidMount() {
     await this.allPrintsStore.initialize();
+    await this.printersStore.initialize();
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <Typography variant="h2">Manage</Typography>
-        <AllPrintsTable printsStore={this.allPrintsStore} />
+        <div className={classes.pageContainer}>
+          <AllPrintsTable printsStore={this.allPrintsStore} />
+          <PrintersPanel printersStore={this.printersStore} />
+        </div>
       </div>
     );
   }

@@ -4,7 +4,7 @@ import UploadPage from "./Components/Upload/UploadPage";
 import ManagePage from "./Components/Manage/ManagePage";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { ServerConnector } from "./ServerAPI";
+import { ServerConnector } from "./ServerAPI/ServerConnector";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 

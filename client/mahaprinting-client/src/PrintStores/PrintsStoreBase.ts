@@ -1,5 +1,7 @@
 import { observable } from "mobx";
-import { ServerConnector, PrintStatus, UserPrint } from "../ServerAPI";
+import { ServerConnector } from "../ServerAPI/ServerConnector";
+import { PrintStatus } from "../ServerAPI/PrintStatus";
+import { UserPrint } from "../ServerAPI/UserPrint";
 
 export default abstract class PrintsStoreBase<TPrint extends UserPrint> {
   @observable public prints = new Array<TPrint>();
