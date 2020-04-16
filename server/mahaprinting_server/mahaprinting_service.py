@@ -70,7 +70,7 @@ class MahaPrintingService:
         client = OctoRest(printer.address, printer.apiKey)
         printer_info |= client.state()
 
-        if printer_info['flags']['printing'] is True:
-            printer_info |= client.job_info()
+        # if printer_info['flags']['printing'] is True:
+        printer_info |= client.job_info()
 
         return printer_info
