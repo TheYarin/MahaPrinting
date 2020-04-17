@@ -23,6 +23,7 @@ import ViewColumn from "@material-ui/icons/ViewColumn";
 
 import { PrintsStore } from "../../PrintStores/PrintsStore";
 import { observer } from "mobx-react";
+import moment from "moment";
 
 const tableIcons = {
   Add: forwardRef((props, ref: any) => <AddBox {...props} ref={ref} />),
@@ -60,15 +61,27 @@ class AllPrintsTable extends Component<Props> {
     return (
       <div className={classes.root}>
         <MaterialTable
+          title="Uploaded Prints"
           columns={[
-            { title: "ID", field: "id" },
+            { title: "ID", field: "id", width: "auto" },
             { title: "Print Name", field: "name", cellStyle: { wordBreak: "break-word" } },
             { title: "Contact Details", field: "contactDetails" },
-            { title: "Uploaded at", field: "timestamp" },
+            {
+              title: "Uploaded",
+              field: "timestamp",
+              render: (rowData) => moment(rowData.timestamp).fromNow(),
+              width: "auto",
+              // headerStyle: { width: "100px" },
+            },
           ]}
           data={printsStore.prints.map((p) => p)}
           icons={tableIcons as Icons}
-          options={{ pageSize: 100, pageSizeOptions: [20, 50, 100, 200], emptyRowsWhenPaging: false }}
+          options={{
+            pageSize: 100,
+            pageSizeOptions: [20, 50, 100, 200],
+            emptyRowsWhenPaging: false,
+            // headerStyle: { width: "" },
+          }}
           actions={[
             {
               icon: () => <PrintIcon />,

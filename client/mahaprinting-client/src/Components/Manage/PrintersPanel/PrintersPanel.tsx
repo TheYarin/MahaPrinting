@@ -7,14 +7,15 @@ import AddPrinterDialog from "./AddPrinterDialog";
 
 const styles = createStyles({
   root: {
-    width: 300,
-    padding: 10,
+    width: 250,
+    padding: "0 10px",
     boxSizing: "border-box",
+    flex: "0 0 auto", // Required for "width" to work because width works differently inside a flex container
   },
   printersList: {
-    backgroundColor: colors.grey[50],
+    backgroundColor: colors.grey[100],
     padding: "5px 0",
-    boxShadow: "0 0 5px " + colors.grey[50],
+    boxShadow: "0 0 5px " + colors.grey[100],
   },
   titleRow: {
     display: "flex",

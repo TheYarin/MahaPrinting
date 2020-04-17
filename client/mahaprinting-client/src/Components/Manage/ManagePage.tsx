@@ -10,7 +10,7 @@ import PrintersPanel from "./PrintersPanel/PrintersPanel";
 import PrintersStore from "../../Stores/PrintersStore";
 
 const styles = createStyles({
-  pageContainer: { display: "flex" },
+  pageContainer: { display: "flex", padding: 20 },
 });
 
 interface Props extends WithStyles<typeof styles> {

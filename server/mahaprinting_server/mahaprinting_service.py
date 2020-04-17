@@ -1,4 +1,3 @@
-from Dummies.DummyOctoRest import DummyOctoRest
 from typing import Dict, List
 import io
 # import requests
@@ -10,6 +9,8 @@ from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordReposi
 
 from DomainObjects.Repositories.IPrinterRecordRepository import IPrinterRecordRepository
 from DomainObjects.printer import Printer
+
+from Dummies.DummyOctoRest import dummy_octorest_generator
 
 
 class MahaPrintingService:
@@ -68,7 +69,7 @@ class MahaPrintingService:
 
     def _get_printer_info(self, printer: Printer) -> Dict:
         # client = OctoRest(printer.address, printer.apiKey)
-        client = DummyOctoRest()
+        client = dummy_octorest_generator()
         printer_info = printer.__dict__.copy()
         printer_info['state'] = client.state()
 
