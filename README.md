@@ -36,7 +36,7 @@ To start the server, run `flask run`.
 
 <details>
 <summary>
-    Click here for the VSCode ".vscode/launch.json" file content that helps you to debug the server easily
+    Click here for the VSCode ".vscode/launch.json" file content that helps you debug the server easily
 </summary>
 
 ```jsonc
