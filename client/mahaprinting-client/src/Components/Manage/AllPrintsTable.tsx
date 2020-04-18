@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 
-import { createStyles, WithStyles, withStyles } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles, Typography } from "@material-ui/core";
 import PrintIcon from "@material-ui/icons/Print";
 
-import MaterialTable, { Icons } from "material-table";
+import MaterialTable, { Icons, MTableToolbar, MTableHeader } from "material-table";
 import { forwardRef } from "react";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
@@ -24,6 +24,8 @@ import ViewColumn from "@material-ui/icons/ViewColumn";
 import { PrintsStore } from "../../PrintStores/PrintsStore";
 import { observer } from "mobx-react";
 import moment from "moment";
+import * as muiColors from "@material-ui/core/colors";
+//import { PrintStatus } from "../../ServerAPI/PrintStatus";
 
 const tableIcons = {
     Add: forwardRef((props, ref: any) => <AddBox {...props} ref={ref} />),
@@ -46,7 +48,10 @@ const tableIcons = {
 };
 
 const styles = createStyles({
-    root: {},
+    root: { flexBasis: "75%", maxWidth: "calc(100% - 250px)" },
+    customToolbar: { backgroundColor: muiColors.lightBlue[300], color: "white" },
+    printIcon: { color: muiColors.grey[700] },
+    tableHeader: { fontFamily: "monospace", fontWeight: "bold" },
 });
 
 interface Props extends WithStyles<typeof styles> {
@@ -61,21 +66,26 @@ class AllPrintsTable extends Component<Props> {
         return (
             <div className={classes.root}>
                 <MaterialTable
-                    title="Uploaded Prints"
+                    title={
+                        <Typography variant="h5" className={classes.tableHeader}>
+                            Waiting Prints
+                        </Typography>
+                    }
                     columns={[
-                        { title: "#", field: "id", width: "auto" },
-                        { title: "Print Name", field: "name", cellStyle: { wordBreak: "break-word" } },
-                        { title: "Contact Details", field: "contactDetails" },
+                        { title: "#", field: "id", width: "8%", cellStyle: { fontWeight: "bold", fontSize: "103%" } },
+                        { title: "Print Name", field: "name", width: "25%", cellStyle: { wordBreak: "break-word" } },
+                        { title: "Contact Details", field: "contactDetails", width: "25%" },
                         {
                             title: "Uploaded",
                             field: "timestamp",
                             render: (rowData) => moment(rowData.timestamp).fromNow(),
-                            width: "auto",
-                            defaultSort: "desc",
+                            width: "12%",
+                            //defaultSort: "desc",
                             // headerStyle: { width: "100px" },
                         },
+                        { title: "Notes", field: "notes", width: "25%" },
                     ]}
-                    data={printsStore.prints.map((p) => p)}
+                    data={printsStore.prints.map((p) => p)} //printsStore.prints.filter(p => p.status === PrintStatus.UPLOADED).map((p) => p)
                     icons={tableIcons as Icons}
                     options={{
                         pageSize: 5,
@@ -83,15 +93,27 @@ class AllPrintsTable extends Component<Props> {
                         emptyRowsWhenPaging: false,
                         sorting: true,
                         actionsColumnIndex: -1,
+                        headerStyle: {
+                            backgroundColor: "rgba(0,0,0,0.1)",
+                            fontWeight: "bold",
+                            fontSize: "105%",
+                        },
                         // headerStyle: { width: "" },
                     }}
                     actions={[
                         {
-                            icon: () => <PrintIcon />,
+                            icon: () => <PrintIcon className={classes.printIcon} />,
                             tooltip: "Send to 3D printer",
                             onClick: () => false,
                         },
                     ]}
+                    components={{
+                        Toolbar: (props) => (
+                            <div className={classes.customToolbar}>
+                                <MTableToolbar {...props} />
+                            </div>
+                        ),
+                    }}
                 />
             </div>
         );
