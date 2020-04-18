@@ -13,7 +13,7 @@ import { Toolbar, Typography, IconButton, Button } from "@material-ui/core";
 import * as muiColors from "@material-ui/core/colors";
 
 const styles = createStyles({
-    appRoot: { backgroundColor: "whitesmoke", height: "100%", minWidth: 1000 },
+    appRoot: { backgroundColor: "whitesmoke", height: "100%", minHeight: "100vh", minWidth: 1000 },
     appBar: { backgroundColor: muiColors.lightBlue[600], color: "white", padding: "7px 12px" },
     appTitle: { fontWeight: "bold", fontFamily: "monospace", marginLeft: 15 },
     pageRoot: { padding: 20 },

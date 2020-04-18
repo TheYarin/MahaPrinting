@@ -10,7 +10,7 @@ const styles = createStyles({
     root: {
         flexBasis: "calc(25% - 15px)",
         marginLeft: 15,
-        minWidth: 250,
+        minWidth: 280,
         //padding: "0 10px",
         //boxSizing: "border-box",
         //flex: "0 0 auto", // Required for "width" to work because width works differently inside a flex container

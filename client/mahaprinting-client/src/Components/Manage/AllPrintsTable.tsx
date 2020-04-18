@@ -48,7 +48,7 @@ const tableIcons = {
 };
 
 const styles = createStyles({
-    root: { flexBasis: "75%", maxWidth: "calc(100% - 250px)" },
+    root: { flexBasis: "75%", maxWidth: "calc(100% - 280px)" },
     customToolbar: { backgroundColor: muiColors.lightBlue[300], color: "white" },
     printIcon: { color: muiColors.grey[700] },
     tableHeader: { fontFamily: "monospace", fontWeight: "bold" },
