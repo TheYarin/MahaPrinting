@@ -16,8 +16,15 @@
 
 1. Open terminal in the internal client folder
 2. Install required packages by running `npm install`
+3. Fix Material-UI's typing mistake:
+   1. Open the following file: `node_modules\material-table\types\index.d.ts`
+   2. Add the following line to the `Column` interface:
+   ```typescript
+   width?:string | number;
+   ```
 
-To start the client, run `npm start`
+To start the client, run `npm start`.
+To enter admin-only pages, make sure your user_id cookie is the same as ADMIN_USER_ID.
 
 #### Server:
 
@@ -32,7 +39,11 @@ To start the client, run `npm start`
    ```
    2. The ADMIN_USER_ID value should be the same as the user_id cookie in the client of a manager. You can put a temporary value and fill this one later.
 
-To start the server, run `flask run`.
+To start the server, enter the project's venv by running `pipenv shell` and then run `flask run`.
+
+Alternatively, you can use VSCode's debug capabilities:
+
+- copy the following `launch.json` into the `.vscode` folder in your python workspace, and then just hit `F5`!
 
 <details>
 <summary>
