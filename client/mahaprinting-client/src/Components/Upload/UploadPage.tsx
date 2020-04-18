@@ -17,6 +17,11 @@ const styles = createStyles({
     flexDirection: "column",
     maxWidth: "min(600px, 100%)",
   },
+  container: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+  },
 });
 
 interface Props extends WithStyles<typeof styles> {
@@ -36,10 +41,12 @@ class UploadPage extends React.Component<Props> {
 
     return (
       <Provider userPrintStore={this.userPrintsStore}>
-        <div className={classes.root}>
-          <Typography variant="h2">Upload</Typography>
-          <UploadPrintForm userPrintsStore={this.userPrintsStore} />
-          {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+        <div className={classes.container}>
+          <div className={classes.root}>
+            <Typography variant="h2">Upload</Typography>
+            <UploadPrintForm userPrintsStore={this.userPrintsStore} />
+            {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+          </div>
         </div>
       </Provider>
     );
