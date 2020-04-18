@@ -1,6 +1,4 @@
 import React from "react";
-
-import Typography from "@material-ui/core/Typography";
 import { WithStyles, createStyles, withStyles } from "@material-ui/core";
 
 import { PrintsStore } from "../../PrintStores/PrintsStore";
@@ -10,33 +8,30 @@ import PrintersPanel from "./PrintersPanel/PrintersPanel";
 import PrintersStore from "../../Stores/PrintersStore";
 
 const styles = createStyles({
-  pageContainer: { display: "flex", padding: 20 },
+    pageContainer: { display: "flex" },
 });
 
 interface Props extends WithStyles<typeof styles> {
-  serverConnector: ServerConnector;
+    serverConnector: ServerConnector;
 }
 class ManagePage extends React.Component<Props> {
-  allPrintsStore: PrintsStore = new PrintsStore(this.props.serverConnector);
-  printersStore: PrintersStore = new PrintersStore(this.props.serverConnector);
+    allPrintsStore: PrintsStore = new PrintsStore(this.props.serverConnector);
+    printersStore: PrintersStore = new PrintersStore(this.props.serverConnector);
 
-  async componentDidMount() {
-    await this.allPrintsStore.initialize();
-    await this.printersStore.initialize();
-  }
+    async componentDidMount() {
+        await this.allPrintsStore.initialize();
+        await this.printersStore.initialize();
+    }
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div>
-        <Typography variant="h2">Manage</Typography>
-        <div className={classes.pageContainer}>
-          <AllPrintsTable printsStore={this.allPrintsStore} />
-          <PrintersPanel printersStore={this.printersStore} />
-        </div>
-      </div>
-    );
-  }
+    render() {
+        const { classes } = this.props;
+        return (
+            <div className={classes.pageContainer}>
+                <AllPrintsTable printsStore={this.allPrintsStore} />
+                <PrintersPanel printersStore={this.printersStore} />
+            </div>
+        );
+    }
 }
 
 export default withStyles(styles)(ManagePage);
