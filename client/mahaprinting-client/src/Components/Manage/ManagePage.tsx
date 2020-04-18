@@ -8,30 +8,30 @@ import PrintersPanel from "./PrintersPanel/PrintersPanel";
 import PrintersStore from "../../Stores/PrintersStore";
 
 const styles = createStyles({
-    pageContainer: { display: "flex" },
+  pageContainer: { display: "flex" },
 });
 
 interface Props extends WithStyles<typeof styles> {
-    serverConnector: ServerConnector;
+  serverConnector: ServerConnector;
 }
 class ManagePage extends React.Component<Props> {
-    allPrintsStore: PrintsStore = new PrintsStore(this.props.serverConnector);
-    printersStore: PrintersStore = new PrintersStore(this.props.serverConnector);
+  allPrintsStore: PrintsStore = new PrintsStore(this.props.serverConnector);
+  printersStore: PrintersStore = new PrintersStore(this.props.serverConnector);
 
-    async componentDidMount() {
-        await this.allPrintsStore.initialize();
-        await this.printersStore.initialize();
-    }
+  async componentDidMount() {
+    await this.allPrintsStore.initialize();
+    await this.printersStore.initialize();
+  }
 
-    render() {
-        const { classes } = this.props;
-        return (
-            <div className={classes.pageContainer}>
-                <AllPrintsTable printsStore={this.allPrintsStore} />
-                <PrintersPanel printersStore={this.printersStore} />
-            </div>
-        );
-    }
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.pageContainer}>
+        <AllPrintsTable printsStore={this.allPrintsStore} />
+        <PrintersPanel printersStore={this.printersStore} />
+      </div>
+    );
+  }
 }
 
 export default withStyles(styles)(ManagePage);
