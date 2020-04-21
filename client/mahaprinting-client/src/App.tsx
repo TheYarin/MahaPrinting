@@ -3,13 +3,13 @@ import "./App.css";
 import UploadPage from "./Components/Upload/UploadPage";
 import ManagePage from "./Components/Manage/ManagePage";
 
-import { Switch, Route, withRouter, RouteComponentProps } from "react-router-dom";
+import { Switch, Route, withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 import { ServerConnector } from "./ServerAPI/ServerConnector";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
 import { WithStyles, createStyles, withStyles } from "@material-ui/core";
-import { Toolbar, Typography, IconButton, Button } from "@material-ui/core";
+import { Toolbar, Typography } from "@material-ui/core";
 import * as muiColors from "@material-ui/core/colors";
 
 const styles = createStyles({
@@ -53,12 +53,13 @@ class App extends Component<Props> {
         </Toolbar>
         <div className={classes.pageRoot}>
           <Switch>
+            <Route exact path="/">
+              <UploadPage serverConnector={castServerConnector} />
+            </Route>
             <Route path="/manage">
               <ManagePage serverConnector={castServerConnector} />
             </Route>
-            <Route path="/">
-              <UploadPage serverConnector={castServerConnector} />
-            </Route>
+            <Redirect to="/" />
           </Switch>
         </div>
       </div>
