@@ -48,7 +48,7 @@ const tableIcons = {
 };
 
 const styles = createStyles({
-    root: { flexBasis: "75%", maxWidth: "calc(100% - 280px)" },
+    root: { flexBasis: "80%", maxWidth: "calc(100% - 280px)" },
     customToolbar: { backgroundColor: muiColors.lightBlue[300], color: "white" },
     printIcon: { color: muiColors.grey[700] },
     tableHeader: { fontFamily: "monospace", fontWeight: "bold" },
@@ -94,7 +94,7 @@ class AllPrintsTable extends Component<Props> {
                         sorting: true,
                         actionsColumnIndex: -1,
                         headerStyle: {
-                            backgroundColor: "rgba(0,0,0,0.1)",
+                            backgroundColor: muiColors.grey[300],
                             fontWeight: "bold",
                             fontSize: "105%",
                         },

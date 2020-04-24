@@ -8,7 +8,7 @@ import * as muiColors from "@material-ui/core/colors";
 
 const styles = createStyles({
     root: {
-        flexBasis: "calc(25% - 15px)",
+        flexBasis: "calc(20% - 15px)",
         marginLeft: 15,
         minWidth: 280,
         //padding: "0 10px",
@@ -16,9 +16,7 @@ const styles = createStyles({
         //flex: "0 0 auto", // Required for "width" to work because width works differently inside a flex container
     },
     printersList: {
-        backgroundColor: colors.grey[100],
-        padding: "5px 0",
-        boxShadow: "0 0 5px " + colors.grey[100],
+        backgroundColor: colors.grey[200],
     },
     titleRow: {
         display: "flex",
@@ -31,7 +29,10 @@ const styles = createStyles({
     title: {
         fontFamily: "monospace",
         fontWeight: "bold",
-        marginLeft: 15,
+        paddingLeft: 15,
+        height: 64,
+        display: "flex",
+        alignItems: "center",
     },
     noPrintersMessage: {
         textAlign: "center",
@@ -48,19 +49,15 @@ class PrintersPanel extends Component<Props> {
     render() {
         const { classes, printersStore } = this.props;
 
-        const printerPanels = printersStore.printers.map((p) => <PrinterPanel key={p.id} printer={p} />);
-
         return (
             <div className={classes.root}>
                 <div className={classes.titleRow}>
-                    <Typography variant="h5" className={classes.title}>
-                        Printers
-                    </Typography>
+                    <Typography variant="h5" className={classes.title} children="Printers" />
                     <AddPrinterDialog printersStore={printersStore} />
                 </div>
                 <div className={classes.printersList}>
-                    {printerPanels.length > 0 ? (
-                        printerPanels
+                    {printersStore.printers.length > 0 ? (
+                        printersStore.printers.map((p) => <PrinterPanel key={p.id} printer={p} />)
                     ) : (
                         <Typography className={classes.noPrintersMessage} color="textSecondary" variant="h6">
                             No printers yet, you should add one!

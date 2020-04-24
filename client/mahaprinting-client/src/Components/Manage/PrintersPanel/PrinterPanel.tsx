@@ -1,50 +1,75 @@
 import React, { Component } from "react";
-import { createStyles, WithStyles, withStyles, Paper, Typography, LinearProgress, lighten } from "@material-ui/core";
-import { purple, red, green, grey } from "@material-ui/core/colors";
+import {
+    createStyles,
+    WithStyles,
+    withStyles,
+    Card,
+    Typography,
+    LinearProgress,
+    lighten,
+    Tooltip,
+} from "@material-ui/core";
 import moment from "moment";
 import Printer from "../../../ServerAPI/Printer";
-import { spaceChildren, flexColCentered } from "../../../JssUtils";
+import * as muiColors from "@material-ui/core/colors";
 
 const BorderLinearProgress = withStyles({
     root: {
         borderRadius: 20,
         height: 10,
-        backgroundColor: lighten(purple[200], 0.8),
+        backgroundColor: lighten(muiColors.purple[200], 0.8),
         width: "100%",
+        marginLeft: 10,
     },
     bar: {
         borderRadius: 20,
-        backgroundColor: purple[200],
+        backgroundColor: muiColors.purple[200],
     },
 })(LinearProgress);
 
 const styles = createStyles({
     root: {
-        ...flexColCentered,
-        margin: 5,
-        padding: 10,
-    },
-    printStatusOperational: {
-        color: green["A400"],
-    },
-    printStatusPrinting: { color: purple[300] },
-    printStatusBad: { color: lighten(red[400], 0.1) },
-    printStatusDefault: {
-        /* color: red[400] */
+        marginBottom: 2,
+        padding: 12,
+        borderRadius: 0,
     },
     currentPrintProgressSection: {
-        ...flexColCentered,
-        width: "100%",
-        padding: 8,
-        boxSizing: "border-box",
-        ...spaceChildren("vertically", 10),
+        margin: 2,
     },
     printerName: {
-        textAlign: "center",
-        color: grey[600],
+        backgroundColor: muiColors.grey[300],
+        //color: "white",
+        borderRadius: 5,
+        border: "1px solid " + muiColors.grey[400],
+        padding: "1px 7px",
+        fontWeight: "bold",
+        wordBreak: "break-word",
+        //whiteSpace: "nowrap",
+        //overflow: "hidden",
+        //textOverflow: "ellipsis",
+        width: "fit-content",
     },
-    timeLeft: {
-        ...flexColCentered,
+    status: {
+        display: "flex",
+        marginTop: 8,
+        marginLeft: 2,
+        //fontWeight: "bold"
+    },
+    printStatusText: {
+        marginLeft: 5,
+        fontWeight: "bold",
+        fontStyle: "italic",
+    },
+    printProgress: {
+        display: "flex",
+        alignItems: "center",
+    },
+    percentFinished: {
+        marginLeft: 5,
+        fontWeight: "bold",
+    },
+    printTimeLeft: {
+        marginLeft: 2,
     },
 });
 
@@ -58,12 +83,12 @@ class PrinterPanel extends Component<Props> {
         const { name } = printer;
         console.log("PrinterPanel -> render -> printer", printer);
         const stateText = printer.state["text"]; // One of the following values:  "Operational", "Printing", "Pausing", "Paused", "Cancelling", "Error" or "Offline"
-        let stateColorClass;
+        let printStatusTextColor;
 
         if (["Pausing", "Paused", "Cancelling", "Error", "Offline"].includes(stateText))
-            stateColorClass = classes.printStatusBad;
-        if ("Operational" === stateText) stateColorClass = classes.printStatusOperational;
-        if ("Printing" === stateText) stateColorClass = classes.printStatusPrinting;
+            printStatusTextColor = lighten(muiColors.red[400], 0.1);
+        if ("Operational" === stateText) printStatusTextColor = muiColors.green["A700"];
+        if ("Printing" === stateText) printStatusTextColor = muiColors.purple[300];
 
         let currentPrintProgressInfo;
 
@@ -75,27 +100,48 @@ class PrinterPanel extends Component<Props> {
 
             currentPrintProgressInfo = (
                 <div className={classes.currentPrintProgressSection}>
-                    <BorderLinearProgress variant="determinate" value={percentCompleted} color="primary" />
-                    <div className={classes.timeLeft}>
-                        <Typography variant="subtitle2">Estimated time left: </Typography>
-                        <Typography variant="subtitle2">
-                            <b>{moment.duration({ seconds: secondsLeftEstimation }).humanize()}</b>
-                        </Typography>
-                    </div>
+                    <Typography variant="subtitle1" className={classes.printProgress}>
+                        Progress:{" "}
+                        <div
+                            className={classes.percentFinished}
+                            children={`${Math.round(percentCompleted)}% Finished`}
+                        />
+                        {/* <Tooltip title={`${Math.round(percentCompleted)}% Finished`} placement="top">
+                            <BorderLinearProgress variant="determinate" value={percentCompleted} color="primary" />
+                        </Tooltip> */}
+                    </Typography>
+                    <Typography variant="subtitle1">
+                        Estimated Time Left: <b>{moment.duration({ seconds: secondsLeftEstimation }).humanize()}</b>
+                    </Typography>
                 </div>
             );
         }
 
         return (
-            <Paper className={classes.root}>
-                <Typography className={classes.printerName} variant="h5">
+            <Card className={classes.root}>
+                <Typography className={classes.printerName} variant="subtitle1">
                     {name}
                 </Typography>
-                <Typography className={stateColorClass} variant="h6">
-                    {stateText}
+                <Typography variant="subtitle1" className={classes.status}>
+                    Status:{" "}
+                    <div
+                        style={{ color: printStatusTextColor }}
+                        className={classes.printStatusText}
+                        children={
+                            stateText === "Printing"
+                                ? `Printing (${Math.round(printer.jobInfo.progress.completion * 100)}% Finished)`
+                                : stateText
+                        }
+                    />
                 </Typography>
-                {currentPrintProgressInfo}
-            </Paper>
+                {stateText === "Printing" && (
+                    <Typography variant="subtitle1" className={classes.printTimeLeft}>
+                        Estimated Time Left:{" "}
+                        <b>{moment.duration({ seconds: printer.jobInfo.progress.printTimeLeft }).humanize()}</b>
+                    </Typography>
+                )}
+                {/* {currentPrintProgressInfo} */}
+            </Card>
         );
     }
 }
