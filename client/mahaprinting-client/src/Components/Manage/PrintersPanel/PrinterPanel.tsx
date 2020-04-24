@@ -15,15 +15,18 @@ import * as muiColors from "@material-ui/core/colors";
 
 const BorderLinearProgress = withStyles({
     root: {
-        borderRadius: 20,
-        height: 10,
-        backgroundColor: lighten(muiColors.purple[200], 0.8),
+        borderRadius: 3,
+        height: 7,
+        backgroundColor: lighten(muiColors.purple[300], 0.8),
         width: "100%",
-        marginLeft: 10,
     },
     bar: {
-        borderRadius: 20,
+        borderRadius: 3,
         backgroundColor: muiColors.purple[200],
+    },
+    dashedColorPrimary: {
+        backgroundImage: "none",
+        backgroundColor: muiColors.lightBlue[100],
     },
 })(LinearProgress);
 
@@ -41,7 +44,7 @@ const styles = createStyles({
         //color: "white",
         borderRadius: 5,
         border: "1px solid " + muiColors.grey[400],
-        padding: "1px 7px",
+        padding: "0px 7px",
         fontWeight: "bold",
         wordBreak: "break-word",
         //whiteSpace: "nowrap",
@@ -56,7 +59,6 @@ const styles = createStyles({
         //fontWeight: "bold"
     },
     printStatusText: {
-        marginLeft: 5,
         fontWeight: "bold",
         fontStyle: "italic",
     },
@@ -69,7 +71,8 @@ const styles = createStyles({
         fontWeight: "bold",
     },
     printTimeLeft: {
-        marginLeft: 2,
+        textAlign: "center",
+        marginTop: 10,
     },
 });
 
@@ -123,22 +126,37 @@ class PrinterPanel extends Component<Props> {
                     {name}
                 </Typography>
                 <Typography variant="subtitle1" className={classes.status}>
-                    Status:{" "}
+                    {/* Status:{" "} */}
                     <div
                         style={{ color: printStatusTextColor }}
                         className={classes.printStatusText}
                         children={
                             stateText === "Printing"
-                                ? `Printing (${Math.round(printer.jobInfo.progress.completion * 100)}% Finished)`
+                                ? "Printing..." //`Printing (${Math.round(printer.jobInfo.progress.completion * 100)}% Finished)`
                                 : stateText
                         }
                     />
                 </Typography>
                 {stateText === "Printing" && (
-                    <Typography variant="subtitle1" className={classes.printTimeLeft}>
+                    <div>
+                        <BorderLinearProgress
+                            variant="buffer"
+                            value={printer.jobInfo.progress.completion * 100}
+                            valueBuffer={printer.jobInfo.progress.completion * 100 + 10}
+                            color="primary"
+                        />
+                        <Typography variant="subtitle2" className={classes.printTimeLeft}>
+                            {`${Math.round(printer.jobInfo.progress.completion * 100)}% Finished (`}
+                            <b>
+                                {moment.duration({ seconds: printer.jobInfo.progress.printTimeLeft }).humanize()} left
+                            </b>
+                            )
+                        </Typography>
+                        {/* <Typography variant="subtitle1" className={classes.printTimeLeft}>
                         Estimated Time Left:{" "}
                         <b>{moment.duration({ seconds: printer.jobInfo.progress.printTimeLeft }).humanize()}</b>
-                    </Typography>
+                    </Typography> */}
+                    </div>
                 )}
                 {/* {currentPrintProgressInfo} */}
             </Card>
