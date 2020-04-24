@@ -5,6 +5,7 @@ import PrintersStore from "../../../Stores/PrintersStore";
 import { observer } from "mobx-react";
 import AddPrinterDialog from "./AddPrinterDialog";
 import TitleBar from "../../Common/TitleBar";
+import InfoNotFound from "../../Common/InfoNotFound/InfoNotFound";
 import { spaceChildren } from "../../../JssUtils";
 import * as muiColors from "@material-ui/core/colors";
 
@@ -61,9 +62,7 @@ class PrintersPanel extends Component<Props> {
                     {printersStore.printers.length > 0 ? (
                         printersStore.printers.map((p) => <PrinterPanel key={p.id} printer={p} />)
                     ) : (
-                        <Typography className={classes.noPrintersMessage} color="textSecondary" variant="h6">
-                            No printers yet, you should add one!
-                        </Typography>
+                        <InfoNotFound text="No printers found - you should add one!" />
                     )}
                 </div>
             </div>

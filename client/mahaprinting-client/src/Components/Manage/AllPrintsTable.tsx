@@ -72,7 +72,12 @@ class AllPrintsTable extends Component<Props> {
                         </Typography>
                     }
                     columns={[
-                        { title: "#", field: "id", width: "8%", cellStyle: { fontWeight: "bold", fontSize: "103%" } },
+                        {
+                            title: "#",
+                            field: "id",
+                            width: "8%",
+                            cellStyle: { fontWeight: "bold", fontSize: "115%", fontFamily: "monospace" },
+                        },
                         { title: "Print Name", field: "name", width: "25%", cellStyle: { wordBreak: "break-word" } },
                         { title: "Contact Details", field: "contactDetails", width: "25%" },
                         {
@@ -96,7 +101,8 @@ class AllPrintsTable extends Component<Props> {
                         headerStyle: {
                             backgroundColor: muiColors.grey[300],
                             fontWeight: "bold",
-                            fontSize: "105%",
+                            fontSize: "130%",
+                            fontFamily: "monospace",
                         },
                         // headerStyle: { width: "" },
                     }}

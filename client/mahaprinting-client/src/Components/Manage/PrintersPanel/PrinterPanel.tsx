@@ -43,7 +43,7 @@ const styles = createStyles({
         backgroundColor: muiColors.grey[300],
         //color: "white",
         borderRadius: 5,
-        border: "1px solid " + muiColors.grey[400],
+        //border: "1px solid " + muiColors.grey[400],
         padding: "0px 7px",
         fontWeight: "bold",
         wordBreak: "break-word",
@@ -51,6 +51,11 @@ const styles = createStyles({
         //overflow: "hidden",
         //textOverflow: "ellipsis",
         width: "fit-content",
+        fontFamily: "monospace",
+        fontSize: "110%",
+        textTransform: "uppercase",
+        boxShadow:
+            "0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
     },
     status: {
         display: "flex",
