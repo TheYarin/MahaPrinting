@@ -1,5 +1,4 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
 import { createStyles, WithStyles, withStyles } from "@material-ui/core";
 
 import UploadPrintForm from "./UploadPrintForm";
@@ -7,15 +6,19 @@ import MyPrints from "./MyPrints/MyPrints";
 import { ServerConnector } from "../../ServerAPI/ServerConnector";
 import { observer, Provider } from "mobx-react";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
+import { flexCol, spaceChildren } from "../../JssUtils";
+import TitleBar from "../Common/TitleBar";
 
 const styles = createStyles({
   root: {
-    "& > *:not(:last-child)": {
-      marginBottom: 20,
-    },
-    display: "flex",
-    flexDirection: "column",
+    ...spaceChildren("vertically", 20),
+    ...flexCol,
     maxWidth: "min(600px, 100%)",
+  },
+  container: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
   },
 });
 
@@ -36,10 +39,12 @@ class UploadPage extends React.Component<Props> {
 
     return (
       <Provider userPrintStore={this.userPrintsStore}>
-        <div className={classes.root}>
-          <Typography variant="h2">Upload</Typography>
-          <UploadPrintForm userPrintsStore={this.userPrintsStore} />
-          {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+        <div className={classes.container}>
+          <div className={classes.root}>
+            <TitleBar title="Upload a new print" />
+            <UploadPrintForm userPrintsStore={this.userPrintsStore} />
+            {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+          </div>
         </div>
       </Provider>
     );

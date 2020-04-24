@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { createStyles, WithStyles, withStyles, colors, Typography } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles, Typography } from "@material-ui/core";
 import PrinterPanel from "./PrinterPanel";
 import PrintersStore from "../../../Stores/PrintersStore";
 import { observer } from "mobx-react";
 import AddPrinterDialog from "./AddPrinterDialog";
+import TitleBar from "../../Common/TitleBar";
+import { spaceChildren } from "../../../JssUtils";
 import * as muiColors from "@material-ui/core/colors";
 
 const styles = createStyles({
@@ -16,7 +18,7 @@ const styles = createStyles({
         //flex: "0 0 auto", // Required for "width" to work because width works differently inside a flex container
     },
     printersList: {
-        backgroundColor: colors.grey[200],
+        backgroundColor: muiColors.grey[200],
     },
     titleRow: {
         display: "flex",

@@ -2,7 +2,7 @@ import React, { FormEvent } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
-import { TextField, WithStyles, createStyles, withStyles, Button } from "@material-ui/core";
+import { TextField, WithStyles, createStyles, withStyles, Button, TextFieldProps } from "@material-ui/core";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
 
 const styles = createStyles({
@@ -54,17 +54,16 @@ class UploadPrintForm extends React.Component<Props> {
 
     return (
       <form className={classes.root} autoComplete="off" onSubmit={this.submitPrint}>
-        <TextField
+        <CustomizedTextField
           name="name"
           label="Print name"
-          variant="outlined"
           value={this.name || ""}
           onChange={(event) => (this.name = event.target.value)}
         />
-        <TextField
+        <CustomizedTextField
           name="contactDetails"
           label="Contact Details"
-          variant="outlined"
+          placeholder="Your name, phone number..."
           value={this.contactDetails || ""}
           onChange={(event) => (this.contactDetails = event.target.value)}
         />
@@ -78,3 +77,7 @@ class UploadPrintForm extends React.Component<Props> {
 }
 
 export default withStyles(styles)(UploadPrintForm);
+
+const CustomizedTextField = withStyles({ root: { backgroundColor: "white" } })((props: TextFieldProps) => (
+  <TextField variant="outlined" {...props} />
+));
