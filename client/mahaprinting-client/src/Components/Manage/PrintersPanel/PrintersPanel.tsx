@@ -10,7 +10,7 @@ import * as muiColors from "@material-ui/core/colors";
 
 const styles = createStyles({
     root: {
-        flexBasis: "calc(20% - 15px)",
+        flexBasis: "calc(17% - 15px)",
         marginLeft: 15,
         minWidth: 280,
         //padding: "0 10px",

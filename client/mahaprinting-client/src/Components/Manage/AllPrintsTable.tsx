@@ -48,7 +48,7 @@ const tableIcons = {
 };
 
 const styles = createStyles({
-    root: { flexBasis: "80%", maxWidth: "calc(100% - 280px)" },
+    root: { flexBasis: "83%", maxWidth: "calc(100% - 280px)" },
     customToolbar: { backgroundColor: muiColors.lightBlue[300], color: "white" },
     printIcon: { color: muiColors.grey[700] },
     tableHeader: { fontFamily: "monospace", fontWeight: "bold" },
@@ -88,8 +88,8 @@ class AllPrintsTable extends Component<Props> {
                     data={printsStore.prints.map((p) => p)} //printsStore.prints.filter(p => p.status === PrintStatus.UPLOADED).map((p) => p)
                     icons={tableIcons as Icons}
                     options={{
-            pageSize: 10,
-            pageSizeOptions: [10, 30, 50, 100],
+                        pageSize: 10,
+                        pageSizeOptions: [10, 30, 50, 100],
                         emptyRowsWhenPaging: false,
                         sorting: true,
                         actionsColumnIndex: -1,
