@@ -12,9 +12,7 @@ const styles = createStyles({
         flexBasis: "calc(17% - 15px)",
         marginLeft: 15,
         minWidth: 280,
-        //padding: "0 10px",
-        //boxSizing: "border-box",
-        //flex: "0 0 auto", // Required for "width" to work because width works differently inside a flex container
+        marginTop: 15,
     },
     printersList: {
         backgroundColor: muiColors.grey[200],
