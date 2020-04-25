@@ -3,21 +3,20 @@ import {
     createStyles,
     WithStyles,
     withStyles,
-    Dialog,
-    DialogTitle,
     IconButton,
-    DialogActions,
     Button,
-    DialogContent,
     TextField,
+    DialogContent,
+    DialogActions,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import PrintersStore from "../../../Stores/PrintersStore";
+import * as muiColors from "@material-ui/core/colors";
+import Dialog from "../../Common/Dialog";
 
 const styles = createStyles({
-    root: {},
     formFields: {
         display: "flex",
         flexDirection: "column",
@@ -29,6 +28,13 @@ const styles = createStyles({
         color: "white",
         padding: 3,
         marginRight: 10,
+    },
+    title: {
+        backgroundColor: muiColors.lightBlue[400],
+        color: "white",
+        fontFamily: "monospace",
+        fontWeight: "bold",
+        fontSize: "150%",
     },
 });
 
@@ -66,8 +72,7 @@ class AddPrinterDialog extends Component<Props> {
                 <IconButton onClick={() => (this.dialogOpen = true)} className={classes.addButton}>
                     <AddIcon />
                 </IconButton>
-                <Dialog className={classes.root} open={this.dialogOpen} onClose={() => (this.dialogOpen = false)}>
-                    <DialogTitle>Add a printer</DialogTitle>
+                <Dialog open={this.dialogOpen} onClose={() => (this.dialogOpen = false)} title="Add New Printer">
                     <form onSubmit={this.submit}>
                         <DialogContent className={classes.formFields}>
                             <TextField
