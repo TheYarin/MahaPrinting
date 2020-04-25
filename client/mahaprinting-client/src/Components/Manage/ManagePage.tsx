@@ -9,7 +9,7 @@ import PrintersStore from "../../Stores/PrintersStore";
 import WaitingPrintsTable from "./PrintTables/WaitingPrintsTable";
 
 const styles = createStyles({
-    pageContainer: { display: "flex", minWidth: 1000, padding: 20, paddingTop: 5 },
+    pageContainer: { display: "flex", minWidth: 1150, padding: 20, paddingTop: 5 },
     tableContainer: { flexBasis: "83%", maxWidth: "calc(100% - 280px)" },
 });
 

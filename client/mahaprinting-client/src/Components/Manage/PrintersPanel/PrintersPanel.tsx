@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { createStyles, WithStyles, withStyles, Typography } from "@material-ui/core";
-import PrinterPanel from "./PrinterPanel";
+import PrinterPanel from "./PrinterCard";
 import PrintersStore from "../../../Stores/PrintersStore";
 import { observer } from "mobx-react";
 import AddPrinterDialog from "./AddPrinterDialog";
