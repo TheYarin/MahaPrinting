@@ -66,7 +66,7 @@ class StyledMaterialTable extends Component<Props> {
         cellStyle: { fontWeight: "bold", fontSize: "115%", fontFamily: "monospace" },
       } as Column<any>,
       { title: "Print Name", field: "name", width: "25%", cellStyle: { wordBreak: "break-word" } } as Column<any>,
-      ...columns.filter((c) => !["id", "name"].includes(c.field as string)),
+      ...columns.filter((c) => !(["id", "name"] as Array<any>).includes(c.field)),
     ];
 
     return (
