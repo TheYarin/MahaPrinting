@@ -1,14 +1,5 @@
 import React, { Component } from "react";
-import {
-    createStyles,
-    WithStyles,
-    withStyles,
-    Card,
-    Typography,
-    LinearProgress,
-    lighten,
-    Tooltip,
-} from "@material-ui/core";
+import { createStyles, WithStyles, withStyles, Card, Typography, LinearProgress, lighten } from "@material-ui/core";
 import moment from "moment";
 import Printer from "../../../ServerAPI/Printer";
 import * as muiColors from "@material-ui/core/colors";
@@ -98,33 +89,6 @@ class PrinterPanel extends Component<Props> {
         if ("Operational" === stateText) printStatusTextColor = muiColors.green["A700"];
         if ("Printing" === stateText) printStatusTextColor = muiColors.purple[300];
 
-        let currentPrintProgressInfo;
-
-        if (printer.state.flags.printing) {
-            const { completion, printTimeLeft } = printer.jobInfo.progress;
-
-            const percentCompleted = completion * 100;
-            const secondsLeftEstimation = printTimeLeft;
-
-            currentPrintProgressInfo = (
-                <div className={classes.currentPrintProgressSection}>
-                    <Typography variant="subtitle1" className={classes.printProgress}>
-                        Progress:{" "}
-                        <div
-                            className={classes.percentFinished}
-                            children={`${Math.round(percentCompleted)}% Finished`}
-                        />
-                        {/* <Tooltip title={`${Math.round(percentCompleted)}% Finished`} placement="top">
-                            <BorderLinearProgress variant="determinate" value={percentCompleted} color="primary" />
-                        </Tooltip> */}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                        Estimated Time Left: <b>{moment.duration({ seconds: secondsLeftEstimation }).humanize()}</b>
-                    </Typography>
-                </div>
-            );
-        }
-
         return (
             <Card className={classes.root}>
                 <Typography className={classes.printerName} variant="subtitle1">
@@ -137,7 +101,7 @@ class PrinterPanel extends Component<Props> {
                         className={classes.printStatusText}
                         children={
                             stateText === "Printing"
-                                ? "Printing..." //`Printing (${Math.round(printer.jobInfo.progress.completion * 100)}% Finished)`
+                                ? "Printing..." //TODO: Add the name of what's being printed?
                                 : stateText
                         }
                     />

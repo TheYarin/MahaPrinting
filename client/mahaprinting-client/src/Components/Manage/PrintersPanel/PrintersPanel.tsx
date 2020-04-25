@@ -4,9 +4,7 @@ import PrinterPanel from "./PrinterPanel";
 import PrintersStore from "../../../Stores/PrintersStore";
 import { observer } from "mobx-react";
 import AddPrinterDialog from "./AddPrinterDialog";
-import TitleBar from "../../Common/TitleBar";
 import InfoNotFound from "../../Common/InfoNotFound/InfoNotFound";
-import { spaceChildren } from "../../../JssUtils";
 import * as muiColors from "@material-ui/core/colors";
 
 const styles = createStyles({

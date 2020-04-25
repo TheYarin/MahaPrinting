@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { createStyles, WithStyles, withStyles, Typography } from "@material-ui/core";
 import PrintIcon from "@material-ui/icons/Print";
 
-import MaterialTable, { Icons, MTableToolbar, MTableHeader } from "material-table";
+import MaterialTable, { Icons, MTableToolbar } from "material-table";
 import { forwardRef } from "react";
 import AddBox from "@material-ui/icons/AddBox";
 import ArrowDownward from "@material-ui/icons/ArrowDownward";
@@ -90,7 +90,7 @@ class AllPrintsTable extends Component<Props> {
                         },
                         { title: "Notes", field: "notes", width: "25%" },
                     ]}
-                    data={printsStore.prints.map((p) => p)} //printsStore.prints.filter(p => p.status === PrintStatus.UPLOADED).map((p) => p)
+                    data={printsStore.prints.map((p) => p)} //TODO: printsStore.prints.filter(p => p.status === PrintStatus.UPLOADED).map((p) => p)
                     icons={tableIcons as Icons}
                     options={{
                         pageSize: 10,
