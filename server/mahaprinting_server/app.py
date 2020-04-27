@@ -113,7 +113,7 @@ def cancel_print():
 @admin_only
 def add_printer():
     data = request.json
-    printer_info = mahaprinting_service.add_printer(data['printerName'], data['address'], data['apiKey'])
+    printer_info = mahaprinting_service.add_printer(data['printerName'], data['url'], data['apiKey'])
 
     return json.dumps(printer_info)
 

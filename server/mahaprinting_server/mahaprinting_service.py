@@ -68,7 +68,7 @@ class MahaPrintingService:
         return printers_info
 
     def _get_printer_info(self, printer: Printer) -> Dict:
-        # client = OctoRest(printer.address, printer.apiKey)
+        # client = OctoRest(printer.url, printer.apiKey)
         client = dummy_octorest_generator()
         printer_info = printer.__dict__.copy()
         printer_info['state'] = client.state()

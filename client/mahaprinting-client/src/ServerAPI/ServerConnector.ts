@@ -61,8 +61,8 @@ export class ServerConnector {
     return printers;
   }
 
-  public async addPrinter(printerName: string, address: string, apiKey: string): Promise<Printer> {
-    const response = await postJsonWithCookies(this.urlBase + "/addPrinter", { printerName, address, apiKey });
+  public async addPrinter(printerName: string, url: string, apiKey: string): Promise<Printer> {
+    const response = await postJsonWithCookies(this.urlBase + "/addPrinter", { printerName, url, apiKey });
     const responseJson = await response.json();
 
     return new Printer(responseJson);

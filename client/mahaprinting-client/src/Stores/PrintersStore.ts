@@ -16,8 +16,8 @@ export default class PrintersStore {
     this.printers.push(...printersFromTheServer);
   }
 
-  public async addPrinter(printerName: string, address: string, apiKey: string): Promise<void> {
-    const printer = await this.serverConnector.addPrinter(printerName, address, apiKey);
+  public async addPrinter(printerName: string, url: string, apiKey: string): Promise<void> {
+    const printer = await this.serverConnector.addPrinter(printerName, url, apiKey);
     this.printers.push(printer);
   }
 }
