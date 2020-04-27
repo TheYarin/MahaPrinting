@@ -22,7 +22,7 @@ To start the client, run `npm start`
 #### Server:
 
 1. Open terminal in the internal server folder
-2. Install required packages by running `pipenv install`
+2. Install required packages by running `pipenv install --dev`
 3. Configure environment variables:
    1. Create a file named `.env` in the server folder with the following content:
    ```env
@@ -32,7 +32,14 @@ To start the client, run `npm start`
    ```
    2. The ADMIN_USER_ID value should be the same as the user_id cookie in the client of a manager. You can put a temporary value and fill this one later.
 
-To start the server, run `flask run`.
+To start the server, run `flask run` in a shell inside the venv. (To open a shell inside the venv, run `pipenv shell`)
+
+> On windows, pipenv sometimes screws up adding the venv to the PATH on git bash. you can fix this by editing the "activate" script (just "activate", no file extension) in the bin folder of the venv and changing the path assigned to `VIRTUAL_ENV` to be in a format compatible with git bash.  
+> To easily open the `activate` script for editing, run the following command in git bash from the server project directory:
+>
+> ```bash
+> code "$(pipenv --venv)/Scripts/activate"
+> ```
 
 <details>
 <summary>
