@@ -3,7 +3,7 @@ import { observable } from "mobx";
 export default class Printer {
   @observable id: number;
   @observable name: string;
-  @observable address: string;
+  @observable url: string;
   @observable apiKey: string;
   @observable state: { [key: string]: any };
   @observable jobInfo: { [key: string]: any };
@@ -11,21 +11,21 @@ export default class Printer {
   constructor({
     id,
     name,
-    address,
+    url,
     apiKey,
     state,
     jobInfo,
   }: {
     id: number;
     name: string;
-    address: string;
+    url: string;
     apiKey: string;
     state: { [key: string]: any };
     jobInfo: { [key: string]: any };
   }) {
     this.id = id;
     this.name = name;
-    this.address = address;
+    this.url = url;
     this.apiKey = apiKey;
     this.state = state;
     this.jobInfo = jobInfo;
