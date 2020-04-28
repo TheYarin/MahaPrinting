@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { createStyles, WithStyles, withStyles, Typography } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles } from "@material-ui/core";
 import PrinterPanel from "./PrinterCard";
 import PrintersStore from "../../../Stores/PrintersStore";
 import { observer } from "mobx-react";
 import AddPrinterDialog from "./AddPrinterDialog";
 import InfoNotFound from "../../Common/InfoNotFound/InfoNotFound";
 import * as muiColors from "@material-ui/core/colors";
+import TitleBar from "../../Common/TitleBar";
 
 const styles = createStyles({
     root: {
@@ -16,14 +17,6 @@ const styles = createStyles({
     },
     printersList: {
         backgroundColor: muiColors.grey[200],
-    },
-    titleRow: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: "100%",
-        backgroundColor: muiColors.lightBlue[300],
-        color: "white",
     },
     title: {
         fontFamily: "monospace",
@@ -50,10 +43,7 @@ class PrintersPanel extends Component<Props> {
 
         return (
             <div className={classes.root}>
-                <div className={classes.titleRow}>
-                    <Typography variant="h5" className={classes.title} children="Printers" />
-                    <AddPrinterDialog printersStore={printersStore} />
-                </div>
+                <TitleBar title={"Printers"} iconSection={<AddPrinterDialog printersStore={printersStore} />} />
                 <div className={classes.printersList}>
                     {printersStore.printers.length > 0 ? (
                         printersStore.printers.map((p) => <PrinterPanel key={p.id} printer={p} />)

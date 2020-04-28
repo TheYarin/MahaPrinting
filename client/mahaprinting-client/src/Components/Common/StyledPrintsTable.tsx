@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { createStyles, WithStyles, withStyles, Typography } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles, Theme } from "@material-ui/core";
 
 import MaterialTable, { Icons, MTableToolbar, MaterialTableProps, Column } from "material-table";
 import { forwardRef } from "react";
@@ -21,6 +21,7 @@ import Search from "@material-ui/icons/Search";
 import ViewColumn from "@material-ui/icons/ViewColumn";
 import { observer } from "mobx-react";
 import * as muiColors from "@material-ui/core/colors";
+import TitleBar from "../Common/TitleBar";
 
 const tableIcons = {
     Add: forwardRef((props, ref: any) => <AddBox {...props} ref={ref} />),
@@ -42,14 +43,17 @@ const tableIcons = {
     ViewColumn: forwardRef((props, ref: any) => <ViewColumn {...props} ref={ref} />),
 };
 
-const styles = createStyles({
-    root: { marginTop: 15 },
-    customToolbar: { backgroundColor: muiColors.lightBlue[300], color: "white" },
-    printIcon: { color: muiColors.grey[700] },
-    tableHeader: { fontFamily: "monospace", fontWeight: "bold" },
-});
+const styles = (theme: Theme) =>
+    createStyles({
+        root: { marginTop: 15 },
+        customToolbar: theme.palette.global.titleBar,
+        printIcon: { color: muiColors.grey[700] },
+        toolbarOverride: { paddingLeft: 0 },
+    });
 
-export interface Props extends WithStyles<typeof styles>, MaterialTableProps<any> {}
+export interface Props extends WithStyles<typeof styles>, MaterialTableProps<any> {
+    title: string;
+}
 
 @observer
 class StyledPrintsTable extends Component<Props> {
@@ -70,7 +74,7 @@ class StyledPrintsTable extends Component<Props> {
             <div className={classes.root}>
                 <MaterialTable
                     {...otherProps}
-                    title={<Typography variant="h5" className={classes.tableHeader} children={title} />}
+                    title={<TitleBar title={title} />}
                     columns={finalColumns}
                     icons={tableIcons as Icons}
                     options={{
@@ -91,7 +95,7 @@ class StyledPrintsTable extends Component<Props> {
                         ...components,
                         Toolbar: (props) => (
                             <div className={classes.customToolbar}>
-                                <MTableToolbar {...props} />
+                                <MTableToolbar {...props} classes={{ root: classes.toolbarOverride }} />
                             </div>
                         ),
                     }}
