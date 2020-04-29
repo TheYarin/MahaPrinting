@@ -8,16 +8,16 @@ import { ServerConnector } from "./ServerAPI/ServerConnector";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 
-import { WithStyles, createStyles, withStyles } from "@material-ui/core";
+import { WithStyles, createStyles, withStyles, Theme } from "@material-ui/core";
 import { Toolbar, Typography } from "@material-ui/core";
-import * as muiColors from "@material-ui/core/colors";
 
-const styles = createStyles({
-    appRoot: { backgroundColor: "whitesmoke", height: "100%", minHeight: "100vh" },
-    appBar: { backgroundColor: muiColors.lightBlue[600], color: "white", padding: "7px 12px" },
-    appTitle: { fontWeight: "bold", fontFamily: "monospace", marginLeft: 15 },
-    pageRoot: {},
-});
+const styles = (theme: Theme) =>
+    createStyles({
+        appRoot: { backgroundColor: "whitesmoke", height: "100%", minHeight: "100vh" },
+        appBar: { backgroundColor: theme.palette.global.appBarColor, color: "white", padding: "7px 12px" },
+        appTitle: { fontWeight: "bold", fontFamily: "monospace", marginLeft: 15 },
+        pageRoot: {},
+    });
 
 type Props = RouteComponentProps<{}> & WithStyles<typeof styles>;
 
