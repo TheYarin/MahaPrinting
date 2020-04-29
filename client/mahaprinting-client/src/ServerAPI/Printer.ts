@@ -5,7 +5,7 @@ export default class Printer {
   @observable name: string;
   @observable url: string;
   @observable apiKey: string;
-  @observable state: { [key: string]: any };
+  @observable state: string;
   @observable jobInfo: { [key: string]: any };
 
   constructor({
@@ -20,7 +20,7 @@ export default class Printer {
     name: string;
     url: string;
     apiKey: string;
-    state: { [key: string]: any };
+    state: string;
     jobInfo: { [key: string]: any };
   }) {
     this.id = id;
