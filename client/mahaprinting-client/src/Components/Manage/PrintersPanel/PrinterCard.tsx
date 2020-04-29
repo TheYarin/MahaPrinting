@@ -80,7 +80,7 @@ class PrinterCard extends Component<Props> {
     const { classes, printer } = this.props;
     const { name } = printer;
     console.log("PrinterCard -> render -> printer", printer);
-    const stateText = printer.state; // One of the following values:  "Operational", "Printing", "Pausing", "Paused", "Cancelling", "Error", "Closed" or "Offline"
+    const stateText = printer.state; // One of the following values:  "Operational", "Printing", "Pausing", "Cancelling", "Error", "Closed" or "Offline". or "Closed". or "Error: Failed to autodetect serial port, please set it manually.".
     let printStatusTextColor;
 
     if (["Pausing", "Paused", "Cancelling", "Error", "Offline", "Closed"].includes(stateText))
@@ -101,7 +101,7 @@ class PrinterCard extends Component<Props> {
             children={
               stateText === "Printing"
                 ? "Printing <PrintName>..." //TODO: Add the name of what's being printed?
-                : stateText === "Closed"
+                : stateText === "Closed" || stateText === "Error: Failed to autodetect serial port, please set it manually."
                 ? "Printer unavailable"
                 : stateText
             }
