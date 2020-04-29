@@ -37,6 +37,3 @@ export default class PrintersStore {
     return result;
   }
 }
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
