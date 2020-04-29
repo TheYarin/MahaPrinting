@@ -8,6 +8,8 @@ import { observer } from "mobx-react";
 import moment from "moment";
 import * as muiColors from "@material-ui/core/colors";
 import { PrintStatus } from "../../../ServerAPI/PrintStatus";
+import { Print } from "../../../ServerAPI/Print";
+import SendFileToPrinter from "../../Dialogs/SendFileToPrinter";
 
 const styles = createStyles({
     icon: { color: muiColors.grey[700] },
@@ -19,30 +21,45 @@ interface Props extends WithStyles<typeof styles> {
 
 @observer
 class WaitingPrintsTable extends Component<Props> {
+    state = {
+        printDialogOpen: false,
+        selectedPrint: undefined,
+    };
+
+    _openPrintDialog = (selectedPrint: Print) => this.setState({ printDialogOpen: true, selectedPrint: selectedPrint });
+    _closePrintDialog = () => this.setState({ printDialogOpen: false, selectedPrint: null });
+
     render() {
         const { classes, printsStore } = this.props;
         return (
-            <StyledPrintsTable
-                title={"Waiting Prints"}
-                columns={[
-                    { title: "Notes", field: "notes", width: "25%" },
-                    {
-                        title: "Uploaded",
-                        field: "timestamp",
-                        render: (rowData) => moment(rowData.timestamp).fromNow(),
-                        width: "12%",
-                    },
-                    { title: "Contact Details", field: "contactDetails", width: "25%" },
-                ]}
-                data={printsStore.prints.filter((p) => p.status === PrintStatus.IN_QUEUE).map((p) => p)}
-                actions={[
-                    {
-                        icon: () => <PrintIcon className={classes.icon} />,
-                        tooltip: "Send to 3D printer",
-                        onClick: () => false,
-                    },
-                ]}
-            />
+            <>
+                <StyledPrintsTable
+                    title={"Waiting Prints"}
+                    columns={[
+                        { title: "Notes", field: "notes", width: "25%" },
+                        {
+                            title: "Uploaded",
+                            field: "timestamp",
+                            render: (rowData) => moment(rowData.timestamp).fromNow(),
+                            width: "12%",
+                        },
+                        { title: "Contact Details", field: "contactDetails", width: "25%" },
+                    ]}
+                    data={printsStore.prints.filter((p) => p.status === PrintStatus.IN_QUEUE).map((p) => p)}
+                    actions={[
+                        {
+                            icon: () => <PrintIcon className={classes.icon} />,
+                            tooltip: "Send to 3D printer",
+                            onClick: (e, rowData) => this._openPrintDialog(rowData),
+                        },
+                    ]}
+                />
+                <SendFileToPrinter
+                    selectedPrint={this.state.selectedPrint}
+                    open={this.state.printDialogOpen}
+                    onClose={this._closePrintDialog}
+                />
+            </>
         );
     }
 }

@@ -34,6 +34,22 @@ const theme = createMuiTheme({
             done: "",
         },
     },
+    overrides: {
+        MuiStepLabel: {
+            label: {
+                fontFamily: "monospace",
+                fontSize: "105%",
+            },
+            labelContainer: {
+                marginTop: -8,
+            },
+        },
+        MuiDialog: {
+            paperWidthSm: {
+                maxWidth: undefined,
+            },
+        },
+    },
 });
 
 export default theme;
