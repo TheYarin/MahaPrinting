@@ -1,8 +1,7 @@
-from typing import Dict, List
+from enum import Enum
+from typing import Dict, List, Optional, Tuple
 import io
 # import requests
-
-from octorest import OctoRest
 
 from DomainObjects.print import Print, PrintStatus, UserPrint
 from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordRepository
@@ -11,6 +10,22 @@ from DomainObjects.Repositories.IPrinterRecordRepository import IPrinterRecordRe
 from DomainObjects.printer import Printer
 
 from Dummies.DummyOctoRest import dummy_octorest_generator
+
+from octorest import OctoRest, WorkflowAppKeyRequestResult
+
+
+class AddPrinterResult(str, Enum):
+    BAD_URL = "BAD_URL"
+    WORKFLOW_UNSUPPORTED = "WORKFLOW_UNSUPPORTED"
+    API_KEY_REQUEST_TIMED_OUT = "API_KEY_REQUEST_TIMED_OUT"
+    API_KEY_REQUEST_DENIED = "API_KEY_REQUEST_DENIED"
+    SUCCESS = "SUCCESS"
+
+
+class AddPrinterWithApiKeyResult(str, Enum):
+    BAD_API_KEY = "BAD_API_KEY"
+    BAD_URL = "BAD_URL"
+    SUCCESS = "SUCCESS"
 
 
 class MahaPrintingService:
@@ -52,9 +67,57 @@ class MahaPrintingService:
 
     # PRINTERS STUFF
 
-    def add_printer(self, printer_name: str, address: str, apiKey: str) -> Dict:
-        # TODO validate that the address and the API key are working
-        printer = self.printer_record_repository.add_printer(printer_name, address, apiKey)
+    def add_printer(self, printer_name: str, url: str, user: Optional[str]) -> Tuple[AddPrinterResult, Optional[Dict]]:
+        octorest_client = None
+
+        try:
+            octorest_client = OctoRest(url=url)
+        except TypeError:
+            return (AddPrinterResult.BAD_URL, None)
+
+        (result, api_key) = (None, None)
+
+        try:
+            (result, api_key) = octorest_client.try_get_api_key('MahaPrinting', user)
+        except ConnectionError:
+            return (AddPrinterResult.BAD_URL, None)
+
+        if result == WorkflowAppKeyRequestResult.WORKFLOW_UNSUPPORTED:
+            return (AddPrinterResult.WORKFLOW_UNSUPPORTED, None)
+        if result == WorkflowAppKeyRequestResult.TIMED_OUT:
+            return (AddPrinterResult.API_KEY_REQUEST_TIMED_OUT, None)
+        if result == WorkflowAppKeyRequestResult.NOPE:
+            return (AddPrinterResult.API_KEY_REQUEST_DENIED, None)
+        if result == WorkflowAppKeyRequestResult.GRANTED:
+            printer_info = self._add_printer_no_url_validation(printer_name, url, api_key)
+
+            return (AddPrinterResult.SUCCESS, printer_info)
+
+        raise NotImplementedError("An unsupported WorkflowAppKeyRequestResult value was encountered: " + result.name)
+
+    def add_printer_with_api_key(self, printer_name: str, url: str, api_key: str) -> Tuple[AddPrinterWithApiKeyResult,
+                                                                                           Optional[Dict]]:
+
+        if not api_key:
+            return (AddPrinterWithApiKeyResult.BAD_API_KEY, None)
+
+        # Validate that the url and the API key are working
+        try:
+            OctoRest(url=url, apikey=api_key)
+        except Exception as e:
+            if e is ConnectionError or "Provided URL is" in str(e):
+                return (AddPrinterWithApiKeyResult.BAD_URL, None)
+            elif "Forbidden (403)" in str(e):
+                return (AddPrinterWithApiKeyResult.BAD_API_KEY, None)
+            else:
+                raise e
+
+        printer_info = self._add_printer_no_url_validation(printer_name, url, api_key)
+
+        return (AddPrinterWithApiKeyResult.SUCCESS, printer_info)
+
+    def _add_printer_no_url_validation(self, printer_name: str, url: str, api_key: str) -> Dict:
+        printer = self.printer_record_repository.add_printer(printer_name, url, api_key)
 
         return self._get_printer_info(printer)
 
@@ -68,9 +131,15 @@ class MahaPrintingService:
         return printers_info
 
     def _get_printer_info(self, printer: Printer) -> Dict:
-        # client = OctoRest(printer.url, printer.apiKey)
-        client = dummy_octorest_generator()
         printer_info = printer.__dict__.copy()
+        client = None
+
+        try:
+            client = OctoRest(url=printer.url, apikey=printer.apiKey)
+        except (RuntimeError, ConnectionError):
+            printer_info['state'] = "OctoPrint unavailable"
+            return printer_info
+
         printer_info['state'] = client.state()
 
         # if printer_info['flags']['printing'] is True:

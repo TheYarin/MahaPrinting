@@ -113,9 +113,20 @@ def cancel_print():
 @admin_only
 def add_printer():
     data = request.json
-    printer_info = mahaprinting_service.add_printer(data['printerName'], data['url'], data['apiKey'])
+    (result, printer_info) = mahaprinting_service.add_printer(
+        data['printerName'], data['url'], data.get('user'))  # using .get() for the user because it's optional will throw a KeyError if accessed by []
 
-    return json.dumps(printer_info)
+    return json.dumps({'result': result, 'printerInfo': printer_info})
+
+
+@app.route('/addPrinterWithApiKey', methods=['POST'])
+@admin_only
+def add_printer_with_api_key():
+    data = request.json
+    (result, printer_info) = mahaprinting_service.add_printer_with_api_key(
+        data['printerName'], data['url'], data['apiKey'])
+
+    return json.dumps({'result': result, 'printerInfo': printer_info})
 
 
 @app.route('/getPrinters', methods=['GET'])
