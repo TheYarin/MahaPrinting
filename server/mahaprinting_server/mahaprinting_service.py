@@ -132,22 +132,22 @@ class MahaPrintingService:
 
     def _get_printer_info(self, printer: Printer) -> Dict:
         printer_info = printer.__dict__.copy()
-        client = None
+        octorest_client = None
 
         try:
-            client = OctoRest(url=printer.url, apikey=printer.apiKey)
+            octorest_client = OctoRest(url=printer.url, apikey=printer.apiKey)
         except (RuntimeError, ConnectionError):
             printer_info['state'] = "OctoPrint unavailable"
             return printer_info
 
-        printer_info['state'] = client.state()
+        printer_info['state'] = octorest_client.state()
 
         # Get the printer model
-        printer_profiles = client.printer_profiles()['profiles']
+        printer_profiles = octorest_client.printer_profiles()['profiles']
         # Assuming printer_profiles is not empty, and there's one profile marked as default
         default_profile = next(profile for profile in printer_profiles.values() if profile['default'] is True)
         printer_info['model'] = default_profile['model']
 
-        printer_info['jobInfo'] = client.job_info()
+        printer_info['jobInfo'] = octorest_client.job_info()
 
         return printer_info
