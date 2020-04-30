@@ -29,7 +29,7 @@ class CustomStepper extends Component<Props> {
     render() {
         const { classes } = this.props;
         return (
-            <div className={classes.root} style={{ minWidth: this.props.steps.length * 153 }}>
+            <div className={classes.root} style={{ minWidth: this.props.steps.length * 175 }}>
                 <Stepper activeStep={this.props.activeStep} className={classes.stepper} alternativeLabel>
                     {this.props.steps.map((title) => (
                         <Step key={title}>

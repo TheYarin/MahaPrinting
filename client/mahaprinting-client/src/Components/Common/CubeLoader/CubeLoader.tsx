@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { createStyles, WithStyles, withStyles, Typography, Fade } from "@material-ui/core";
 import Lottie from "react-lottie";
-import animationData from "./NotFoundAnimation.json";
+import animationData from "./CubeAnimation.json";
 
 const styles = createStyles({
-    root: {},
+    root: {
+        pointerEvents: "none",
+    },
     text: {
         fontStyle: "italic",
         padding: "0px 25px 10px 25px",
@@ -14,11 +16,11 @@ const styles = createStyles({
     },
 });
 
-interface InfoNotFoundProps extends WithStyles<typeof styles> {
+interface CubeLoaderProps extends WithStyles<typeof styles> {
     text: string;
 }
 
-class InfoNotFound extends Component<InfoNotFoundProps> {
+class CubeLoader extends Component<CubeLoaderProps> {
     render() {
         const { classes, text } = this.props;
 
@@ -34,7 +36,7 @@ class InfoNotFound extends Component<InfoNotFoundProps> {
                                 preserveAspectRatio: "xMidYMid slice",
                             },
                         }}
-                        height={200}
+                        height={130}
                         width={200}
                     />
                     <Typography variant="subtitle1" children={text} className={classes.text} />
@@ -44,4 +46,4 @@ class InfoNotFound extends Component<InfoNotFoundProps> {
     }
 }
 
-export default withStyles(styles)(InfoNotFound);
+export default withStyles(styles)(CubeLoader);

@@ -1,6 +1,6 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 import deepPurple from "@material-ui/core/colors/deepPurple";
-import red from "@material-ui/core/colors/red";
+import amber from "@material-ui/core/colors/amber";
 
 const theme = createMuiTheme({
     palette: {
@@ -10,9 +10,9 @@ const theme = createMuiTheme({
             light: deepPurple[200],
         },
         secondary: {
-            main: red[600],
-            dark: red[800],
-            light: red[200],
+            main: amber[600],
+            dark: amber[800],
+            light: amber[300],
         },
         global: {
             titleBar: {
