@@ -5,8 +5,9 @@ export default class Printer {
   @observable name: string;
   @observable url: string;
   @observable apiKey: string;
-  @observable state: { [key: string]: any };
+  @observable state: string;
   @observable jobInfo: { [key: string]: any };
+  @observable model: string;
 
   constructor({
     id,
@@ -15,13 +16,15 @@ export default class Printer {
     apiKey,
     state,
     jobInfo,
+    model,
   }: {
     id: number;
     name: string;
     url: string;
     apiKey: string;
-    state: { [key: string]: any };
+    state: string;
     jobInfo: { [key: string]: any };
+    model: string;
   }) {
     this.id = id;
     this.name = name;
@@ -29,5 +32,6 @@ export default class Printer {
     this.apiKey = apiKey;
     this.state = state;
     this.jobInfo = jobInfo;
+    this.model = model;
   }
 }
