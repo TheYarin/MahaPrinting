@@ -142,7 +142,12 @@ class MahaPrintingService:
 
         printer_info['state'] = client.state()
 
-        # if printer_info['flags']['printing'] is True:
+        # Get the printer model
+        printer_profiles = client.printer_profiles()['profiles']
+        # Assuming printer_profiles is not empty, and there's one profile marked as default
+        default_profile = next(profile for profile in printer_profiles.values() if profile['default'] is True)
+        printer_info['model'] = default_profile['model']
+
         printer_info['jobInfo'] = client.job_info()
 
         return printer_info
