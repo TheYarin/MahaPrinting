@@ -45,7 +45,7 @@ class PrintersPanel extends Component<Props> {
             <div className={classes.root}>
                 <TitleBar title={"Printers"} iconSection={<AddPrinterDialog printersStore={printersStore} />} />
                 <div className={classes.printersList}>
-                    {printersStore.printers.length < 0 ? (
+                    {printersStore.printers.length > 0 ? (
                         printersStore.printers.map((p) => <PrinterPanel key={p.id} printer={p} />)
                     ) : (
                         <InfoNotFound text="No printers found - you should add one!" />
