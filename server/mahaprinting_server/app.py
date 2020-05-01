@@ -3,6 +3,7 @@ import sqlite3
 import random
 import string
 import json
+import os
 from typing import Any, Callable
 
 from flask import Flask, request, make_response, abort, send_file
@@ -97,6 +98,9 @@ def get_user_prints():
 def get_print_file(print_id):
     throw_if_not_admin_or_print_owner(print_id)
     file_path_in_storage = uploads_manager.get_print_file_path(print_id)
+
+    if not os.path.isfile(file_path_in_storage):
+        abort(404)
 
     return send_file(file_path_in_storage)
 

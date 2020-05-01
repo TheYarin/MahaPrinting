@@ -76,7 +76,11 @@ class UserPrintDialog extends Component<Props> {
 
   async loadStlFile() {
     const { userPrint, userPrintStore } = this.props;
-    this.stlFile = await userPrintStore?.serverConnector.getPrintFile(userPrint.id);
+    try {
+      this.stlFile = await userPrintStore?.serverConnector.getPrintFile(userPrint.id);
+    } catch {
+      this.stlFile = undefined;
+    }
   }
 
   render() {
