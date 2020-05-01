@@ -63,8 +63,10 @@ class UserPrintDialog extends Component<Props> {
           " Yeah yeah, I know it's marked as optional, but that's just to trick typescript to work with Mobx's inject." +
           " It's actually mandatory. sorry."
       );
+  }
 
-    this.loadStlFile();
+  async componentDidMount() {
+    await this.loadStlFile();
   }
 
   cancelPrint = () => {
@@ -90,15 +92,17 @@ class UserPrintDialog extends Component<Props> {
         </div>
 
         <div className={classes.previewContainer}>
-          <STLViewer
-            model={this.stlFile}
-            width={300}
-            height={300}
-            modelColor="#B92C2C"
-            backgroundColor="#EAEAEA"
-            rotate={true}
-            orbitControls={true}
-          />
+          {this.stlFile && (
+            <STLViewer
+              model={this.stlFile}
+              width={300}
+              height={300}
+              modelColor="#B92C2C"
+              backgroundColor="#EAEAEA"
+              rotate={true}
+              orbitControls={true}
+            />
+          )}
         </div>
 
         <DialogContent>

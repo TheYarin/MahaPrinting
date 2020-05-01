@@ -94,8 +94,7 @@ async function fetchWithCookies(input: RequestInfo, init?: RequestInit): Promise
 
   const response = await fetch(input, initWithCookies);
 
-  if (!response.ok)
-    throw new Error(`Failed to get printers, response status code was ${response.status} (${response.statusText}`);
+  if (!response.ok) throw new Error(`Failed to fetch, response status code was ${response.status} (${response.statusText}`);
 
   return response;
 }
