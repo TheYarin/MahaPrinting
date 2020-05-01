@@ -105,6 +105,11 @@ class UserPrintDialog extends Component<Props> {
               backgroundColor="#EAEAEA"
               rotate={true}
               orbitControls={true}
+              rotationSpeeds={[0, 0.02, 0]}
+              lights={[
+                [1, 1, 1],
+                [-1, -1, -1],
+              ]}
             />
           )}
         </div>
