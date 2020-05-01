@@ -1,7 +1,10 @@
 from enum import Enum
 from typing import Dict, List, Optional, Tuple
-import io
-# import requests
+
+from werkzeug.datastructures import FileStorage
+from octorest import OctoRest, WorkflowAppKeyRequestResult
+
+from UploadsManager import UploadsManager
 
 from DomainObjects.print import Print, PrintStatus, UserPrint
 from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordRepository
@@ -10,8 +13,6 @@ from DomainObjects.Repositories.IPrinterRecordRepository import IPrinterRecordRe
 from DomainObjects.printer import Printer
 
 from Dummies.DummyOctoRest import dummy_octorest_generator
-
-from octorest import OctoRest, WorkflowAppKeyRequestResult
 
 
 class AddPrinterResult(str, Enum):
@@ -31,21 +32,37 @@ class AddPrinterWithApiKeyResult(str, Enum):
 class MahaPrintingService:
     print_record_repository: IPrintRecordRepository
     printer_record_repository: IPrinterRecordRepository
+    uploads_manager: UploadsManager
 
     def __init__(self,
                  print_record_repository: IPrintRecordRepository,
-                 printer_record_repository: IPrinterRecordRepository):
+                 printer_record_repository: IPrinterRecordRepository,
+                 uploads_manager: UploadsManager):
         self.print_record_repository = print_record_repository
         self.printer_record_repository = printer_record_repository
+        self.uploads_manager = uploads_manager
 
     # PRINTS STUFF
 
-    def upload_user_print(self, name: str, contact_details: str, user_id: str, file: io.IOBase) -> UserPrint:
-        # TODO insert real file upload logic here
-        # requests.post("http://localhost:5000/test", files=dict(boom=file))
+    def upload_user_print(self, name: str, contact_details: str, user_id: str, file: FileStorage) -> UserPrint:
+        filename = file.filename
+
+        if '.' not in filename:
+            raise ValueError("Invalid file: has no extension")
+
+        extension = filename.rsplit('.', 1)[1].lower()
+
+        if extension != "stl":  # This test also makes sure no nasty path games get through
+            raise ValueError("Invalid file: forbidden extension")
+
+        tmp_file_path = self.uploads_manager.upload_temp_file(file, extension)
+
         file_download_link = "<FILE DOWNLOAD LINK>"
         file_path = "<FILE PATH>"
+
         print = self.print_record_repository.add_print(user_id, name, contact_details, file_download_link, file_path)
+
+        self.uploads_manager.save_temp_file_as_print(print.id, tmp_file_path)
 
         return UserPrint(print)
 
@@ -59,6 +76,9 @@ class MahaPrintingService:
 
     def does_print_belongs_to_user(self, print_id: int, user_id: str) -> bool:
         p = self.print_record_repository.get_print(print_id)
+
+        if p is None:
+            return False
 
         return p.userId == user_id
 

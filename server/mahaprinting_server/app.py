@@ -1,13 +1,14 @@
+from UploadsManager import UploadsManager
 import sqlite3
 import random
 import string
 import json
 from typing import Any, Callable
 
-from flask import Flask, request, make_response, abort
+from flask import Flask, request, make_response, abort, send_file
 
 from mahaprinting_service import MahaPrintingService
-from settings import ALLOW_CORS, ADMIN_USER_ID, DB_PATH
+from settings import ALLOW_CORS, ADMIN_USER_ID, DB_PATH, UPLOADS_FOLDER
 from Sqlite.SqlitePrintRecordRepository import SqlitePrintRecordRepository
 from Sqlite.SqlitePrinterRecordRepository import SqlitePrinterRecordRepository
 
@@ -23,7 +24,8 @@ if ALLOW_CORS == 'TRUE':
 sqlite_db_connection = sqlite3.connect(DB_PATH, check_same_thread=False)
 print_record_repository = SqlitePrintRecordRepository(sqlite_db_connection)
 printer_record_repository = SqlitePrinterRecordRepository(sqlite_db_connection)
-mahaprinting_service = MahaPrintingService(print_record_repository, printer_record_repository)
+uploads_manager = UploadsManager(UPLOADS_FOLDER)
+mahaprinting_service = MahaPrintingService(print_record_repository, printer_record_repository, uploads_manager)
 
 
 def get_user_id():
@@ -43,6 +45,13 @@ def admin_only(routeHandlingFunc: Callable[[], Any]):
     wrapper.__name__ = routeHandlingFunc.__name__
 
     return wrapper
+
+
+def throw_if_not_admin_or_print_owner(print_id: int):
+    user_id = get_user_id()
+
+    if not (user_id == ADMIN_USER_ID or mahaprinting_service.does_print_belongs_to_user(print_id, user_id)):
+        abort(401)
 
 
 def generate_user_id() -> str:
@@ -84,6 +93,14 @@ def get_user_prints():
     return json.dumps([p.__dict__ for p in user_prints])
 
 
+@app.route('/getPrintFile/<int:print_id>', methods=['GET'])
+def get_print_file(print_id):
+    throw_if_not_admin_or_print_owner(print_id)
+    file_path_in_storage = uploads_manager.get_print_file_path(print_id)
+
+    return send_file(file_path_in_storage)
+
+
 @app.route('/getAllPrints', methods=['GET'])
 @admin_only
 def get_all_prints():
@@ -94,12 +111,10 @@ def get_all_prints():
 
 @app.route('/cancelPrint', methods=['POST'])
 def cancel_print():
-    user_id = get_user_id()
     data = request.json
     print_id = data['printId']
 
-    if not (user_id == ADMIN_USER_ID or mahaprinting_service.does_print_belongs_to_user(print_id, user_id)):
-        abort(401)
+    throw_if_not_admin_or_print_owner(print_id)
 
     mahaprinting_service.cancel_print(print_id)
 
@@ -135,9 +150,3 @@ def get_printers():
     printers_info = mahaprinting_service.get_printers_info()
 
     return json.dumps(printers_info)
-
-# @app.route('/test', methods=['POST'])
-# def test():
-#     print(request)
-#     request.files['boom'].save(r"I:\test_output.stl")
-#     return 'Hello, World!'
