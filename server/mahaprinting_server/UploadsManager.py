@@ -29,4 +29,4 @@ class UploadsManager():
         os.rename(tmp_file_path, final_file_path)
 
     def get_print_file_path(self, print_id: int) -> str:
-        return os.path.join(self._uploads_folder, str(print_id) + '.stl')
+        return os.path.join(self._uploads_folder, 'mahaprinting_' + str(print_id) + '.stl')
