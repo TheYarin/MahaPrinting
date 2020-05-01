@@ -16,7 +16,7 @@ class IPrintRecordRepository:
     def get_prints(self, user_id: Optional[str] = None) -> List[Print]:
         raise Exception("NOT IMPLEMENTED")
 
-    def get_print(self, print_id: int) -> Print:
+    def get_print(self, print_id: int) -> Optional[Print]:
         raise Exception("NOT IMPLEMENTED")
 
     def change_print_status(self, print_id: int, new_status: PrintStatus) -> None:
