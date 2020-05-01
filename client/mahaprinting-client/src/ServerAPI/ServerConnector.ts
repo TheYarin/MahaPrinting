@@ -45,6 +45,12 @@ export class ServerConnector {
     return new UserPrint(responseJson);
   }
 
+  public async getPrintFile(printId: number): Promise<ArrayBuffer> {
+    const response = await fetchWithCookies(this.urlBase + "/getPrintFile/" + printId);
+
+    return await response.arrayBuffer();
+  }
+
   public async cancelPrint(printId: number): Promise<void> {
     await postJsonWithCookies(this.urlBase + "/cancelPrint", { printId });
   }

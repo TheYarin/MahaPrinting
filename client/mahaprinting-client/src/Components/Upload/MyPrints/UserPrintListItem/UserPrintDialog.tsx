@@ -12,11 +12,15 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+// @ts-ignore
+import STLViewer from "stl-viewer";
 
 import ButtonWithIconOnTop from "../../../Common/ButtonWithIconOnTop";
 import { PrintStatus } from "../../../../ServerAPI/PrintStatus";
 import { UserPrint } from "../../../../ServerAPI/UserPrint";
 import { UserPrintsStore } from "../../../../PrintStores/UserPrintsStore";
+import { flexColCentered } from "../../../../JssUtils";
+import { observable } from "mobx";
 
 const styles = createStyles({
   root: {},
@@ -33,6 +37,10 @@ const styles = createStyles({
     // flexShrink: 1,
     wordWrap: "break-word",
   },
+  previewContainer: {
+    width: "100%",
+    ...flexColCentered,
+  },
 });
 
 interface Props extends WithStyles<typeof styles> {
@@ -45,21 +53,29 @@ interface Props extends WithStyles<typeof styles> {
 @inject("userPrintStore")
 @observer
 class UserPrintDialog extends Component<Props> {
+  @observable stlFile?: ArrayBuffer;
+
   constructor(props: Props) {
     super(props);
-
     if (!props.userPrintStore)
       throw new Error(
         "Missing prop: myPrintStore." +
           " Yeah yeah, I know it's marked as optional, but that's just to trick typescript to work with Mobx's inject." +
           " It's actually mandatory. sorry."
       );
+
+    this.loadStlFile();
   }
 
   cancelPrint = () => {
     const userAgreedToCancel = window.confirm("Are you sure you want to cancel this print?");
     if (userAgreedToCancel) this.props.userPrintStore!.cancelPrint(this.props.userPrint.id);
   };
+
+  async loadStlFile() {
+    const { userPrint, userPrintStore } = this.props;
+    this.stlFile = await userPrintStore?.serverConnector.getPrintFile(userPrint.id);
+  }
 
   render() {
     const { classes, userPrint, open, onClose } = this.props;
@@ -72,6 +88,19 @@ class UserPrintDialog extends Component<Props> {
           </IconButton>
           <DialogTitle className={classes.dialogTitle}>{name}</DialogTitle>
         </div>
+
+        <div className={classes.previewContainer}>
+          <STLViewer
+            model={this.stlFile}
+            width={300}
+            height={300}
+            modelColor="#B92C2C"
+            backgroundColor="#EAEAEA"
+            rotate={true}
+            orbitControls={true}
+          />
+        </div>
+
         <DialogContent>
           <div>Uploaded at: {timestamp}</div>
           <div>Status: {status}</div>

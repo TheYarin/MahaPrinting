@@ -5,7 +5,7 @@ import { UserPrint } from "../ServerAPI/UserPrint";
 
 export default abstract class PrintsStoreBase<TPrint extends UserPrint> {
   @observable public prints = new Array<TPrint>();
-  protected serverConnector: ServerConnector;
+  public serverConnector: ServerConnector;
 
   public constructor(serverConnector: ServerConnector) {
     this.serverConnector = serverConnector;
