@@ -26,10 +26,10 @@ class DummyPrintRecordRepository(IPrintRecordRepository):
         return print
 
     def get_prints(self, user_id: Optional[str] = None) -> List[Print]:
-        raise Exception("NOT IMPLEMENTED")
+        raise NotImplementedError()
 
     def get_print(self, print_id: str) -> Print:
-        raise Exception("NOT IMPLEMENTED")
+        raise NotImplementedError()
 
     def change_print_status(self, print_id: str, new_status: PrintStatus):
-        raise Exception("NOT IMPLEMENTED")
+        raise NotImplementedError()
