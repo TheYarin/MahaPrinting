@@ -10,6 +10,7 @@ import * as muiColors from "@material-ui/core/colors";
 import { PrintStatus } from "../../../ServerAPI/PrintStatus";
 import { Print } from "../../../ServerAPI/Print";
 import SendFileToPrinter from "../../Dialogs/SendFileToPrinter";
+import { Column } from "material-table";
 
 const styles = createStyles({
     icon: { color: muiColors.grey[700] },
@@ -36,14 +37,14 @@ class WaitingPrintsTable extends Component<Props> {
                 <StyledPrintsTable
                     title={"Waiting Prints"}
                     columns={[
-                        { title: "Notes", field: "notes", width: "25%" },
+                        { title: "Notes", field: "notes", width: "25%" } as Column<any>,
                         {
                             title: "Uploaded",
                             field: "timestamp",
                             render: (rowData) => moment(rowData.timestamp).fromNow(),
                             width: "12%",
-                        },
-                        { title: "Contact Details", field: "contactDetails", width: "25%" },
+                        } as Column<any>,
+                        { title: "Contact Details", field: "contactDetails", width: "25%" } as Column<any>,
                     ]}
                     data={printsStore.prints.filter((p) => p.status === PrintStatus.IN_QUEUE).map((p) => p)}
                     actions={[

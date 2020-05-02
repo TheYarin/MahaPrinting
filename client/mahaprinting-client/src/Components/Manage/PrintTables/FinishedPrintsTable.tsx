@@ -8,6 +8,7 @@ import { observer } from "mobx-react";
 import moment from "moment";
 import * as muiColors from "@material-ui/core/colors";
 import { PrintStatus } from "../../../ServerAPI/PrintStatus";
+import { Column } from "material-table";
 
 const styles = createStyles({
     icon: { color: muiColors.grey[700] },
@@ -26,20 +27,20 @@ class FinishedPrintsTable extends Component<Props> {
             <StyledPrintsTable
                 title={"Print History"}
                 columns={[
-                    { title: "Print Status", field: "status", width: "18%" },
+                    { title: "Print Status", field: "status", width: "18%" } as Column<any>,
                     {
                         title: "Printed",
                         field: "timestamp_printed",
                         render: (rowData) => moment(rowData.timestamp).fromNow(),
                         width: "10%",
-                    },
+                    } as Column<any>,
                     {
                         title: "Uploaded",
                         field: "timestamp",
                         render: (rowData) => moment(rowData.timestamp).fromNow(),
                         width: "10%",
-                    },
-                    { title: "Contact Details", field: "contactDetails", width: "25%" },
+                    } as Column<any>,
+                    { title: "Contact Details", field: "contactDetails", width: "25%" } as Column<any>,
                 ]}
                 data={printsStore.prints
                     .filter((p) => [PrintStatus.DONE, PrintStatus.CANCELED].includes(p.status))
