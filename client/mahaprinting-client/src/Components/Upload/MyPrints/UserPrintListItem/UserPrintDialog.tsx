@@ -102,10 +102,10 @@ class UserPrintDialog extends Component<Props> {
         await this.loadStlFile();
     }
 
-    cancelPrint = () => {
+    /* cancelPrint = () => {
         const userAgreedToCancel = window.confirm("Are you sure you want to cancel this print?");
         if (userAgreedToCancel) this.props.userPrintStore!.cancelPrint(this.props.userPrint.id);
-    };
+    }; */
 
     async loadStlFile() {
         const { userPrint, userPrintStore } = this.props;
@@ -147,12 +147,12 @@ class UserPrintDialog extends Component<Props> {
                     {status !== PrintStatus.CANCELED && (
                         <Button
                             className={classes.button}
-                            onClick={this.cancelPrint}
+                            onClick={undefined}
                             variant="contained"
                             color={"primary"}
                             size="small"
                         >
-                            <DeleteIcon className={classes.buttonIcon} /> Cancel Print
+                            <DeleteIcon className={classes.buttonIcon} /> Delete Print
                         </Button>
                     )}
                 </div>
