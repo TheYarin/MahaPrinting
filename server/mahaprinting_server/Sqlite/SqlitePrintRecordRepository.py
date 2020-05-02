@@ -27,14 +27,12 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
                   user_id: str,
                   name: str,
                   contact_details: str,
-                  file_download_link: str,
-                  file_path: str) -> Print:
+                  notes: str) -> Print:
         p = Print()
         p.userId = user_id
         p.name = name
         p.contactDetails = contact_details
-        p.fileDownloadLink = file_download_link
-        p.filePath = file_path
+        p.notes = notes
         p.status = PrintStatus.IN_QUEUE
         p.timestamp = datetime.now().isoformat()
 
@@ -44,8 +42,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
                                            p.name,
                                            p.status,
                                            p.contactDetails,
-                                           p.fileDownloadLink,
-                                           p.filePath))
+                                           notes))
         self._connection.commit()
 
         p.id = cursor.lastrowid
@@ -99,7 +96,7 @@ def _convert_rows_to_prints(rows: List[Row]) -> List[Print]:
 
 def _convert_row_to_print(row: Row) -> Print:
     p = Print()
-    (p.id, p.timestamp, p.userId, p.name, p.status, p.contactDetails, p.fileDownloadLink, p.filePath) = row
+    (p.id, p.timestamp, p.userId, p.name, p.status, p.contactDetails, p.notes) = row
 
     return p
 
@@ -111,14 +108,13 @@ CREATE_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS prints (
     name text,
     status text,
     contactDetails text,
-    fileDownloadLink text,
-    filePath text
+    notes text
 );'''
 
-INSERT_QUERY = ''' INSERT INTO prints(timestamp,userId,name,status,contactDetails,fileDownloadLink,filePath)
-                   VALUES(?,?,?,?,?,?,?) '''
+INSERT_QUERY = ''' INSERT INTO prints(timestamp,userId,name,status,contactDetails,notes)
+                   VALUES(?,?,?,?,?,?) '''
 
-GET_ALL_PRINTS_QUERY = 'SELECT id,timestamp,userId,name,status,contactDetails,fileDownloadLink,filePath FROM prints'
+GET_ALL_PRINTS_QUERY = 'SELECT id,timestamp,userId,name,status,contactDetails,notes FROM prints'
 GET_USER_PRINTS_QUERY = GET_ALL_PRINTS_QUERY + ' WHERE userId=?'
 GET_PRINT = GET_ALL_PRINTS_QUERY + ' WHERE id=? LIMIT 1'
 UPDATE_PRINT_STATUS = 'UPDATE prints SET status = ? WHERE id = ?'

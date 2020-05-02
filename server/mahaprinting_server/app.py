@@ -80,6 +80,7 @@ def upload_user_print():
     user_print = mahaprinting_service.upload_user_print(
         request.form['name'],
         request.form['contactDetails'],
+        request.form['notes'],
         user_id,
         request.files['file'])
 

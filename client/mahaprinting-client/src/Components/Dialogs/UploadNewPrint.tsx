@@ -39,10 +39,16 @@ class UploadNewPrint extends Component<Props> {
   submitPrint = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    await this.props.userPrintsStore.add(this.name as string, this.contactDetails as string, this.file as File); //this.notes as string
+    // await this.props.userPrintsStore.add(
+    //   this.name as string,
+    //   this.contactDetails as string,
+    //   this.notes as string,
+    //   this.file as File
+    // );
 
     window.localStorage["contactDetails"] = this.contactDetails;
     this.resetForm();
+    this.props.onClose();
   };
 
   resetForm() {

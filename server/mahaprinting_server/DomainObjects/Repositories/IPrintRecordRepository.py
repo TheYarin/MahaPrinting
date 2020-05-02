@@ -9,8 +9,7 @@ class IPrintRecordRepository:
                   user_id: str,
                   name: str,
                   contact_details: str,
-                  file_download_link: str,
-                  file_path: str) -> Print:
+                  notes: str) -> Print:
         raise NotImplementedError()
 
     def get_prints(self, user_id: Optional[str] = None) -> List[Print]:

@@ -33,10 +33,11 @@ export class ServerConnector {
     return prints;
   }
 
-  public async uploadUserPrint(name: string, contactDetails: string, file: File): Promise<UserPrint> {
+  public async uploadUserPrint(name: string, contactDetails: string, notes: string, file: File): Promise<UserPrint> {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("contactDetails", contactDetails);
+    formData.append("notes", notes);
     formData.append("file", file);
 
     const response = await postFormDataWithCookies(this.urlBase + "/uploadUserPrint", formData);

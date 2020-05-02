@@ -14,10 +14,8 @@ class Print:
     status: PrintStatus
     userId: str
     contactDetails: str
+    notes: str
     timestamp: str
-    fileDownloadLink: str
-    filePath: str  # On OctoPrint
-    # file_location: str # On OctoPrint, "local" or "sdcard"
 
 
 class UserPrint:
@@ -25,5 +23,6 @@ class UserPrint:
         self.id = print.id
         self.name = print.name
         self.status = print.status
-        self.timestamp = print.timestamp
         self.contactDetails = print.contactDetails
+        self.notes = print.notes
+        self.timestamp = print.timestamp

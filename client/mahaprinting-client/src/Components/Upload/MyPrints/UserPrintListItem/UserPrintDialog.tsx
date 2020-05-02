@@ -118,14 +118,15 @@ class UserPrintDialog extends Component<Props> {
 
   render() {
     const { classes, userPrint, open, onClose } = this.props;
-    const { name, status, timestamp } = userPrint;
+    const { name, status, notes, timestamp, contactDetails } = userPrint;
 
     type GenericObject = { [key: string]: any };
 
     const printInfo = {
       Uploaded: moment(timestamp).calendar(),
       Status: status,
-      Notes: "<notes>",
+      Notes: notes,
+      "Contact Details": contactDetails,
     } as GenericObject;
 
     return (

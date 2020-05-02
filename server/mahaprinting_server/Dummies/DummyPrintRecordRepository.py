@@ -13,13 +13,13 @@ class DummyPrintRecordRepository(IPrintRecordRepository):
                   user_id: str,
                   name: str,
                   contact_details: str,
-                  file_download_link: str,
-                  file_path: str) -> Print:
+                  notes: str) -> Print:
         self._counter += 1
         print = Print()
         print.id = self._counter
         print.name = name
         print.contactDetails = contact_details
+        print.notes = notes
         print.status = PrintStatus.IN_QUEUE
         print.timestamp = datetime.now().isoformat()
 

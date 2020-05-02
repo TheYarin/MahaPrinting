@@ -46,7 +46,12 @@ class MahaPrintingService:
 
     # PRINTS STUFF
 
-    def upload_user_print(self, name: str, contact_details: str, user_id: str, file: FileStorage) -> UserPrint:
+    def upload_user_print(self,
+                          name: str,
+                          contact_details: str,
+                          notes: str,
+                          user_id: str,
+                          file: FileStorage) -> UserPrint:
         filename = file.filename
 
         if '.' not in filename:
@@ -59,10 +64,7 @@ class MahaPrintingService:
 
         tmp_file_path = self.uploads_manager.upload_temp_file(file, extension)
 
-        file_download_link = "<FILE DOWNLOAD LINK>"
-        file_path = "<FILE PATH>"
-
-        print = self.print_record_repository.add_print(user_id, name, contact_details, file_download_link, file_path)
+        print = self.print_record_repository.add_print(user_id, name, contact_details, notes)
 
         self.uploads_manager.save_temp_file_as_print(print.id, tmp_file_path)
 
