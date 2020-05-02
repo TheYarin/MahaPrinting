@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Dict, List, Optional, Tuple
 
+import requests
+
 from werkzeug.datastructures import FileStorage
 from octorest import OctoRest, WorkflowAppKeyRequestResult
 
@@ -99,7 +101,7 @@ class MahaPrintingService:
 
         try:
             (result, api_key) = octorest_client.try_get_api_key('MahaPrinting', user)
-        except ConnectionError:
+        except requests.exceptions.ConnectionError:
             return (AddPrinterResult.BAD_URL, None)
 
         if result == WorkflowAppKeyRequestResult.WORKFLOW_UNSUPPORTED:
@@ -125,7 +127,7 @@ class MahaPrintingService:
         try:
             OctoRest(url=url, apikey=api_key)
         except Exception as e:
-            if e is ConnectionError or "Provided URL is" in str(e):
+            if e is requests.exceptions.ConnectionError or "Provided URL is" in str(e):
                 return (AddPrinterWithApiKeyResult.BAD_URL, None)
             elif "Forbidden (403)" in str(e):
                 return (AddPrinterWithApiKeyResult.BAD_API_KEY, None)
@@ -156,7 +158,7 @@ class MahaPrintingService:
 
         try:
             octorest_client = OctoRest(url=printer.url, apikey=printer.apiKey)
-        except (RuntimeError, ConnectionError):
+        except (RuntimeError, requests.exceptions.ConnectionError):
             printer_info['state'] = "OctoPrint unavailable"
             return printer_info
 
