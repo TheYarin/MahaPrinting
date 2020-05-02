@@ -12,8 +12,6 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-// @ts-ignore
-import STLViewer from "stl-viewer";
 
 import ButtonWithIconOnTop from "../../../Common/ButtonWithIconOnTop";
 import { PrintStatus } from "../../../../ServerAPI/PrintStatus";
@@ -21,6 +19,7 @@ import { UserPrint } from "../../../../ServerAPI/UserPrint";
 import { UserPrintsStore } from "../../../../PrintStores/UserPrintsStore";
 import { flexColCentered } from "../../../../JssUtils";
 import { observable } from "mobx";
+import STLViewer from "../../../Common/STLViewer";
 
 const styles = createStyles({
   root: {},
@@ -95,19 +94,7 @@ class UserPrintDialog extends Component<Props> {
           <DialogTitle className={classes.dialogTitle}>{name}</DialogTitle>
         </div>
 
-        <div className={classes.previewContainer}>
-          {this.stlFile && (
-            <STLViewer
-              model={this.stlFile}
-              width={300}
-              height={300}
-              modelColor="#B92C2C"
-              backgroundColor="#EAEAEA"
-              rotate={true}
-              orbitControls={true}
-            />
-          )}
-        </div>
+        <div className={classes.previewContainer}>{this.stlFile && <STLViewer stlFile={this.stlFile} />}</div>
 
         <DialogContent>
           <div>Uploaded at: {timestamp}</div>
