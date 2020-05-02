@@ -12,7 +12,7 @@ const styles = createStyles({
     stepper: {
         padding: "15px 10px 10px",
         margin: "-15px -15px 10px",
-        backgroundColor: grey[100],
+        backgroundColor: grey[200],
         borderBottom: `1px solid ${grey[300]}`,
     },
     stepFont: {

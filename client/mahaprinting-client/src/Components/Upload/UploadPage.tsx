@@ -1,54 +1,72 @@
 import React from "react";
-import { createStyles, WithStyles, withStyles } from "@material-ui/core";
-
-import UploadPrintForm from "./UploadPrintForm";
+import { createStyles, WithStyles, withStyles, Fab } from "@material-ui/core";
 import MyPrints from "./MyPrints/MyPrints";
 import { ServerConnector } from "../../ServerAPI/ServerConnector";
 import { observer, Provider } from "mobx-react";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
-import { flexCol, spaceChildren } from "../../JssUtils";
-import TitleBar from "../Common/TitleBar";
+import Add from "@material-ui/icons/Add";
+import UploadNewPrint from "../Dialogs/UploadNewPrint";
 
 const styles = createStyles({
-  root: {
-    ...spaceChildren("vertically", 20),
-    ...flexCol,
-    maxWidth: "min(600px, 100%)",
-  },
-  container: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center",
-  },
+    root: {
+        padding: 20,
+        maxWidth: 800,
+    },
+    uploadButton: {
+        position: "absolute",
+        zIndex: 1,
+        bottom: 0,
+        right: 0,
+        margin: 25,
+    },
+    container: {
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+    },
 });
 
 interface Props extends WithStyles<typeof styles> {
-  serverConnector: ServerConnector;
+    serverConnector: ServerConnector;
 }
 
 @observer
 class UploadPage extends React.Component<Props> {
-  userPrintsStore: UserPrintsStore = new UserPrintsStore(this.props.serverConnector);
+    state = {
+        uploadFormOpen: false,
+    };
 
-  async componentDidMount() {
-    await this.userPrintsStore.initialize();
-  }
+    _openUploadForm = () => this.setState({ uploadFormOpen: true });
+    _closeUploadForm = () => this.setState({ uploadFormOpen: false });
 
-  render() {
-    const { classes } = this.props;
+    userPrintsStore: UserPrintsStore = new UserPrintsStore(this.props.serverConnector);
 
-    return (
-      <Provider userPrintStore={this.userPrintsStore}>
-        <div className={classes.container}>
-          <div className={classes.root}>
-            <TitleBar title="Upload a new print" />
-            <UploadPrintForm userPrintsStore={this.userPrintsStore} />
-            {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
-          </div>
-        </div>
-      </Provider>
-    );
-  }
+    async componentDidMount() {
+        await this.userPrintsStore.initialize();
+    }
+
+    render() {
+        const { classes } = this.props;
+
+        return (
+            <Provider userPrintStore={this.userPrintsStore}>
+                <div className={classes.root}>
+                    {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+                    <Fab
+                        color="primary"
+                        children={<Add />}
+                        className={classes.uploadButton}
+                        onClick={this._openUploadForm}
+                    />
+                    <UploadNewPrint
+                        userPrintsStore={this.userPrintsStore}
+                        open={this.state.uploadFormOpen}
+                        onClose={this._closeUploadForm}
+                    />
+                </div>
+            </Provider>
+        );
+    }
 }
 
 export default withStyles(styles)(UploadPage);
