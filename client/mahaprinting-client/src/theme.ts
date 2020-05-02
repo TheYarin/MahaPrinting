@@ -5,18 +5,18 @@ import amber from "@material-ui/core/colors/amber";
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: deepPurple[500],
-            dark: deepPurple[700],
+            main: deepPurple[400],
+            dark: deepPurple[600],
             light: deepPurple[200],
         },
         secondary: {
-            main: amber[600],
+            main: amber[700],
             dark: amber[800],
-            light: amber[300],
+            light: amber[400],
         },
         global: {
             titleBar: {
-                backgroundColor: deepPurple[300],
+                backgroundColor: deepPurple[400],
                 color: "white",
             },
             titleBarText: {
@@ -47,6 +47,18 @@ const theme = createMuiTheme({
         MuiDialog: {
             paperWidthSm: {
                 maxWidth: undefined,
+            },
+        },
+        MuiButton: {
+            root: {
+                fontFamily: "monospace",
+                fontWeight: "bold",
+                fontSize: "110%",
+                fontStyle: "italic",
+                letterSpacing: 2,
+            },
+            sizeSmall: {
+                fontSize: "90%",
             },
         },
     },

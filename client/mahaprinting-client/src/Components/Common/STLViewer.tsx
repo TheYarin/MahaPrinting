@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { createStyles, WithStyles, withStyles, Theme } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 
 // @ts-ignore
 import OriginalSTLViewer from "stl-viewer";
@@ -25,8 +26,8 @@ class STLViewer extends Component<STLViewerProps> {
                 model={stlFile}
                 width={300}
                 height={300}
-                modelColor={this.props.theme.palette.secondary.main}
-                backgroundColor="#EAEAEA"
+                modelColor={this.props.theme.palette.primary.main}
+                backgroundColor={grey[200]}
                 rotate={true}
                 orbitControls={true}
                 rotationSpeeds={[0, 0.02, 0]}
