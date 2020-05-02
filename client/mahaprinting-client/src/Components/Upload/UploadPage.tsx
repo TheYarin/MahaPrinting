@@ -6,10 +6,11 @@ import { observer, Provider } from "mobx-react";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
 import Add from "@material-ui/icons/Add";
 import UploadNewPrint from "../Dialogs/UploadNewPrint";
+import { flexColCentered } from "../../JssUtils";
 
 const styles = createStyles({
   root: {
-    maxWidth: 800,
+    maxWidth: "min(600px, 100%)",
   },
   uploadButton: {
     position: "fixed",
@@ -20,8 +21,7 @@ const styles = createStyles({
   },
   container: {
     width: "100%",
-    display: "flex",
-    justifyContent: "center",
+    ...flexColCentered,
   },
 });
 
@@ -49,14 +49,16 @@ class UploadPage extends React.Component<Props> {
 
     return (
       <Provider userPrintStore={this.userPrintsStore}>
-        <div className={classes.root}>
-          {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
-          <Fab color="primary" children={<Add />} className={classes.uploadButton} onClick={this._openUploadForm} />
-          <UploadNewPrint
-            userPrintsStore={this.userPrintsStore}
-            open={this.state.uploadFormOpen}
-            onClose={this._closeUploadForm}
-          />
+        <div className={classes.container}>
+          <div className={classes.root}>
+            {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+            <Fab color="primary" children={<Add />} className={classes.uploadButton} onClick={this._openUploadForm} />
+            <UploadNewPrint
+              userPrintsStore={this.userPrintsStore}
+              open={this.state.uploadFormOpen}
+              onClose={this._closeUploadForm}
+            />
+          </div>
         </div>
       </Provider>
     );
