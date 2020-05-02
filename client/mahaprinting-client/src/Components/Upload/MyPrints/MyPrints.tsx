@@ -1,17 +1,18 @@
 import React from "react";
 import { observer } from "mobx-react";
 import UserPrintListItem from "./UserPrintListItem/UserPrintListItem";
-import { withStyles, createStyles, WithStyles, colors, Typography, List } from "@material-ui/core";
+import { withStyles, createStyles, WithStyles, List } from "@material-ui/core";
 import { UserPrintsStore } from "../../../PrintStores/UserPrintsStore";
+import TitleBar from "../../Common/TitleBar";
 
 const styles = createStyles({
   title: {
     marginBottom: 10,
   },
   list: {
-    backgroundColor: colors.grey[50],
-    padding: "5px 0",
-    boxShadow: "0 0 5px " + colors.grey[50],
+    // backgroundColor: colors.grey[50],
+    // padding: "5px 0",
+    // boxShadow: "0 0 5px " + colors.grey[50],
   },
 });
 
@@ -30,9 +31,7 @@ class MyPrints extends React.Component<Props> {
 
     return (
       <div>
-        <Typography className={classes.title} variant="h5">
-          Your prints
-        </Typography>
+        <TitleBar title="Your Prints" />
         <List className={classes.list}>{expansionPanels}</List>
       </div>
     );

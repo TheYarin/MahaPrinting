@@ -1,21 +1,27 @@
 import React from "react";
-import Typography from "@material-ui/core/Typography";
-import { createStyles, WithStyles, withStyles } from "@material-ui/core";
-
-import UploadPrintForm from "./UploadPrintForm";
+import { createStyles, WithStyles, withStyles, Fab } from "@material-ui/core";
 import MyPrints from "./MyPrints/MyPrints";
 import { ServerConnector } from "../../ServerAPI/ServerConnector";
 import { observer, Provider } from "mobx-react";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
+import Add from "@material-ui/icons/Add";
+import UploadNewPrint from "../Dialogs/UploadNewPrint";
+import { flexColCentered } from "../../JssUtils";
 
 const styles = createStyles({
   root: {
-    "& > *:not(:last-child)": {
-      marginBottom: 20,
-    },
-    display: "flex",
-    flexDirection: "column",
     maxWidth: "min(600px, 100%)",
+  },
+  uploadButton: {
+    position: "fixed",
+    zIndex: 1,
+    bottom: 0,
+    right: 0,
+    margin: 25,
+  },
+  container: {
+    width: "100%",
+    ...flexColCentered,
   },
 });
 
@@ -25,6 +31,13 @@ interface Props extends WithStyles<typeof styles> {
 
 @observer
 class UploadPage extends React.Component<Props> {
+  state = {
+    uploadFormOpen: false,
+  };
+
+  _openUploadForm = () => this.setState({ uploadFormOpen: true });
+  _closeUploadForm = () => this.setState({ uploadFormOpen: false });
+
   userPrintsStore: UserPrintsStore = new UserPrintsStore(this.props.serverConnector);
 
   async componentDidMount() {
@@ -36,10 +49,16 @@ class UploadPage extends React.Component<Props> {
 
     return (
       <Provider userPrintStore={this.userPrintsStore}>
-        <div className={classes.root}>
-          <Typography variant="h2">Upload</Typography>
-          <UploadPrintForm userPrintsStore={this.userPrintsStore} />
-          {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+        <div className={classes.container}>
+          <div className={classes.root}>
+            {this.userPrintsStore.prints.length > 0 && <MyPrints userPrintsStore={this.userPrintsStore} />}
+            <Fab color="primary" children={<Add />} className={classes.uploadButton} onClick={this._openUploadForm} />
+            <UploadNewPrint
+              userPrintsStore={this.userPrintsStore}
+              open={this.state.uploadFormOpen}
+              onClose={this._closeUploadForm}
+            />
+          </div>
         </div>
       </Provider>
     );

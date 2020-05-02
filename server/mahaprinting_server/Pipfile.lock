@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fee8e914a3838713f249fae8460dd59158b4218e2894ba3c5db1b698ff149e33"
+            "sha256": "02721b1997761e6761af897e0406a63ddad213040ed212b41daf934ada2b4e58"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -32,10 +32,10 @@
         },
         "click": {
             "hashes": [
-                "sha256:8a18b4ea89d8820c5d0c7da8a64b2c324b4dabb695804dbfea19b9be9d88c0cc",
-                "sha256:e345d143d80bf5ee7534056164e5e112ea5e22716bbb1ce727941f4c8b471b9a"
+                "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a",
+                "sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"
             ],
-            "version": "==7.1.1"
+            "version": "==7.1.2"
         },
         "flask": {
             "hashes": [
@@ -112,21 +112,17 @@
             ],
             "version": "==1.1.1"
         },
-        "octorest": {
-            "hashes": [
-                "sha256:0818c1827608b1cac38d95ff2fe37c35187b07dd25d4f1b5f8c7873a17bc55bd",
-                "sha256:bd4344c137dc68912ee856706bbc89511f88b499caf965bf7746bdfa16fc0953"
-            ],
-            "index": "pypi",
-            "version": "==0.3"
+        "octorest-0-3-yarin": {
+            "git": "https://github.com/TheYarin/OctoRest",
+            "ref": "4037adbb7131922fb922b236b73cc522912bd736"
         },
         "python-dotenv": {
             "hashes": [
-                "sha256:81822227f771e0cab235a2939f0f265954ac4763cafd806d845801c863bf372f",
-                "sha256:92b3123fb2d58a284f76cc92bfe4ee6c502c32ded73e8b051c4f6afc8b6751ed"
+                "sha256:25c0ff1a3e12f4bde8d592cc254ab075cfe734fc5dd989036716fd17ee7e5ec7",
+                "sha256:3b9909bc96b0edc6b01586e1eed05e71174ef4e04c71da5786370cebea53ad74"
             ],
             "index": "pypi",
-            "version": "==0.12.0"
+            "version": "==0.13.0"
         },
         "requests": {
             "hashes": [
@@ -145,17 +141,10 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc",
-                "sha256:87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc"
+                "sha256:3018294ebefce6572a474f0604c2021e33b3fd8006ecd11d62107a5d2a963527",
+                "sha256:88206b0eb87e6d677d424843ac5209e3fb9d0190d0ee169599165ec25e9d9115"
             ],
-            "version": "==1.25.8"
-        },
-        "websocket-client": {
-            "hashes": [
-                "sha256:0fc45c961324d79c781bab301359d5a1b00b13ad1b10415a4780229ef71a5549",
-                "sha256:d735b91d6d1692a6a181f2a8c9e0238e5f6373356f561bb9dc4c7af36f452010"
-            ],
-            "version": "==0.57.0"
+            "version": "==1.25.9"
         },
         "werkzeug": {
             "hashes": [
@@ -168,10 +157,10 @@
     "develop": {
         "autopep8": {
             "hashes": [
-                "sha256:cc6be1dfd46f2c7fa00e84a357f1a269683985b09eaffb47654ed551194399eb"
+                "sha256:152fd8fe47d02082be86e05001ec23d6f420086db56b17fc883f3f965fb34954"
             ],
             "index": "pypi",
-            "version": "==1.5.1"
+            "version": "==1.5.2"
         },
         "entrypoints": {
             "hashes": [

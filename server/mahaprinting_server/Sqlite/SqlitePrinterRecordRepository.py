@@ -22,11 +22,11 @@ class SqlitePrinterRecordRepository(IPrinterRecordRepository):
     # Public Methods
 
     @synchronized
-    def add_printer(self, printer_name: str, address: str, apiKey: str) -> Printer:
-        cursor = self._connection.execute(INSERT_QUERY, (printer_name, address, apiKey))
+    def add_printer(self, printer_name: str, url: str, apiKey: str) -> Printer:
+        cursor = self._connection.execute(INSERT_QUERY, (printer_name, url, apiKey))
         self._connection.commit()
 
-        printer = Printer(cursor.lastrowid, printer_name, address, apiKey)
+        printer = Printer(cursor.lastrowid, printer_name, url, apiKey)
 
         return printer
 
@@ -52,12 +52,12 @@ def _convert_rows_to_printers(rows: List[Row]) -> List[Printer]:
 CREATE_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS printers (
     id integer PRIMARY KEY,
     name text,
-    address text,
+    url text,
     apiKey text
 );'''
 
-INSERT_QUERY = ''' INSERT INTO printers(name,address,apiKey)
+INSERT_QUERY = ''' INSERT INTO printers(name,url,apiKey)
                    VALUES(?,?,?) '''
 
-GET_ALL_PRINTERS_QUERY = 'SELECT id,name,address,apiKey FROM printers'
+GET_ALL_PRINTERS_QUERY = 'SELECT id,name,url,apiKey FROM printers'
 # GET_PRINT = GET_ALL_PRINTERS_QUERY + ' WHERE id=? LIMIT 1'

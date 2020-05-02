@@ -53,7 +53,9 @@ class UserPrintListItem extends Component<Props> {
 
     return (
       <Paper className={classes.root}>
-        <UserPrintDialog userPrint={userPrint} open={this.dialogOpen} onClose={() => (this.dialogOpen = false)} />
+        {this.dialogOpen && (
+          <UserPrintDialog userPrint={userPrint} open={this.dialogOpen} onClose={() => (this.dialogOpen = false)} />
+        )}
         <ListItem button disableGutters className={classes.itemContent} onClick={() => (this.dialogOpen = true)}>
           <Typography className={classes.fullSizeFont} variant="body1">
             {name}
