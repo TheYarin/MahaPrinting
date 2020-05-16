@@ -11,10 +11,10 @@ export default abstract class PrintsStoreBase<TPrint extends UserPrint> {
     this.serverConnector = serverConnector;
   }
 
-  protected abstract async _getPrints(): Promise<TPrint[]>;
+  protected abstract async _loadPrintsFromServer(): Promise<TPrint[]>;
 
   public async initialize(): Promise<void> {
-    const printsFromTheServer = await this._getPrints();
+    const printsFromTheServer = await this._loadPrintsFromServer();
 
     this.prints.push(...printsFromTheServer);
   }
