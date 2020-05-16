@@ -89,6 +89,9 @@ class MahaPrintingService:
     def cancel_print(self, print_id: int) -> None:
         self.print_record_repository.change_print_status(print_id, PrintStatus.CANCELED)
 
+    def mark_print_as_completed(self, print_id: int) -> None:
+        self.print_record_repository.change_print_status(print_id, PrintStatus.COMPLETED)
+
     # PRINTERS STUFF
 
     def add_printer(self, printer_name: str, url: str, user: Optional[str]) -> Tuple[AddPrinterResult, Optional[Dict]]:

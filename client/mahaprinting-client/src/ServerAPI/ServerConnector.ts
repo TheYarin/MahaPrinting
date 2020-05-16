@@ -56,6 +56,10 @@ export class ServerConnector {
     await postJsonWithCookies(this.urlBase + "/cancelPrint", { printId });
   }
 
+  public async markPrintAsCompleted(printId: number): Promise<void> {
+    await postJsonWithCookies(this.urlBase + "/markPrintAsCompleted", { printId });
+  }
+
   public async getPrinters(): Promise<Printer[]> {
     const response = await fetchWithCookies(this.urlBase + "/getPrinters");
 

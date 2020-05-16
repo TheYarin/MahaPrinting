@@ -129,6 +129,20 @@ def cancel_print():
     return response
 
 
+@app.route('/markPrintAsCompleted', methods=['POST'])
+@admin_only
+def mark_print_as_completed():
+    data = request.json
+    print_id = data['printId']
+
+    mahaprinting_service.mark_print_as_completed(print_id)
+
+    response = make_response()
+    response.status_code = 200
+
+    return response
+
+
 @app.route('/addPrinter', methods=['POST'])
 @admin_only
 def add_printer():
