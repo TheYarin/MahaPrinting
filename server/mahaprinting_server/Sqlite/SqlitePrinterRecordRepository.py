@@ -39,14 +39,11 @@ class SqlitePrinterRecordRepository(IPrinterRecordRepository):
 
 
 def _convert_rows_to_printers(rows: List[Row]) -> List[Printer]:
-    printers = []
+    return [_convert_row_to_printer(row) for row in rows]
 
-    for row in rows:
-        printer = Printer(row[0], row[1], row[2], row[3])
 
-        printers.append(printer)
-
-    return printers
+def _convert_row_to_printer(row: Row) -> Printer:
+    return Printer(row[0], row[1], row[2], row[3])
 
 
 CREATE_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS printers (

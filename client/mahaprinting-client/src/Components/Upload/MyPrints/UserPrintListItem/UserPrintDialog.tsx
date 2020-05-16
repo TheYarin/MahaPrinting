@@ -92,7 +92,7 @@ class UserPrintDialog extends Component<Props> {
     super(props);
     if (!props.userPrintStore)
       throw new Error(
-        "Missing prop: myPrintStore." +
+        "Missing prop: userPrintStore." +
           " Yeah yeah, I know it's marked as optional, but that's just to trick typescript to work with Mobx's inject." +
           " It's actually mandatory. sorry."
       );

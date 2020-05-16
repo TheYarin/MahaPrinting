@@ -84,14 +84,7 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
 
 
 def _convert_rows_to_prints(rows: List[Row]) -> List[Print]:
-    prints = []
-
-    for row in rows:
-        p = _convert_row_to_print(row)
-
-        prints.append(p)
-
-    return prints
+    return [_convert_row_to_print(row) for row in rows]
 
 
 def _convert_row_to_print(row: Row) -> Print:
