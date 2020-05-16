@@ -95,7 +95,7 @@ class UploadNewPrint extends Component<Props> {
             value={this.notes || ""}
             onChange={(event) => (this.notes = event.target.value)}
           />
-          <input type="file" ref={this.fileInputRef} accept=".stl" onChange={(e) => (this.file = e.target.files?.[0])} />
+          <input type="file" ref={this.fileInputRef} accept=".stl" onChange={this.onFileChange} />
           <Button type="submit" variant="contained" color="primary" disabled={!this.canSubmitForm}>
             Upload print!
           </Button>
@@ -103,6 +103,15 @@ class UploadNewPrint extends Component<Props> {
       </Dialog>
     );
   }
+
+  onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.file = e.target.files?.[0];
+
+    if (this.file && !this.name) {
+      const fileNameWithoutExtension = this.file.name.replace(/\.[^/.]+$/, "");
+      this.name = fileNameWithoutExtension;
+    }
+  };
 }
 
 export default withStyles(styles)(UploadNewPrint);
