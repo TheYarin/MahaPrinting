@@ -13,6 +13,14 @@ export default abstract class PrintsStoreBase<TPrint extends UserPrint> {
 
   protected abstract async _loadPrintsFromServer(): Promise<TPrint[]>;
 
+  protected _getPrint(printId: number): TPrint {
+    const print = this.prints.find((p) => p.id === printId);
+
+    if (print === undefined) throw new Error("Tried to access a print that cannot be found in the print store");
+
+    return print;
+  }
+
   public async initialize(): Promise<void> {
     const printsFromTheServer = await this._loadPrintsFromServer();
 
@@ -20,11 +28,9 @@ export default abstract class PrintsStoreBase<TPrint extends UserPrint> {
   }
 
   public async cancelPrint(printId: number): Promise<void> {
+    const printToCancel = this._getPrint(printId);
+
     await this.serverConnector.cancelPrint(printId);
-    const printToCancel = this.prints.find((p) => p.id === printId);
-
-    if (printToCancel === undefined) throw new Error("Tried to cancel a print that cannot be found in the print store");
-
     printToCancel.status = PrintStatus.CANCELED;
   }
 }
