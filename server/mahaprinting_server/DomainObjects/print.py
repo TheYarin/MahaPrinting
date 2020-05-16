@@ -4,7 +4,7 @@ from enum import Enum
 class PrintStatus(str, Enum):
     IN_QUEUE = "IN_QUEUE"
     PRINTING = "PRINTING"
-    DONE = "DONE"
+    COMPLETED = "COMPLETED"
     CANCELED = "CANCELED"
 
 

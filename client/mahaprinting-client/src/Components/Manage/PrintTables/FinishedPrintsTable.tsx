@@ -42,7 +42,7 @@ class FinishedPrintsTable extends Component<Props> {
           } as Column<any>,
           { title: "Contact Details", field: "contactDetails", width: "25%" } as Column<any>,
         ]}
-        data={printsStore.prints.filter((p) => [PrintStatus.DONE, PrintStatus.CANCELED].includes(p.status)).map((p) => p)}
+        data={printsStore.prints.filter((p) => [PrintStatus.COMPLETED, PrintStatus.CANCELED].includes(p.status)).map((p) => p)}
         actions={[
           {
             icon: () => <RemoveIcon className={classes.icon} />,
