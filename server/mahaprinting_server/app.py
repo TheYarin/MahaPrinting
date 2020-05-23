@@ -169,3 +169,15 @@ def get_printers():
     printers_info = mahaprinting_service.get_printers_info()
 
     return json.dumps(printers_info)
+
+# SENDING PRINT TO PRINTER STUFF
+@app.route('/slicePrint', methods=['POST'])
+@admin_only
+def slice_print():
+    data = request.json
+    print_id = data['printId']
+    printer_id = data['printerId']
+
+    mahaprinting_service.slice_print(print_id, printer_id)
+
+    raise NotImplementedError()

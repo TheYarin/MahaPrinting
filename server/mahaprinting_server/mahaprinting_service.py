@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import Dict, List, Optional, Tuple
+from pathlib import Path
 
 import requests
 
@@ -178,3 +179,21 @@ class MahaPrintingService:
         printer_info['jobInfo'] = octorest_client.job_info()
 
         return printer_info
+
+    # SENDING PRINT TO PRINTER STUFF
+
+    def slice_print(self, print_id, printer_id):
+        printer = self.printer_record_repository.get_printer(printer_id)
+
+        if printer is None:
+            raise ValueError("No printer matches the given printer ID.")
+
+        octorest_client = OctoRest(url=printer.url)
+        print_file_path = self.uploads_manager.get_print_file_path(print_id)
+
+        octorest_client.upload(print_file_path)
+
+        print_file_name = Path(print_file_path).name
+        octorest_client.slice(print_file_name)
+
+        raise NotImplementedError()
