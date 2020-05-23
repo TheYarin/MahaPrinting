@@ -17,7 +17,6 @@ class PrettyTimestamp extends Component<Props> {
   render() {
     const { timestamp, classes } = this.props;
 
-    console.log("PrettyTimestamp -> render -> timestamp", timestamp);
     const timestampMoment = moment(timestamp);
     return (
       <Tooltip title={timestampMoment.format("MMMM Do YYYY, HH:mm:ss")}>
