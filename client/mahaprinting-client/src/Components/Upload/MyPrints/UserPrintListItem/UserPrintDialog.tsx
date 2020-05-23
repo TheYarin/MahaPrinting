@@ -11,6 +11,7 @@ import { flexColCentered } from "../../../../JssUtils";
 import Dialog from "../../../Common/Dialog";
 import STLPrintViewer from "../../../Common/STLPrintViewer";
 import GcodePrintViewer from "../../../Common/GcodePrintViewer";
+import FileType from "../../../Common/FileType";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -93,12 +94,13 @@ class UserPrintDialog extends Component<Props> {
 
   render() {
     const { classes, userPrint, open, onClose, userPrintStore } = this.props;
-    const { name, status, notes, timestamp, contactDetails } = userPrint;
+    const { name, status, notes, timestamp, contactDetails, fileExtension } = userPrint;
 
     type GenericObject = { [key: string]: any };
 
     const printInfo = {
       Uploaded: moment(timestamp).calendar(),
+      "File Type": <FileType fileExtension={fileExtension} />,
       Status: status,
       Notes: notes,
       "Contact Details": contactDetails,

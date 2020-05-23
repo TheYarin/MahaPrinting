@@ -22,6 +22,7 @@ import ViewColumn from "@material-ui/icons/ViewColumn";
 import { observer } from "mobx-react";
 import * as muiColors from "@material-ui/core/colors";
 import TitleBar from "../Common/TitleBar";
+import FileType from "./FileType";
 
 const tableIcons = {
   Add: forwardRef((props, ref: any) => <AddBox {...props} ref={ref} />),
@@ -71,14 +72,8 @@ class StyledPrintsTable extends Component<Props> {
         title: "File Type",
         field: "fileExtension",
         width: "7%",
-        cellStyle: { wordBreak: "break-word", textAlign: "center", fontWeight: "bold" },
-        render: (print) => {
-          let color;
-          if (print.fileExtension === "stl") color = muiColors.blue[700];
-          else if (print.fileExtension === "gcode") color = muiColors.orange[900];
-
-          return <em style={{ color }}>{print.fileExtension.toUpperCase()}</em>;
-        },
+        cellStyle: { wordBreak: "break-word", textAlign: "center" },
+        render: (print) => <FileType fileExtension={print.fileExtension} />,
       } as Column<any>,
       ...columns.filter((c) => !(["id", "name"] as Array<any>).includes(c.field)),
     ];
