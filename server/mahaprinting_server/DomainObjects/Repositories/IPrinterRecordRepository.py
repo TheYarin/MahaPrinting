@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from DomainObjects.printer import Printer
 
@@ -8,4 +8,7 @@ class IPrinterRecordRepository:
         raise NotImplementedError()
 
     def get_printers(self) -> List[Printer]:
+        raise NotImplementedError()
+
+    def get_printer(self, printer_id) -> Optional[Printer]:
         raise NotImplementedError()

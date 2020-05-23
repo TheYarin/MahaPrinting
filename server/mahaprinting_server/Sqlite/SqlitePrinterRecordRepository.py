@@ -1,6 +1,6 @@
 from threading import Lock
 
-from typing import List
+from typing import List, Optional
 from sqlite3.dbapi2 import Connection, Row
 
 from DomainObjects.Repositories.IPrinterRecordRepository import IPrinterRecordRepository
@@ -37,6 +37,17 @@ class SqlitePrinterRecordRepository(IPrinterRecordRepository):
 
         return printers
 
+    def get_printer(self, printer_id) -> Optional[Printer]:
+        # Don't remove the trailing comma in (printer_id,) - The comma turns this expression into a tuple
+        cursor = self._connection.execute(GET_PRINTER, (printer_id,))
+
+        row = cursor.fetchone()
+
+        if row is None:
+            return None
+
+        return _convert_row_to_printer(row)
+
 
 def _convert_rows_to_printers(rows: List[Row]) -> List[Printer]:
     return [_convert_row_to_printer(row) for row in rows]
@@ -57,4 +68,4 @@ INSERT_QUERY = ''' INSERT INTO printers(name,url,apiKey)
                    VALUES(?,?,?) '''
 
 GET_ALL_PRINTERS_QUERY = 'SELECT id,name,url,apiKey FROM printers'
-# GET_PRINT = GET_ALL_PRINTERS_QUERY + ' WHERE id=? LIMIT 1'
+GET_PRINTER = GET_ALL_PRINTERS_QUERY + ' WHERE id=? LIMIT 1'
