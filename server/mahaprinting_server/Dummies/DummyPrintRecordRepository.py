@@ -12,12 +12,16 @@ class DummyPrintRecordRepository(IPrintRecordRepository):
     def add_print(self,
                   user_id: str,
                   name: str,
+                  file_extension: str,
+                  sliced_for: Optional[str],
                   contact_details: str,
                   notes: str) -> Print:
         self._counter += 1
         print = Print()
         print.id = self._counter
         print.name = name
+        print.fileExtension = file_extension
+        print.slicedFor = sliced_for
         print.contactDetails = contact_details
         print.notes = notes
         print.status = PrintStatus.IN_QUEUE

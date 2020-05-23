@@ -6,6 +6,7 @@ import { observable, computed } from "mobx";
 import { observer } from "mobx-react";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
 import STLViewer from "../Common/STLViewer";
+import Select from "../Common/Select";
 
 const styles = createStyles({
   root: {
@@ -24,27 +25,33 @@ interface Props extends WithStyles<typeof styles> {
 @observer
 class UploadNewPrint extends Component<Props> {
   @observable name?: string;
+  @observable slicedFor?: string;
   @observable contactDetails?: string = window.localStorage["contactDetails"];
   @observable notes?: string;
   @observable file?: File;
   fileInputRef: React.RefObject<HTMLInputElement> = React.createRef<HTMLInputElement>();
 
   @observable visited: { [key: string]: boolean } = {};
+  @observable showSlicedForField: boolean = false;
+  @observable printerModels?: string[];
 
   @computed
   get canSubmitForm() {
+    if (this.showSlicedForField && !this.slicedFor) return false;
+
     return this.name && this.contactDetails && this.file;
   }
 
   submitPrint = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // await this.props.userPrintsStore.add(
-    //   this.name as string,
-    //   this.contactDetails as string,
-    //   this.notes as string,
-    //   this.file as File
-    // );
+    await this.props.userPrintsStore.add(
+      this.name as string,
+      this.slicedFor as string,
+      this.contactDetails as string,
+      this.notes as string,
+      this.file as File
+    );
 
     window.localStorage["contactDetails"] = this.contactDetails;
     this.resetForm();
@@ -53,11 +60,23 @@ class UploadNewPrint extends Component<Props> {
 
   resetForm() {
     this.name = undefined;
+    this.resetSlicedFor();
     this.contactDetails = window.localStorage["contactDetails"];
     this.notes = undefined;
     this.file = undefined;
     this.fileInputRef.current!.value = "";
     this.visited = {};
+  }
+
+  private resetSlicedFor() {
+    this.slicedFor = undefined;
+    this.showSlicedForField = false;
+  }
+
+  async componentDidMount() {
+    this.printerModels = await this.props.userPrintsStore.serverConnector.getPrinterModels();
+
+    if (this.printerModels?.length === 1) this.slicedFor = this.printerModels[0];
   }
 
   render() {
@@ -95,7 +114,22 @@ class UploadNewPrint extends Component<Props> {
             value={this.notes || ""}
             onChange={(event) => (this.notes = event.target.value)}
           />
-          <input type="file" ref={this.fileInputRef} accept=".stl" onChange={this.onFileChange} />
+          <input type="file" ref={this.fileInputRef} accept=".stl,.gcode" onChange={this.onFileChange} />
+          {this.showSlicedForField && (
+            <Select
+              options={this.printerModels}
+              loading={this.printerModels === undefined}
+              textFieldProps={{
+                label: "Sliced for...",
+                helperText: "For which printer model was this GCODE sliced for?",
+
+                value: this.slicedFor || "",
+                onChange: (event: any) => {
+                  this.slicedFor = event.target.value as string;
+                },
+              }}
+            />
+          )}
           <Button type="submit" variant="contained" color="primary" disabled={!this.canSubmitForm}>
             Upload print!
           </Button>
@@ -105,11 +139,25 @@ class UploadNewPrint extends Component<Props> {
   }
 
   onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const previousFile = this.file;
     this.file = e.target.files?.[0];
 
-    if (this.file && !this.name) {
-      const fileNameWithoutExtension = this.file.name.replace(/\.[^/.]+$/, "");
-      this.name = fileNameWithoutExtension;
+    // Clear print name if it was derived from the previous file's name
+    const previousFileNameWithoutExtension = previousFile?.name.replace(/\.[^/.]+$/, "");
+    if (this.name === previousFileNameWithoutExtension) this.name = undefined;
+
+    if (this.file) {
+      if (!this.name) {
+        const fileNameWithoutExtension = this.file.name.replace(/\.[^/.]+$/, "");
+        this.name = fileNameWithoutExtension;
+      }
+
+      const fileExtension = this.file.name.split(".").pop()?.toLowerCase();
+
+      if (fileExtension === "gcode") this.showSlicedForField = true;
+      else this.resetSlicedFor();
+    } else {
+      this.resetSlicedFor();
     }
   };
 }

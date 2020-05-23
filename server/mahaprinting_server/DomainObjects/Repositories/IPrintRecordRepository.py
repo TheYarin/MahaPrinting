@@ -8,6 +8,8 @@ class IPrintRecordRepository:
     def add_print(self,
                   user_id: str,
                   name: str,
+                  file_extension: str,
+                  sliced_for: Optional[str],
                   contact_details: str,
                   notes: str) -> Print:
         raise NotImplementedError()

@@ -7,13 +7,18 @@ const styles = createStyles({
   root: {},
 });
 
-interface GCodeViewerProps extends WithStyles<typeof styles> {
+interface GcodeViewerProps extends WithStyles<typeof styles> {
   gcode: string;
-  height: number;
-  width: number;
+  height?: number;
+  width?: number;
 }
 
-class GCodeViewer extends Component<GCodeViewerProps> {
+class GcodeViewer extends Component<GcodeViewerProps> {
+  static defaultProps = {
+    width: 300,
+    height: 300,
+  };
+
   id: string = randomGcodeViewerId();
 
   componentDidMount() {
@@ -31,7 +36,7 @@ class GCodeViewer extends Component<GCodeViewerProps> {
   }
 }
 
-export default withStyles(styles)(GCodeViewer);
+export default withStyles(styles)(GcodeViewer);
 
 function randomString(length: number): string {
   var result = "";

@@ -3,6 +3,7 @@ from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 
 import requests
+from functools import partial
 
 from werkzeug.datastructures import FileStorage
 from octorest import OctoRest, WorkflowAppKeyRequestResult
@@ -14,8 +15,9 @@ from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordReposi
 
 from DomainObjects.Repositories.IPrinterRecordRepository import IPrinterRecordRepository
 from DomainObjects.printer import Printer
+from werkzeug.utils import secure_filename
 
-from Dummies.DummyOctoRest import dummy_octorest_generator
+ALLOWED_EXTENSIONS = ['stl', 'gcode']
 
 
 class AddPrinterResult(str, Enum):
@@ -49,25 +51,31 @@ class MahaPrintingService:
 
     def upload_user_print(self,
                           name: str,
+                          sliced_for: Optional[str],
                           contact_details: str,
                           notes: str,
                           user_id: str,
                           file: FileStorage) -> UserPrint:
-        filename = file.filename
+        filename = secure_filename(file.filename)
 
         if '.' not in filename:
             raise ValueError("Invalid file: has no extension")
 
         extension = filename.rsplit('.', 1)[1].lower()
 
-        if extension != "stl":  # This test also makes sure no nasty path games get through
+        if extension not in ALLOWED_EXTENSIONS:
             raise ValueError("Invalid file: forbidden extension")
+
+        if extension == 'gcode' and sliced_for is None:
+            raise ValueError("Missing slicing target printer (sliced_for)")
+        elif extension != 'gcode' and sliced_for is not None:
+            raise ValueError("sliced_for should only be filled for files of type 'gcode'")
 
         tmp_file_path = self.uploads_manager.upload_temp_file(file, extension)
 
-        print = self.print_record_repository.add_print(user_id, name, contact_details, notes)
+        print = self.print_record_repository.add_print(user_id, name, extension, sliced_for, contact_details, notes)
 
-        self.uploads_manager.save_temp_file_as_print(print.id, tmp_file_path)
+        self.uploads_manager.save_temp_file_as_print(print, tmp_file_path)
 
         return UserPrint(print)
 
@@ -163,7 +171,10 @@ class MahaPrintingService:
         octorest_client = None
 
         try:
-            octorest_client = OctoRest(url=printer.url, apikey=printer.apiKey)
+            session = requests.Session()
+            # overriding the default session OctoRest uses to set my desired timeout
+            session.get = partial(session.get, timeout=3)
+            octorest_client = OctoRest(url=printer.url, apikey=printer.apiKey, session=session)
         except (RuntimeError, requests.exceptions.ConnectionError):
             printer_info['state'] = "OctoPrint unavailable"
             return printer_info
@@ -180,6 +191,9 @@ class MahaPrintingService:
 
         return printer_info
 
+    def get_printer_models(self):
+        return {printer_info.get('model') for printer_info in self.get_printers_info() if 'model' in printer_info}
+
     # SENDING PRINT TO PRINTER STUFF
 
     def slice_print(self, print_id, printer_id):
@@ -189,7 +203,12 @@ class MahaPrintingService:
             raise ValueError("No printer matches the given printer ID.")
 
         octorest_client = OctoRest(url=printer.url)
-        print_file_path = self.uploads_manager.get_print_file_path(print_id)
+        print = self.print_record_repository.get_print(print_id)
+
+        if print is None:
+            raise ValueError("No print matches the given print ID.")
+
+        print_file_path = self.uploads_manager.get_print_file_path(print)
 
         octorest_client.upload(print_file_path)
 

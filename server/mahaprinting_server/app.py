@@ -79,6 +79,8 @@ def upload_user_print():
     user_id = get_user_id()
     user_print = mahaprinting_service.upload_user_print(
         request.form['name'],
+        # using .get() for the slicedFor field because it's optional will throw a KeyError if accessed by []
+        request.form.get('slicedFor'),
         request.form['contactDetails'],
         request.form['notes'],
         user_id,
@@ -98,7 +100,13 @@ def get_user_prints():
 @app.route('/getPrintFile/<int:print_id>', methods=['GET'])
 def get_print_file(print_id):
     throw_if_not_admin_or_print_owner(print_id)
-    file_path_in_storage = uploads_manager.get_print_file_path(print_id)
+
+    print = print_record_repository.get_print(print_id)
+
+    if print is None:
+        raise ValueError("No print matches the given print ID.")
+
+    file_path_in_storage = uploads_manager.get_print_file_path(print)
 
     if not os.path.isfile(file_path_in_storage):
         abort(404)
@@ -147,8 +155,9 @@ def mark_print_as_completed():
 @admin_only
 def add_printer():
     data = request.json
+    # using .get() for the user because it's optional will throw a KeyError if accessed by []
     (result, printer_info) = mahaprinting_service.add_printer(
-        data['printerName'], data['url'], data.get('user'))  # using .get() for the user because it's optional will throw a KeyError if accessed by []
+        data['printerName'], data['url'], data.get('user'))
 
     return json.dumps({'result': result, 'printerInfo': printer_info})
 
@@ -169,6 +178,13 @@ def get_printers():
     printers_info = mahaprinting_service.get_printers_info()
 
     return json.dumps(printers_info)
+
+
+@app.route('/getPrinterModels', methods=['GET'])
+def get_printer_models():
+    printer_models = mahaprinting_service.get_printer_models()
+
+    return json.dumps(list(printer_models))
 
 # SENDING PRINT TO PRINTER STUFF
 @app.route('/slicePrint', methods=['POST'])

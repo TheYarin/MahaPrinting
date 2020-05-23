@@ -33,9 +33,16 @@ export class ServerConnector {
     return prints;
   }
 
-  public async uploadUserPrint(name: string, contactDetails: string, notes: string, file: File): Promise<UserPrint> {
+  public async uploadUserPrint(
+    name: string,
+    slicedFor: string | undefined,
+    contactDetails: string,
+    notes: string,
+    file: File
+  ): Promise<UserPrint> {
     const formData = new FormData();
     formData.append("name", name);
+    if (slicedFor) formData.append("slicedFor", slicedFor);
     formData.append("contactDetails", contactDetails);
     formData.append("notes", notes);
     formData.append("file", file);
@@ -46,10 +53,19 @@ export class ServerConnector {
     return new UserPrint(responseJson);
   }
 
-  public async getPrintFile(printId: number): Promise<ArrayBuffer> {
-    const response = await fetchWithCookies(this.urlBase + "/getPrintFile/" + printId);
+  public async getPrintFileAsArrayBuffer(printId: number): Promise<ArrayBuffer> {
+    const response = await this._fetchPrintFile(printId);
 
     return await response.arrayBuffer();
+  }
+
+  public async getPrintFileAsString(printId: number): Promise<string> {
+    const response = await this._fetchPrintFile(printId);
+    return await response.text();
+  }
+
+  private _fetchPrintFile(printId: number): Promise<Response> {
+    return fetchWithCookies(this.urlBase + "/getPrintFile/" + printId);
   }
 
   public async cancelPrint(printId: number): Promise<void> {
@@ -75,6 +91,13 @@ export class ServerConnector {
     const maybePrinter = responseJson.printerInfo ? new Printer(responseJson.printerInfo) : undefined;
 
     return [responseJson.result as AddPrinterResult, maybePrinter];
+  }
+
+  public async getPrinterModels(): Promise<string[]> {
+    const response = await fetchWithCookies(this.urlBase + "/getPrinterModels");
+    const responseJson: string[] = await response.json();
+
+    return responseJson;
   }
 
   public async addPrinterWithApiKey(

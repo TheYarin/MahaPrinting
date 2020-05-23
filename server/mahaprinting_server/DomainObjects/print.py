@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 
 class PrintStatus(str, Enum):
@@ -11,6 +12,8 @@ class PrintStatus(str, Enum):
 class Print:
     id: int
     name: str
+    fileExtension: str
+    slicedFor: Optional[str]
     status: PrintStatus
     userId: str
     contactDetails: str
@@ -22,6 +25,8 @@ class UserPrint:
     def __init__(self, print: Print):
         self.id = print.id
         self.name = print.name
+        self.fileExtension = print.fileExtension
+        self.slicedFor = print.slicedFor
         self.status = print.status
         self.contactDetails = print.contactDetails
         self.notes = print.notes

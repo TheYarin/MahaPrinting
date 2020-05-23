@@ -2,15 +2,15 @@ import React, { Component, ReactNode } from "react";
 import { observer, inject } from "mobx-react";
 import { createStyles, WithStyles, withStyles, Typography, Theme, Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { grey } from "@material-ui/core/colors";
+import moment from "moment";
 import { PrintStatus } from "../../../../ServerAPI/PrintStatus";
 import { UserPrint } from "../../../../ServerAPI/UserPrint";
 import { UserPrintsStore } from "../../../../PrintStores/UserPrintsStore";
 import { flexColCentered } from "../../../../JssUtils";
-import { observable } from "mobx";
-import STLViewer from "../../../Common/STLViewer";
 import Dialog from "../../../Common/Dialog";
-import { grey } from "@material-ui/core/colors";
-import moment from "moment";
+import STLPrintViewer from "../../../Common/STLPrintViewer";
+import GcodePrintViewer from "../../../Common/GcodePrintViewer";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -34,16 +34,6 @@ const styles = (theme: Theme) =>
       backgroundColor: grey[200],
       border: `1px solid ${grey[300]}`,
       position: "relative",
-    },
-    previewText: {
-      fontStyle: "italic",
-      fontFamily: "monospace",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      margin: 10,
-      fontSize: "105%",
-      color: grey[500],
     },
     printInfoDiv: {
       margin: "10px 3px 0",
@@ -86,8 +76,6 @@ interface InfoPairProps {
 @inject("userPrintStore")
 @observer
 class UserPrintDialog extends Component<Props> {
-  @observable stlFile?: ArrayBuffer;
-
   constructor(props: Props) {
     super(props);
     if (!props.userPrintStore)
@@ -98,26 +86,13 @@ class UserPrintDialog extends Component<Props> {
       );
   }
 
-  async componentDidMount() {
-    await this.loadStlFile();
-  }
-
   /* cancelPrint = () => {
         const userAgreedToCancel = window.confirm("Are you sure you want to cancel this print?");
         if (userAgreedToCancel) this.props.userPrintStore!.cancelPrint(this.props.userPrint.id);
     }; */
 
-  async loadStlFile() {
-    const { userPrint, userPrintStore } = this.props;
-    try {
-      this.stlFile = await userPrintStore?.serverConnector.getPrintFile(userPrint.id);
-    } catch {
-      this.stlFile = undefined;
-    }
-  }
-
   render() {
-    const { classes, userPrint, open, onClose } = this.props;
+    const { classes, userPrint, open, onClose, userPrintStore } = this.props;
     const { name, status, notes, timestamp, contactDetails } = userPrint;
 
     type GenericObject = { [key: string]: any };
@@ -131,12 +106,12 @@ class UserPrintDialog extends Component<Props> {
 
     return (
       <Dialog onClose={onClose} open={open} title={`Print: ${name}`}>
-        <div className={classes.previewContainer}>
-          {this.stlFile && <STLViewer height={250} stlFile={this.stlFile} />}
-          <Typography variant="caption" className={classes.previewText}>
-            (STL Preview)
-          </Typography>
-        </div>
+        {userPrint.fileExtension === "stl" && userPrintStore && (
+          <STLPrintViewer printId={userPrint.id} serverConnector={userPrintStore.serverConnector} />
+        )}
+        {userPrint.fileExtension === "gcode" && userPrintStore && (
+          <GcodePrintViewer printId={userPrint.id} serverConnector={userPrintStore.serverConnector} />
+        )}
 
         <div className={classes.printInfoDiv}>
           {Object.keys(printInfo).map((k) => (

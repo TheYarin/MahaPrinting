@@ -8,6 +8,8 @@ export class Print extends UserPrint {
   constructor({
     id,
     name,
+    fileExtension,
+    slicedFor,
     status,
     timestamp,
     contactDetails,
@@ -16,13 +18,15 @@ export class Print extends UserPrint {
   }: {
     id: number;
     name: string;
+    fileExtension: string;
+    slicedFor?: string;
     status: PrintStatus;
     timestamp: string;
     contactDetails: string;
     notes: string;
     userId: string;
   }) {
-    super({ id, name, status, timestamp, contactDetails, notes });
+    super({ id, name, fileExtension, slicedFor, status, timestamp, contactDetails, notes });
     this.userId = userId;
   }
 }

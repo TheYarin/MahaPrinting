@@ -26,11 +26,15 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
     def add_print(self,
                   user_id: str,
                   name: str,
+                  file_extension: str,
+                  sliced_for: Optional[str],
                   contact_details: str,
                   notes: str) -> Print:
         p = Print()
         p.userId = user_id
         p.name = name
+        p.fileExtension = file_extension
+        p.slicedFor = sliced_for
         p.contactDetails = contact_details
         p.notes = notes
         p.status = PrintStatus.IN_QUEUE
@@ -40,6 +44,8 @@ class SqlitePrintRecordRepository(IPrintRecordRepository):
                                           (p.timestamp,
                                            p.userId,
                                            p.name,
+                                           p.fileExtension,
+                                           p.slicedFor,
                                            p.status,
                                            p.contactDetails,
                                            notes))
@@ -89,7 +95,7 @@ def _convert_rows_to_prints(rows: List[Row]) -> List[Print]:
 
 def _convert_row_to_print(row: Row) -> Print:
     p = Print()
-    (p.id, p.timestamp, p.userId, p.name, p.status, p.contactDetails, p.notes) = row
+    (p.id, p.timestamp, p.userId, p.name, p.fileExtension, p.slicedFor, p.status, p.contactDetails, p.notes) = row
 
     return p
 
@@ -99,15 +105,17 @@ CREATE_TABLE_QUERY = '''CREATE TABLE IF NOT EXISTS prints (
     timestamp text,
     userId text,
     name text,
+    fileExtension text,
+    slicedFor text,
     status text,
     contactDetails text,
     notes text
 );'''
 
-INSERT_QUERY = ''' INSERT INTO prints(timestamp,userId,name,status,contactDetails,notes)
-                   VALUES(?,?,?,?,?,?) '''
+INSERT_QUERY = ''' INSERT INTO prints(timestamp,userId,name,fileExtension,slicedFor,status,contactDetails,notes)
+                   VALUES(?,?,?,?,?,?,?,?) '''
 
-GET_ALL_PRINTS_QUERY = 'SELECT id,timestamp,userId,name,status,contactDetails,notes FROM prints'
+GET_ALL_PRINTS_QUERY = 'SELECT id,timestamp,userId,name,fileExtension,slicedFor,status,contactDetails,notes FROM prints'
 GET_USER_PRINTS_QUERY = GET_ALL_PRINTS_QUERY + ' WHERE userId=?'
 GET_PRINT = GET_ALL_PRINTS_QUERY + ' WHERE id=? LIMIT 1'
 UPDATE_PRINT_STATUS = 'UPDATE prints SET status = ? WHERE id = ?'

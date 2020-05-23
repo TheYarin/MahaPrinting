@@ -1,3 +1,4 @@
+from DomainObjects.print import Print
 import os
 from datetime import datetime
 from pathlib import Path
@@ -24,12 +25,12 @@ class UploadsManager():
 
         return tmp_file_path
 
-    def save_temp_file_as_print(self, print_id: int, tmp_file_path: str) -> None:
-        final_file_path = self.get_print_file_path(print_id)
+    def save_temp_file_as_print(self, print: Print, tmp_file_path: str) -> None:
+        final_file_path = self.get_print_file_path(print)
         os.rename(tmp_file_path, final_file_path)
 
-    def get_print_file_path(self, print_id: int) -> str:
-        return os.path.join(self._uploads_folder, self.get_print_file_name(print_id))
+    def get_print_file_path(self, print: Print) -> str:
+        return os.path.join(self._uploads_folder, self.get_print_file_name(print))
 
-    def get_print_file_name(self, print_id: int) -> str:
-        return 'mahaprinting_' + str(print_id) + '.stl'
+    def get_print_file_name(self, print: Print) -> str:
+        return 'mahaprinting_' + str(print.id) + '.' + print.fileExtension
