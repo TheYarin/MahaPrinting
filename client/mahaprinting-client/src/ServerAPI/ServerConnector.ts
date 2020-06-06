@@ -42,10 +42,10 @@ export class ServerConnector {
   ): Promise<UserPrint> {
     const formData = new FormData();
     formData.append("name", name);
-    if (slicedFor) formData.append("slicedFor", slicedFor);
     formData.append("contactDetails", contactDetails);
-    formData.append("notes", notes);
     formData.append("file", file);
+    if (slicedFor) formData.append("slicedFor", slicedFor);
+    if (notes) formData.append("notes", notes);
 
     const response = await postFormDataWithCookies(this.urlBase + "/uploadUserPrint", formData);
     const responseJson = await response.json();
