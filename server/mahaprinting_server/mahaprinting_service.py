@@ -8,7 +8,7 @@ from functools import partial
 from werkzeug.datastructures import FileStorage
 from octorest import OctoRest, WorkflowAppKeyRequestResult
 
-from UploadsManager import UploadsManager
+from UploadsManager import UploadsManager, get_print_file_name_by_extension
 
 from DomainObjects.print import Print, PrintStatus, UserPrint
 from DomainObjects.Repositories.IPrintRecordRepository import IPrintRecordRepository
@@ -18,6 +18,24 @@ from DomainObjects.printer import Printer
 from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = ['stl', 'gcode']
+
+
+def validate_file_extension(file: FileStorage, allowed_extensions: List[str]) -> str:
+    '''
+    throws ValueError if invalid extension or no extension
+    returns the file extension
+    '''
+    filename = secure_filename(file)
+
+    if '.' not in filename:
+        raise ValueError("Invalid file: has no extension")
+
+    extension = filename.rsplit('.', 1)[1].lower()
+
+    if extension not in allowed_extensions:
+        raise ValueError("Invalid file: forbidden extension")
+
+    return extension
 
 
 class AddPrinterResult(str, Enum):
@@ -56,15 +74,8 @@ class MahaPrintingService:
                           notes: str,
                           user_id: str,
                           file: FileStorage) -> UserPrint:
-        filename = secure_filename(file.filename)
 
-        if '.' not in filename:
-            raise ValueError("Invalid file: has no extension")
-
-        extension = filename.rsplit('.', 1)[1].lower()
-
-        if extension not in ALLOWED_EXTENSIONS:
-            raise ValueError("Invalid file: forbidden extension")
+        extension = validate_file_extension(file, ALLOWED_EXTENSIONS)
 
         if extension == 'gcode' and sliced_for is None:
             raise ValueError("Missing slicing target printer (sliced_for)")
@@ -196,7 +207,7 @@ class MahaPrintingService:
 
     # SENDING PRINT TO PRINTER STUFF
 
-    def slice_print(self, print_id, printer_id):
+    def send_to_printer(self, print_id: int, printer_id: int, gcode_file: Optional[FileStorage] = None):
         printer = self.printer_record_repository.get_printer(printer_id)
 
         if printer is None:
@@ -208,11 +219,18 @@ class MahaPrintingService:
         if print is None:
             raise ValueError("No print matches the given print ID.")
 
-        print_file_path = self.uploads_manager.get_print_file_path(print)
+        uploaded_file_path_in_octoprint = None
 
-        octorest_client.upload(print_file_path)
+        if gcode_file is None:
+            print_file_path = self.uploads_manager.get_print_file_path(print)
+            octorest_client.upload(print_file_path)
+            uploaded_file_path_in_octoprint = Path(print_file_path).name
+        else:
+            validate_file_extension(gcode_file, ['gcode'])
+            file_name = get_print_file_name_by_extension(print.id, 'gcode')
+            octorest_client.upload((file_name, gcode_file))
+            uploaded_file_path_in_octoprint = file_name
 
-        print_file_name = Path(print_file_path).name
-        octorest_client.slice(print_file_name)
+        octorest_client.select(uploaded_file_path_in_octoprint, print=True)
 
-        raise NotImplementedError()
+        self.print_record_repository.change_print_status(print.id, PrintStatus.PRINTING)

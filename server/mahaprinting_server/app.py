@@ -33,6 +33,15 @@ def get_user_id():
     return request.cookies.get(USER_ID_COOKIE)
 
 
+def get_user_id_throw_if_none():
+    user_id = get_user_id()
+
+    if user_id is None:
+        raise ValueError("Did not receive a user_id cookie")
+
+    return user_id
+
+
 def admin_only(routeHandlingFunc: Callable[[], Any]):
     def wrapper():
         user_id = get_user_id()
@@ -49,7 +58,7 @@ def admin_only(routeHandlingFunc: Callable[[], Any]):
 
 
 def throw_if_not_admin_or_print_owner(print_id: int):
-    user_id = get_user_id()
+    user_id = get_user_id_throw_if_none()
 
     if not (user_id == ADMIN_USER_ID or mahaprinting_service.does_print_belongs_to_user(print_id, user_id)):
         abort(401)
@@ -76,7 +85,8 @@ def initialize():
 
 @app.route('/uploadUserPrint', methods=['POST'])
 def upload_user_print():
-    user_id = get_user_id()
+    user_id = get_user_id_throw_if_none()
+
     user_print = mahaprinting_service.upload_user_print(
         request.form['name'],
         # using .get() for the slicedFor field because it's optional will throw a KeyError if accessed by []
@@ -91,7 +101,7 @@ def upload_user_print():
 
 @app.route('/getUserPrints', methods=['GET'])
 def get_user_prints():
-    user_id = get_user_id()
+    user_id = get_user_id_throw_if_none()
     user_prints = mahaprinting_service.get_user_prints(user_id)
 
     return json.dumps([p.__dict__ for p in user_prints])
@@ -187,13 +197,12 @@ def get_printer_models():
     return json.dumps(list(printer_models))
 
 # SENDING PRINT TO PRINTER STUFF
-@app.route('/slicePrint', methods=['POST'])
+@app.route('/sendToPrinter', methods=['POST'])
 @admin_only
-def slice_print():
-    data = request.json
-    print_id = data['printId']
-    printer_id = data['printerId']
+def send_to_printer():
+    data = request.form
+    print_id = int(data['printId'])
+    printer_id = int(data['printerId'])
+    gcode_file = request.files['gcodeFile']
 
-    mahaprinting_service.slice_print(print_id, printer_id)
-
-    raise NotImplementedError()
+    mahaprinting_service.send_to_printer(print_id, printer_id, gcode_file)

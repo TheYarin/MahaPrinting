@@ -111,6 +111,15 @@ export class ServerConnector {
 
     return [responseJson.result as AddPrinterWithApiKeyResult, maybePrinter];
   }
+
+  public async sendToPrinter(printId: number, printerId: number, gcodeFile?: File) {
+    const formData = new FormData();
+    formData.append("printId", printId.toString());
+    formData.append("printerId", printerId.toString());
+    if (gcodeFile) formData.append("gcodeFile", gcodeFile);
+
+    await postFormDataWithCookies(this.urlBase + "/uploadUserPrint", formData);
+  }
 }
 
 async function fetchWithCookies(input: RequestInfo, init?: RequestInit): Promise<Response> {

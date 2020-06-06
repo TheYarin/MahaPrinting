@@ -7,6 +7,13 @@ export class PrintsStore extends PrintsStoreBase<Print> {
     return await this.serverConnector.getAllPrints();
   }
 
+  public async sendToPrinter(printId: number, printerId: number, gcodeFile?: File) {
+    const print = this._getPrint(printId);
+    await this.serverConnector.sendToPrinter(printId, printerId, gcodeFile);
+
+    print.status = PrintStatus.PRINTING;
+  }
+
   public async markPrintAsCompleted(printId: number): Promise<void> {
     const print = this._getPrint(printId);
 

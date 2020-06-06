@@ -8,6 +8,10 @@ from werkzeug.datastructures import FileStorage
 TEMP_FILES_FOLDER_NAME = 'tmp'
 
 
+def get_print_file_name_by_extension(print_id: int, extension: str) -> str:
+    return 'mahaprinting_' + str(print_id) + '.' + extension
+
+
 class UploadsManager():
     _uploads_folder: str
     _temp_folder: str
@@ -33,4 +37,4 @@ class UploadsManager():
         return os.path.join(self._uploads_folder, self.get_print_file_name(print))
 
     def get_print_file_name(self, print: Print) -> str:
-        return 'mahaprinting_' + str(print.id) + '.' + print.fileExtension
+        return get_print_file_name_by_extension(print.id, print.fileExtension)
