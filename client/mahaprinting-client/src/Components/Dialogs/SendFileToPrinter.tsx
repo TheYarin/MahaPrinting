@@ -1,45 +1,75 @@
 import React, { Component } from "react";
-import { createStyles, WithStyles, withStyles } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles, TextField, MenuItem } from "@material-ui/core";
 import { Print } from "../../ServerAPI/Print";
 import Dialog from "../Common/Dialog";
-import Stepper from "../Common/Stepper";
-import CubeLoader from "../Common/CubeLoader/CubeLoader";
+import { observable } from "mobx";
+import Printer from "../../ServerAPI/Printer";
 
 const styles = createStyles({});
 
 interface Props extends WithStyles<typeof styles> {
-    open: boolean;
-    onClose: Function;
-    selectedPrint?: Print;
+  onClose: Function;
+  selectedPrint: Print;
+  printers: Printer[];
 }
 
 const states = {
-    UPLOADING: "Uploading",
-    SLICING: "Slicing",
+  UPLOADING: "Uploading",
+  SLICING: "Slicing",
 };
 
-const stepTitles = ["Preview Print Info", "Select Printer", "Preview G-Code", "Confirm and Continue"];
-
 class SendFileToPrinter extends Component<Props> {
-    state = {
-        activeStep: -1,
-        printState: null,
-    };
+  @observable selectedPrinterId?: number;
 
-    _uploadPrint = () => this.setState({ printState: states.UPLOADING });
-    _slicePrint = () => this.setState({ printState: states.SLICING });
-    _showPrintInfo = () => this.setState({ printState: null, activeStep: 2 });
+  constructor(props: Props) {
+    super(props);
 
-    render() {
-        const { classes } = this.props;
-        const { activeStep, printState } = this.state;
-        return (
-            <Dialog open={this.props.open} onClose={this.props.onClose} title="Send to 3D Printer">
-                <Stepper activeStep={activeStep} steps={stepTitles} />
-                {activeStep === 1 && !!printState && <CubeLoader text={`${printState}...`} />}
-            </Dialog>
-        );
-    }
+    this.selectedPrinterId = props.printers[0]?.id;
+  }
+
+  state = {
+    activeStep: -1,
+    printState: null,
+  };
+
+  onSubmit = () => {};
+
+  _uploadPrint = () => this.setState({ printState: states.UPLOADING });
+  _slicePrint = () => this.setState({ printState: states.SLICING });
+  _showPrintInfo = () => this.setState({ printState: null, activeStep: 2 });
+
+  render() {
+    const { selectedPrint, printers } = this.props;
+
+    let printerOptions = printers.map((printer) => (
+      <MenuItem key={printer.id} value={printer.id}>
+        {printer.name}
+      </MenuItem>
+    ));
+
+    printerOptions = [
+      <MenuItem key=" " value=" ">
+        {" "}
+      </MenuItem>,
+      ...printerOptions,
+    ];
+
+    return (
+      <Dialog open={true} onClose={this.props.onClose} title="Send to 3D Printer">
+        <TextField
+          select
+          label="Choose Printer"
+          value={this.selectedPrinterId || ""}
+          onChange={(event: any) => {
+            this.selectedPrinterId = event.target.value;
+          }}
+        >
+          {printerOptions}
+        </TextField>
+        {selectedPrint.fileExtension === "stl" && <input />}
+      </Dialog>
+    );
+  }
 }
 
 export default withStyles(styles)(SendFileToPrinter);

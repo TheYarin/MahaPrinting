@@ -8,7 +8,6 @@ import { observer } from "mobx-react";
 import * as muiColors from "@material-ui/core/colors";
 import { PrintStatus } from "../../../ServerAPI/PrintStatus";
 import { Print } from "../../../ServerAPI/Print";
-import SendFileToPrinter from "../../Dialogs/SendFileToPrinter";
 import { Column } from "material-table";
 import PrettyTimestamp from "../../Common/PrettyTimestamp";
 
@@ -18,49 +17,35 @@ const styles = createStyles({
 
 interface Props extends WithStyles<typeof styles> {
   printsStore: PrintsStore;
+  sendToPrinter: (print: Print) => void;
 }
 
 @observer
 class WaitingPrintsTable extends Component<Props> {
-  state = {
-    printDialogOpen: false,
-    selectedPrint: undefined,
-  };
-
-  _openPrintDialog = (selectedPrint: Print) => this.setState({ printDialogOpen: true, selectedPrint: selectedPrint });
-  _closePrintDialog = () => this.setState({ printDialogOpen: false, selectedPrint: null });
-
   render() {
-    const { classes, printsStore } = this.props;
+    const { classes, printsStore, sendToPrinter } = this.props;
     return (
-      <>
-        <StyledPrintsTable
-          title={"Waiting Prints"}
-          columns={[
-            { title: "Notes", field: "notes", width: "25%" } as Column<any>,
-            {
-              title: "Uploaded",
-              field: "timestamp",
-              render: (rowData) => <PrettyTimestamp timestamp={rowData.timestamp} />,
-              width: "12%",
-            } as Column<any>,
-            { title: "Contact Details", field: "contactDetails", width: "25%" } as Column<any>,
-          ]}
-          data={printsStore.prints.filter((p) => p.status === PrintStatus.IN_QUEUE).map((p) => p)}
-          actions={[
-            {
-              icon: () => <PrintIcon className={classes.icon} />,
-              tooltip: "Send to 3D printer",
-              onClick: (e, rowData) => this._openPrintDialog(rowData),
-            },
-          ]}
-        />
-        <SendFileToPrinter
-          selectedPrint={this.state.selectedPrint}
-          open={this.state.printDialogOpen}
-          onClose={this._closePrintDialog}
-        />
-      </>
+      <StyledPrintsTable
+        title={"Waiting Prints"}
+        columns={[
+          { title: "Notes", field: "notes", width: "25%" } as Column<any>,
+          {
+            title: "Uploaded",
+            field: "timestamp",
+            render: (rowData) => <PrettyTimestamp timestamp={rowData.timestamp} />,
+            width: "12%",
+          } as Column<any>,
+          { title: "Contact Details", field: "contactDetails", width: "25%" } as Column<any>,
+        ]}
+        data={printsStore.prints.filter((p) => p.status === PrintStatus.IN_QUEUE).map((p) => p)}
+        actions={[
+          {
+            icon: () => <PrintIcon className={classes.icon} />,
+            tooltip: "Send to 3D printer",
+            onClick: (_e, rowData) => sendToPrinter(rowData),
+          },
+        ]}
+      />
     );
   }
 }
