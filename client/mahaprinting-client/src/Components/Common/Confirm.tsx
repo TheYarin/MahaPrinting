@@ -1,28 +1,13 @@
 import React, { Component } from "react";
-import { render, unmountComponentAtNode } from "react-dom";
 
 import { createStyles, WithStyles, withStyles, Theme, Dialog, DialogActions, DialogContent, Button } from "@material-ui/core";
+import { openDetachedDialog } from "./DetachedDialog";
 
 export function confirm(message: string): Promise<boolean> {
-  const divTarget = document.createElement("div");
-  divTarget.id = "react-confirm-dialog";
-  document.body.appendChild(divTarget);
-
-  let promiseResolve: (value: boolean) => void;
-
-  const confirmPromise = new Promise<boolean>((resolve, reject) => {
-    promiseResolve = resolve;
-  });
-
-  const closeDialog = (confirmResult: boolean) => {
-    unmountComponentAtNode(divTarget);
-    document.body.removeChild(divTarget);
-    promiseResolve(confirmResult);
-  };
-
-  render(<StyledConfirmDialog message={message} closeDialog={closeDialog} />, divTarget);
-
-  return confirmPromise;
+  return openDetachedDialog(
+    (closeDialog) => <StyledConfirmDialog message={message} closeDialog={closeDialog} />,
+    "react-confirm-dialog"
+  );
 }
 
 const styles = (theme: Theme) =>
