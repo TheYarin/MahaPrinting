@@ -1,12 +1,11 @@
 import React, { Component, FormEvent } from "react";
-import { TextField, WithStyles, createStyles, withStyles, Button, Divider } from "@material-ui/core";
+import { TextField, WithStyles, createStyles, withStyles, Button } from "@material-ui/core";
 import { flexCol, spaceChildren } from "../../JssUtils";
 import Dialog from "../Common/Dialog";
 import { observable, computed } from "mobx";
 import { observer } from "mobx-react";
 import { UserPrintsStore } from "../../PrintStores/UserPrintsStore";
-import STLViewer from "../Common/STLViewer";
-import Select from "../Common/Select";
+import Select, { Option } from "../Common/Select";
 
 const styles = createStyles({
   root: {
@@ -73,14 +72,26 @@ class UploadNewPrint extends Component<Props> {
     this.showSlicedForField = false;
   }
 
-  async componentDidMount() {
-    this.printerModels = await this.props.userPrintsStore.serverConnector.getPrinterModels();
+  // async componentDidMount() {
+  //   this.printerModels = await this.props.userPrintsStore.serverConnector.getPrinterModels();
 
-    if (this.printerModels?.length === 1) this.slicedFor = this.printerModels[0];
-  }
+  //   if (this.printerModels?.length === 1) this.slicedFor = this.printerModels[0];
+  // }
 
   render() {
     const { classes } = this.props;
+
+    let printerModelOptions: Option[];
+    let helperText;
+
+    if (!this.printerModels) {
+      printerModelOptions = [];
+      helperText = "Loading...";
+    } else {
+      printerModelOptions = this.printerModels.map((printerModel) => new Option(printerModel, printerModel));
+      helperText = "For which printer model was this GCODE sliced for?";
+    }
+
     return (
       <Dialog open={this.props.open} onClose={this.props.onClose} title="Upload New Print">
         <form className={classes.root} autoComplete="off" onSubmit={this.submitPrint}>
@@ -117,16 +128,12 @@ class UploadNewPrint extends Component<Props> {
           <input type="file" ref={this.fileInputRef} accept=".stl,.gcode" onChange={this.onFileChange} />
           {this.showSlicedForField && (
             <Select
-              options={this.printerModels}
-              loading={this.printerModels === undefined}
-              textFieldProps={{
-                label: "Sliced for...",
-                helperText: "For which printer model was this GCODE sliced for?",
-
-                value: this.slicedFor || "",
-                onChange: (event: any) => {
-                  this.slicedFor = event.target.value as string;
-                },
+              label="Sliced for..."
+              options={printerModelOptions}
+              helperText={helperText}
+              value={this.slicedFor || ""}
+              onChange={(event: any) => {
+                this.slicedFor = event.target.value as string;
               }}
             />
           )}

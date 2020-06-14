@@ -1,38 +1,43 @@
 import React, { Component } from "react";
 import { MenuItem, TextField, TextFieldProps } from "@material-ui/core";
 
+type optionValue = string | number;
+
+export class Option {
+  label: string;
+  value: optionValue;
+
+  constructor(label: string, value: optionValue) {
+    this.label = label;
+    this.value = value;
+  }
+}
+
 interface Props {
-  options?: string[];
-  loading?: boolean;
-  textFieldProps?: TextFieldProps;
+  label: string;
+  helperText?: string;
+  value: optionValue;
+  onChange: (e: any) => void;
+  options: Option[];
 }
 
 class Select extends Component<Props> {
+  public static defaultProps = {
+    textWhenValueIsUndefined: "",
+  };
+
   render() {
-    const { options, loading, textFieldProps } = this.props;
+    const { value, label, onChange, helperText } = this.props;
 
-    if (loading) {
-      const loadingText = "Loading...";
-
-      return (
-        <TextField select disabled {...textFieldProps} value={loadingText}>
-          <MenuItem value={loadingText}>{loadingText}</MenuItem>
-        </TextField>
-      );
-    }
-
-    if (!options || (Array.isArray(options) && options.length === 0)) {
-      console.error("Falsey options passed to Select:", options);
-      return "ERROR";
-    }
+    const optionsElements = this.props.options.map((option) => (
+      <MenuItem key={option.value || ""} value={option.value}>
+        {option.label}
+      </MenuItem>
+    ));
 
     return (
-      <TextField select {...textFieldProps}>
-        {options.map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
+      <TextField select {...{ onChange, label, helperText, value }}>
+        {optionsElements}
       </TextField>
     );
   }

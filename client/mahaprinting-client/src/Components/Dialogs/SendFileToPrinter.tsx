@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { createStyles, WithStyles, withStyles, TextField, MenuItem } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles } from "@material-ui/core";
 import { Print } from "../../ServerAPI/Print";
 import Dialog from "../Common/Dialog";
 import { observable } from "mobx";
 import Printer from "../../ServerAPI/Printer";
+import Select, { Option } from "../Common/Select";
 
 const styles = createStyles({});
 
@@ -24,7 +25,9 @@ class SendFileToPrinter extends Component<Props> {
   constructor(props: Props) {
     super(props);
 
-    this.selectedPrinterId = props.printers[0]?.id;
+    const { printers } = this.props;
+
+    if (printers.length === 1) this.selectedPrinterId = printers[0]?.id;
   }
 
   state = {
@@ -41,31 +44,18 @@ class SendFileToPrinter extends Component<Props> {
   render() {
     const { selectedPrint, printers } = this.props;
 
-    let printerOptions = printers.map((printer) => (
-      <MenuItem key={printer.id} value={printer.id}>
-        {printer.name}
-      </MenuItem>
-    ));
-
-    printerOptions = [
-      <MenuItem key=" " value=" ">
-        {" "}
-      </MenuItem>,
-      ...printerOptions,
-    ];
+    let printerOptions = printers.map((printer) => new Option(printer.name, printer.id));
 
     return (
       <Dialog open={true} onClose={this.props.onClose} title="Send to 3D Printer">
-        <TextField
-          select
+        <Select
           label="Choose Printer"
           value={this.selectedPrinterId || ""}
+          options={printerOptions}
           onChange={(event: any) => {
             this.selectedPrinterId = event.target.value;
           }}
-        >
-          {printerOptions}
-        </TextField>
+        />
         {selectedPrint.fileExtension === "stl" && <input />}
       </Dialog>
     );
