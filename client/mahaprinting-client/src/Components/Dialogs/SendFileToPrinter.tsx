@@ -55,7 +55,7 @@ class SendFileToPrinter extends Component<Props> {
   get canSubmitForm() {
     if (this.shouldUploadGcode && !this.file) return false;
 
-    return this.selectedPrinterId && this.file;
+    return this.selectedPrinterId;
   }
 
   onSubmit = async (event: FormEvent<HTMLFormElement>) => {
