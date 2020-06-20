@@ -121,7 +121,7 @@ def get_print_file(print_id):
     if not os.path.isfile(file_path_in_storage):
         abort(404)
 
-    return send_file(file_path_in_storage)
+    return send_file(file_path_in_storage, as_attachment=True)
 
 
 @app.route('/getAllPrints', methods=['GET'])
@@ -203,6 +203,6 @@ def send_to_printer():
     data = request.form
     print_id = int(data['printId'])
     printer_id = int(data['printerId'])
-    gcode_file = request.files['gcodeFile']
+    gcode_file = request.files.get('gcodeFile')
 
     mahaprinting_service.send_to_printer(print_id, printer_id, gcode_file)

@@ -64,6 +64,10 @@ export class ServerConnector {
     return await response.text();
   }
 
+  public getPrintFileDownloadLink(printId: number): string {
+    return this.urlBase + "/getPrintFile/" + printId;
+  }
+
   private _fetchPrintFile(printId: number): Promise<Response> {
     return fetchWithCookies(this.urlBase + "/getPrintFile/" + printId);
   }
@@ -118,7 +122,7 @@ export class ServerConnector {
     formData.append("printerId", printerId.toString());
     if (gcodeFile) formData.append("gcodeFile", gcodeFile);
 
-    await postFormDataWithCookies(this.urlBase + "/uploadUserPrint", formData);
+    await postFormDataWithCookies(this.urlBase + "/sendToPrinter", formData);
   }
 }
 

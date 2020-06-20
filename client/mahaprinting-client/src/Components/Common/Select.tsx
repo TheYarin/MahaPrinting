@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MenuItem, TextField, TextFieldProps } from "@material-ui/core";
+import { MenuItem, TextField } from "@material-ui/core";
 
 type optionValue = string | number;
 

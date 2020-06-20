@@ -34,7 +34,12 @@ class ManagePage extends React.Component<Props> {
     openDetachedDialog(
       (closeDialog) => (
         <MuiThemeProvider theme={theme}>
-          <SendFileToPrinter selectedPrint={selectedPrint} printers={this.printersStore.printers} onClose={closeDialog} />
+          <SendFileToPrinter
+            selectedPrint={selectedPrint}
+            printers={this.printersStore.printers}
+            onClose={closeDialog}
+            serverConnector={this.props.serverConnector}
+          />
         </MuiThemeProvider>
       ),
       "sendToPrinterDialog"

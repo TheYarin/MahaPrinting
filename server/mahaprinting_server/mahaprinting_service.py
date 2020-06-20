@@ -25,7 +25,7 @@ def validate_file_extension(file: FileStorage, allowed_extensions: List[str]) ->
     throws ValueError if invalid extension or no extension
     returns the file extension
     '''
-    filename = secure_filename(file)
+    filename = secure_filename(file.filename)
 
     if '.' not in filename:
         raise ValueError("Invalid file: has no extension")
