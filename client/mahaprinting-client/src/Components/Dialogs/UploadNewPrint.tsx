@@ -38,7 +38,7 @@ class UploadNewPrint extends Component<Props> {
   get canSubmitForm() {
     if (this.showSlicedForField && !this.slicedFor) return false;
 
-    return this.name && this.contactDetails && this.file;
+    return this.name && this.contactDetails && this.file && this.notes;
   }
 
   submitPrint = async (event: FormEvent<HTMLFormElement>) => {
@@ -72,11 +72,11 @@ class UploadNewPrint extends Component<Props> {
     this.showSlicedForField = false;
   }
 
-  // async componentDidMount() {
-  //   this.printerModels = await this.props.userPrintsStore.serverConnector.getPrinterModels();
+  async componentDidMount() {
+    this.printerModels = await this.props.userPrintsStore.serverConnector.getPrinterModels();
 
-  //   if (this.printerModels?.length === 1) this.slicedFor = this.printerModels[0];
-  // }
+    if (this.printerModels?.length === 1) this.slicedFor = this.printerModels[0];
+  }
 
   render() {
     const { classes } = this.props;
