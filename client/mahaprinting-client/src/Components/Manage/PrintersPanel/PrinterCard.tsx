@@ -79,7 +79,6 @@ class PrinterCard extends Component<Props> {
   render() {
     const { classes, printer } = this.props;
     const { name } = printer;
-    console.log("PrinterCard -> render -> printer", printer);
     const stateText = printer.state; // One of the following values:  "Operational", "Printing", "Pausing", "Cancelling", "Error", "Closed" or "Offline". or "Closed". or "Error: Failed to autodetect serial port, please set it manually.".
     let printStatusTextColor;
 

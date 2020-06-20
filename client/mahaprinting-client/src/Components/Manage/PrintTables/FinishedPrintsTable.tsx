@@ -22,7 +22,7 @@ interface Props extends WithStyles<typeof styles> {
 class FinishedPrintsTable extends Component<Props> {
   render() {
     const { classes, printsStore } = this.props;
-    console.log(printsStore.prints);
+
     return (
       <StyledPrintsTable
         title={"Print History"}
