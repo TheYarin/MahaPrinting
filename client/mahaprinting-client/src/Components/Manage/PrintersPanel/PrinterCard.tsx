@@ -99,7 +99,7 @@ class PrinterCard extends Component<Props> {
             className={classes.printStatusText}
             children={
               stateText === "Printing"
-                ? "Printing <PrintName>..." //TODO: Add the name of what's being printed?
+                ? `Printing ${printer.jobInfo.job.file.name}...` //TODO: Add the name of what's being printed?
                 : stateText === "Closed" || stateText === "Error: Failed to autodetect serial port, please set it manually."
                 ? "Printer unavailable"
                 : stateText
