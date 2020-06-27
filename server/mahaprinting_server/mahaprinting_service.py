@@ -213,7 +213,7 @@ class MahaPrintingService:
         if printer is None:
             raise ValueError("No printer matches the given printer ID.")
 
-        octorest_client = OctoRest(url=printer.url)
+        octorest_client = OctoRest(url=printer.url, apikey=printer.apiKey)
         print = self.print_record_repository.get_print(print_id)
 
         if print is None:

@@ -206,3 +206,8 @@ def send_to_printer():
     gcode_file = request.files.get('gcodeFile')
 
     mahaprinting_service.send_to_printer(print_id, printer_id, gcode_file)
+
+    response = make_response()
+    response.status_code = 200
+
+    return response
