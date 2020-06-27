@@ -1,5 +1,5 @@
 import React, { Component, FormEvent } from "react";
-import { createStyles, WithStyles, withStyles, Typography, Button } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles, Typography, Button, Divider } from "@material-ui/core";
 import { Print } from "../../ServerAPI/Print";
 import Dialog from "../Common/Dialog";
 import { observable, computed } from "mobx";
@@ -10,6 +10,7 @@ import ButtonWithIconOnTop from "../Common/ButtonWithIconOnTop";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import { ServerConnector } from "../../ServerAPI/ServerConnector";
 import { observer } from "mobx-react";
+import PrintInfoPanel from "../Common/PrintInfoPanel";
 
 const styles = createStyles({
   root: {
@@ -76,7 +77,8 @@ class SendFileToPrinter extends Component<Props> {
     return (
       <Dialog open={true} onClose={this.props.onClose} title="Send to 3D Printer">
         <form className={classes.root} onSubmit={this.onSubmit}>
-          <Typography>**Details**</Typography>
+          <PrintInfoPanel print={selectedPrint} serverConnector={serverConnector} />
+          <Divider />
           <Select
             label="Choose Printer"
             value={this.selectedPrinterId || ""}

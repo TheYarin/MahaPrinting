@@ -1,19 +1,16 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import { createStyles, WithStyles, withStyles, Typography, Theme, Button } from "@material-ui/core";
+import { createStyles, WithStyles, withStyles, Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { grey } from "@material-ui/core/colors";
-import moment from "moment";
 import { PrintStatus } from "../../../../ServerAPI/PrintStatus";
 import { UserPrint } from "../../../../ServerAPI/UserPrint";
 import { UserPrintsStore } from "../../../../PrintStores/UserPrintsStore";
 import { flexColCentered } from "../../../../JssUtils";
 import Dialog from "../../../Common/Dialog";
-import STLPrintViewer from "../../../Common/STLPrintViewer";
-import GcodePrintViewer from "../../../Common/GcodePrintViewer";
-import FileType from "../../../Common/FileType";
+import PrintInfoPanel from "../../../Common/PrintInfoPanel";
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     root: {},
     closeButton: {
@@ -36,20 +33,6 @@ const styles = (theme: Theme) =>
       border: `1px solid ${grey[300]}`,
       position: "relative",
     },
-    printInfoDiv: {
-      margin: "10px 3px 0",
-    },
-    infoPairDiv: {
-      marginBottom: 10,
-      display: "flex",
-    },
-    infoPairTitle: {
-      marginRight: 5,
-      fontWeight: "bold",
-    },
-    infoPairContent: {
-      maxWidth: "50%",
-    },
     button: {
       display: "flex",
       alignItems: "center",
@@ -67,11 +50,6 @@ interface Props extends WithStyles<typeof styles> {
   onClose: Function; // This is intentionally not the same type as Dialog's onClose prop because that one really sucks
   userPrint: UserPrint;
   userPrintStore?: UserPrintsStore;
-}
-
-interface InfoPairProps {
-  title: ReactNode | string;
-  content: ReactNode | string;
 }
 
 @inject("userPrintStore")
@@ -94,40 +72,17 @@ class UserPrintDialog extends Component<Props> {
 
   render() {
     const { classes, userPrint, open, onClose, userPrintStore } = this.props;
-    const { name, status, notes, timestamp, contactDetails, fileExtension } = userPrint;
-
-    type GenericObject = { [key: string]: any };
-
-    const printInfo = {
-      Uploaded: moment(timestamp).calendar(),
-      "File Type": <FileType fileExtension={fileExtension} />,
-      Status: status,
-      Notes: notes,
-      "Contact Details": contactDetails,
-    } as GenericObject;
+    const { name, status } = userPrint;
 
     return (
       <Dialog onClose={onClose} open={open} title={`Print: ${name}`}>
-        {userPrint.fileExtension === "stl" && userPrintStore && (
-          <STLPrintViewer printId={userPrint.id} serverConnector={userPrintStore.serverConnector} />
-        )}
-        {userPrint.fileExtension === "gcode" && userPrintStore && (
-          <GcodePrintViewer printId={userPrint.id} serverConnector={userPrintStore.serverConnector} />
-        )}
+        <PrintInfoPanel serverConnector={userPrintStore!.serverConnector} print={userPrint} />
 
-        <div className={classes.printInfoDiv}>
-          {Object.keys(printInfo).map((k) => (
-            <Typography component="div" key={k} className={classes.infoPairDiv}>
-              <div className={classes.infoPairTitle} children={`${k}:`} />
-              <div className={classes.infoPairContent} children={printInfo[k]} />
-            </Typography>
-          ))}
-          {status !== PrintStatus.CANCELED && (
-            <Button className={classes.button} onClick={undefined} variant="contained" color={"primary"} size="small">
-              <DeleteIcon className={classes.buttonIcon} /> Delete Print
-            </Button>
-          )}
-        </div>
+        {status !== PrintStatus.CANCELED && (
+          <Button className={classes.button} onClick={undefined} variant="contained" color={"primary"} size="small">
+            <DeleteIcon className={classes.buttonIcon} /> Delete Print
+          </Button>
+        )}
       </Dialog>
     );
   }
