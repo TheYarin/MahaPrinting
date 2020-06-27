@@ -132,19 +132,19 @@ def get_all_prints():
     return json.dumps([p.__dict__ for p in prints])
 
 
-@app.route('/cancelPrint', methods=['POST'])
-def cancel_print():
-    data = request.json
-    print_id = data['printId']
+# @app.route('/cancelPrint', methods=['POST'])
+# def cancel_print():
+#     data = request.json
+#     print_id = data['printId']
 
-    throw_if_not_admin_or_print_owner(print_id)
+#     throw_if_not_admin_or_print_owner(print_id)
 
-    mahaprinting_service.cancel_print(print_id)
+#     mahaprinting_service.cancel_print(print_id)
 
-    response = make_response()
-    response.status_code = 200
+#     response = make_response()
+#     response.status_code = 200
 
-    return response
+#     return response
 
 
 @app.route('/markPrintAsCompleted', methods=['POST'])

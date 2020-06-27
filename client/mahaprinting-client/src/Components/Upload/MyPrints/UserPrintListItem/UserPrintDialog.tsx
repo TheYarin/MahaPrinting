@@ -78,11 +78,11 @@ class UserPrintDialog extends Component<Props> {
       <Dialog onClose={onClose} open={open} title={`Print: ${name}`}>
         <PrintInfoPanel serverConnector={userPrintStore!.serverConnector} print={userPrint} />
 
-        {status !== PrintStatus.CANCELED && (
+        {/* {status !== PrintStatus.CANCELED && (
           <Button className={classes.button} onClick={undefined} variant="contained" color={"primary"} size="small">
             <DeleteIcon className={classes.buttonIcon} /> Delete Print
           </Button>
-        )}
+        )} */}
       </Dialog>
     );
   }
