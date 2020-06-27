@@ -115,8 +115,14 @@ class PrinterCard extends Component<Props> {
               color="primary"
             />
             <Typography variant="subtitle2" className={classes.printTimeLeft}>
-              {`${Math.round(printer.jobInfo.progress.completion)}% Finished (`}
-              <b>{moment.duration({ seconds: printer.jobInfo.progress.printTimeLeft }).humanize()} left</b>)
+              {`${Math.round(printer.jobInfo.progress.completion)}% Finished`}
+              {" ("}
+              {printer.jobInfo.progress.printTimeLeft ? (
+                <b>{moment.duration({ seconds: printer.jobInfo.progress.printTimeLeft }).humanize()} left</b>
+              ) : (
+                "time left is unknown"
+              )}
+              {")"}
             </Typography>
             {/* <Typography variant="subtitle1" className={classes.printTimeLeft}>
                         Estimated Time Left:{" "}
