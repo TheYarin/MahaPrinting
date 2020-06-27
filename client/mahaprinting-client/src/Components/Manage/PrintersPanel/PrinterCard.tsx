@@ -110,12 +110,12 @@ class PrinterCard extends Component<Props> {
           <div>
             <BorderLinearProgress
               variant="buffer"
-              value={printer.jobInfo.progress.completion * 100}
-              valueBuffer={printer.jobInfo.progress.completion * 100 + 10}
+              value={printer.jobInfo.progress.completion}
+              valueBuffer={printer.jobInfo.progress.completion + 10}
               color="primary"
             />
             <Typography variant="subtitle2" className={classes.printTimeLeft}>
-              {`${Math.round(printer.jobInfo.progress.completion * 100)}% Finished (`}
+              {`${Math.round(printer.jobInfo.progress.completion)}% Finished (`}
               <b>{moment.duration({ seconds: printer.jobInfo.progress.printTimeLeft }).humanize()} left</b>)
             </Typography>
             {/* <Typography variant="subtitle1" className={classes.printTimeLeft}>
