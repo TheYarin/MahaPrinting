@@ -28,12 +28,12 @@ class FinishedPrintsTable extends Component<Props> {
         title={"Print History"}
         columns={[
           { title: "Print Status", field: "status", width: "18%" } as Column<any>,
-          {
-            title: "Printed",
-            field: "timestamp_printed",
-            render: (rowData) => <PrettyTimestamp timestamp={rowData.timestamp} />,
-            width: "10%",
-          } as Column<any>,
+          // {
+          //   title: "Printed",
+          //   field: "timestamp_printed",
+          //   render: (rowData) => <PrettyTimestamp timestamp={rowData.timestamp} />,
+          //   width: "10%",
+          // } as Column<any>,
           {
             title: "Uploaded",
             field: "timestamp",
