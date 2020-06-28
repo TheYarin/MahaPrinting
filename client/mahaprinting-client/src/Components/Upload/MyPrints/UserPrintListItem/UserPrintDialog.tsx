@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import { createStyles, WithStyles, withStyles, Button } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
+import { createStyles, WithStyles, withStyles } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
-import { PrintStatus } from "../../../../ServerAPI/PrintStatus";
 import { UserPrint } from "../../../../ServerAPI/UserPrint";
 import { UserPrintsStore } from "../../../../PrintStores/UserPrintsStore";
 import { flexColCentered } from "../../../../JssUtils";
@@ -71,8 +69,8 @@ class UserPrintDialog extends Component<Props> {
     }; */
 
   render() {
-    const { classes, userPrint, open, onClose, userPrintStore } = this.props;
-    const { name, status } = userPrint;
+    const { userPrint, open, onClose, userPrintStore } = this.props;
+    const { name } = userPrint;
 
     return (
       <Dialog onClose={onClose} open={open} title={`Print: ${name}`}>
