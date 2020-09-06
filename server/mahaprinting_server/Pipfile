@@ -13,7 +13,8 @@ flask = "*"
 python-dotenv = "*"
 requests = "*"
 flask-cors = "*"
-octorest-0-3-yarin = {git = "https://github.com/TheYarin/OctoRest"}
+octorest = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"

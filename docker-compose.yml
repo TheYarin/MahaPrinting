@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  server:
+    image: mahaprinting_server
+    build: ./server/mahaprinting_server
+    volumes:
+      - ./mahaprinting:/app/storage
+    environment:
+      SQLITE_DB_PATH: /app/storage/mahaprinting.db
+      ALLOW_CORS: "FALSE"
+      ADMIN_USER_ID: gsolsjfvwpujscssqjgpzszsqnhvllozmgsvowqh
+      # ADMIN_USER_ID: wubbalubbadubdub
+      UPLOADS_FOLDER: /app/storage/uploads
+  client:
+    image: mahaprinting_client
+    build: ./client/mahaprinting-client
+    ports:
+      - 80:80
+    restart: always
