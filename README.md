@@ -2,7 +2,13 @@
 
 MahaPrinting lets you manage user-uploaded prints in a print queue, and dispatch those prints to multiple printers managed by OctoPrint, all from a single UI.
 
-Among the features:
+## Origin Story
+
+MahaPrinting was designed for a convention/hackathon where the participants can request 3D prints for their projects.  
+That causes some headache prioritizing and tracking prints, and coordinating available printers.  
+MahaPrinting attempts to solve these problems.
+
+## Among the features:
 
 - GCODE/STL support:
 
@@ -22,12 +28,6 @@ Among the features:
   ![a picture of the manager page](/images/manager-page-send-to-printer.png)
 
 **Note**: To open the management page, browse to `/manage` in the address bar. This page can only be opened by the admin.
-
-### Origin Story
-
-MahaPrinting was designed for a convention/hackathon where the participants can request 3D prints for their projects.  
-That causes some headache prioritizing and tracking prints, and coordinating available printers.  
-MahaPrinting attempts to solve these problems.
 
 ## How to build:
 
