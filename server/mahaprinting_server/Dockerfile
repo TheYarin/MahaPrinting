@@ -16,13 +16,14 @@ WORKDIR /app
 # RUN useradd appuser && chown -R appuser /app /home/appuser
 # USER appuser
 # ENV PATH=${PATH}:/home/appuser/.local/bin
-
 # COPY --chown=appuser . /app
-COPY . /app
 
 # Install dependencies
 RUN pip install pipenv
+COPY Pipfile* /app/
 RUN pipenv install --deploy --ignore-pipfile
+
+COPY . /app
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["pipenv", "run", "gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
